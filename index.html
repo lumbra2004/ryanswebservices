@@ -293,12 +293,45 @@
 
     <section id="contact">
         <h2>Contact Me</h2>
-        <form action="mailto:your@email.com" method="POST" enctype="text/plain">
+        <form id="contactForm">
             <input type="text" name="name" placeholder="Your Name" required>
             <input type="email" name="email" placeholder="Your Email" required>
             <textarea name="message" rows="5" placeholder="How can I help your business?" required></textarea>
             <button type="submit">Send Message</button>
+            <div id="formStatus" style="margin-top:1em;"></div>
         </form>
+        <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const statusDiv = document.getElementById('formStatus');
+            statusDiv.textContent = '';
+            const data = {
+                name: form.name.value,
+                email: form.email.value,
+                message: form.message.value
+            };
+            try {
+                const response = await fetch('/.netlify/functions/submit-contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    statusDiv.style.color = 'green';
+                    statusDiv.textContent = 'Message sent! Thank you.';
+                    form.reset();
+                } else {
+                    statusDiv.style.color = 'red';
+                    statusDiv.textContent = result.error || 'Something went wrong.';
+                }
+            } catch (err) {
+                statusDiv.style.color = 'red';
+                statusDiv.textContent = 'Network error. Please try again.';
+            }
+        });
+        </script>
     </section>
 
     <footer>
