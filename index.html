@@ -312,12 +312,15 @@
                 message: form.message.value
             };
             try {
-                const response = await fetch('/.netlify/functions/submit-contact.node', {
+                console.log('Submitting contact form, payload:', data);
+                const response = await fetch('/.netlify/functions/submit-contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+                console.log('Fetch response status:', response.status);
                 const result = await response.json();
+                console.log('Response JSON:', result);
                 if (result.success) {
                     statusDiv.style.color = 'green';
                     statusDiv.textContent = 'Message sent! Thank you.';
@@ -325,8 +328,12 @@
                 } else {
                     statusDiv.style.color = 'red';
                     statusDiv.textContent = result.error || 'Something went wrong.';
+                    if (result.received) {
+                        console.log('Server received:', result.received);
+                    }
                 }
             } catch (err) {
+                console.error('Fetch error:', err);
                 statusDiv.style.color = 'red';
                 statusDiv.textContent = 'Network error. Please try again.';
             }

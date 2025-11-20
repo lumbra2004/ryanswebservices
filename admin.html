@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Submissions - Admin</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:2rem}
+    input[type=password]{padding:.5rem;font-size:1rem}
+    button{padding:.5rem 1rem;margin-left:.5rem}
+    table{width:100%;border-collapse:collapse;margin-top:1rem}
+    th,td{border:1px solid #ddd;padding:.5rem;text-align:left}
+    th{background:#f4f4f4}
+  </style>
+</head>
+<body>
+  <h1>Contact Submissions (Admin)</h1>
+  <p>Enter the admin password to view recent submissions.</p>
+  <div>
+    <input id="password" type="password" placeholder="Admin password">
+    <button id="load">Load Submissions</button>
+    <span id="status" style="margin-left:1rem;color:#b00"></span>
+  </div>
+  <div id="results"></div>
+
+  <script>
+    document.getElementById('load').addEventListener('click', async () => {
+      const pass = document.getElementById('password').value;
+      const status = document.getElementById('status');
+      status.textContent = '';
+      document.getElementById('results').innerHTML = '';
+      if (!pass) { status.textContent = 'Enter password'; return; }
+      try {
+        // Send password as query param `p` to avoid any header stripping in dev
+        const res = await fetch('/.netlify/functions/list-contacts?p=' + encodeURIComponent(pass), {
+          method: 'GET'
+        });
+        const json = await res.json();
+        if (!res.ok) {
+          status.textContent = json.error || 'Access denied';
+          return;
+        }
+        const rows = json.rows || [];
+        if (rows.length === 0) {
+          document.getElementById('results').innerHTML = '<p>No submissions found.</p>';
+          return;
+        }
+        let html = '<table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Created</th></tr></thead><tbody>';
+        for (const r of rows) {
+          html += `<tr><td>${r.id}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.email)}</td><td>${escapeHtml(r.message)}</td><td>${r.created_at}</td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById('results').innerHTML = html;
+      } catch (err) {
+        status.textContent = 'Network error';
+      }
+    });
+
+    function escapeHtml(str){
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+  </script>
+</body>
+</html>
