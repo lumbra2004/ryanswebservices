@@ -1,7 +1,10 @@
 import { neon } from '@netlify/neon';
 
 export default async (event, context) => {
-  if (event.httpMethod !== 'POST') {
+  // Edge Functions: event.request, Node Functions: event.httpMethod
+  let method = event.httpMethod || (event.request && event.request.method);
+
+  if (method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
       headers: { 'Content-Type': 'application/json' }
@@ -9,7 +12,18 @@ export default async (event, context) => {
   }
 
   try {
-    const { name, email, message } = JSON.parse(event.body || '{}');
+    let body;
+    if (event.body) {
+      // Node Functions
+      body = JSON.parse(event.body);
+    } else if (event.request) {
+      // Edge Functions
+      body = await event.request.json();
+    } else {
+      body = {};
+    }
+
+    const { name, email, message } = body;
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ error: 'Missing fields' }), {
         status: 400,
