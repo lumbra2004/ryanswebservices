@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -302,12 +304,6 @@
     <footer>
         &copy; 2025 Ryan's Web Solutions. All rights reserved.
     </footer>
-    <script type="module">
-        import { neon } from '@netlify/neon';
-const sql = neon(); // automatically uses env NETLIFY_DATABASE_URL
-const [post] = await sql`SELECT * FROM posts WHERE id = ${postId}`;
-console.log(post);
-console.log('Hello, world!');
-    </script>
+
 </body>
 </html>
