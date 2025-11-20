@@ -312,7 +312,7 @@
                 message: form.message.value
             };
             try {
-                const response = await fetch('/.netlify/functions/submit-contact', {
+                const response = await fetch('/.netlify/functions/submit-contact.node', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
