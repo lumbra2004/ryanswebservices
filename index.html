@@ -302,5 +302,12 @@
     <footer>
         &copy; 2025 Ryan's Web Solutions. All rights reserved.
     </footer>
+    <script>
+        import { neon } from '@netlify/neon';
+const sql = neon(); // automatically uses env NETLIFY_DATABASE_URL
+const [post] = await sql`SELECT * FROM posts WHERE id = ${postId}`;
+console.log(post);
+console.log('Hello, world!');
+    </script>
 </body>
 </html>
