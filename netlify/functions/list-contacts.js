@@ -56,11 +56,7 @@ export default async (event, context) => {
     `;
     const isMatch = verify && verify[0] ? verify[0].match : false;
 
-    if (showLogs) {
-      try {
-        console.log('[auth-log] admin_row_exists=', !!(adminRow && adminRow.length), 'isMatch=', !!isMatch);
-      } catch (e) {}
-    }
+    // No debug logs in production: proceed silently on auth check
 
     if (!isMatch) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
