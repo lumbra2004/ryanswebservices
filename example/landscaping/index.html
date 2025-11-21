@@ -106,27 +106,32 @@
 
   <script>
     (function(){
+      // Year and quick-contact
       document.getElementById('year').textContent = new Date().getFullYear();
-      document.getElementById('quickBtn').addEventListener('click', function(){
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('quickBtn').addEventListener('click', function(){
-      const name = document.getElementById('qname').value.trim();
-      const contact = document.getElementById('qphone').value.trim();
-      if(!name || !contact){ alert('Please enter your name and contact'); return }
-      alert('Thanks — we will reach out about your estimate.');
-      document.getElementById('qname').value=''; document.getElementById('qphone').value='';
-    })
-    ;(function(){
-      const btn = document.querySelector('.hamburger');
-      const nav = document.querySelector('.navlinks');
-      if(!btn||!nav) return;
-      btn.addEventListener('click', ()=>{
-        const open = nav.classList.toggle('open');
-        btn.setAttribute('aria-expanded', open? 'true':'false');
-      });
-    })();
-  </script>
+      const quickBtn = document.getElementById('quickBtn');
+      if(quickBtn){
+        quickBtn.addEventListener('click', function(){
+          const name = document.getElementById('qname').value.trim();
+          const contact = document.getElementById('qphone').value.trim();
+          if(!name || !contact){ alert('Please enter your name and contact'); return; }
+          alert('Thanks — we will reach out about your estimate.');
+          document.getElementById('qname').value=''; document.getElementById('qphone').value='';
+        });
+      }
+
+      // Mobile nav toggle
+      (function(){
+        const btn = document.querySelector('.hamburger');
+        const nav = document.querySelector('.navlinks');
+        if(!btn || !nav) return;
+        btn.addEventListener('click', ()=>{
+          const open = nav.classList.toggle('open');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      })();
+
+      // Parallax for hero-inner (desktop only)
+      const hero = document.querySelector('.hero');
       const heroInner = document.querySelector('.hero-inner');
       let enabled = false;
       let ticking = false;
@@ -163,7 +168,6 @@
         window.removeEventListener('scroll', onScroll);
         if(heroInner) heroInner.style.transform = '';
         if(heroInner) heroInner.style.willChange = '';
-        // nothing to reset for background element
       }
 
       function update(){
