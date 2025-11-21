@@ -61,6 +61,15 @@ export default async (event, context) => {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
 
+    // Site-level password fallback: if you set `NETLIFY_VIEW_PASSWORD` in
+    // Netlify env vars, accept that plain password (useful for quick fixes).
+    // Prefer DB-hash verification when possible.
+    const sitePassword = process.env.NETLIFY_VIEW_PASSWORD;
+    if (sitePassword && provided === sitePassword) {
+      const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
+      return new Response(JSON.stringify({ rows }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+
     // Check admins table for matching bcrypt hash (Postgres crypt())
     const adminRow = await sql`SELECT password_hash FROM admins WHERE username = 'admin' LIMIT 1`;
     if (!adminRow || adminRow.length === 0) {
