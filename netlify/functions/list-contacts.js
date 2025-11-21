@@ -26,9 +26,7 @@ export default async (event, context) => {
   } catch (e) {
     auth = null;
   }
-  
 
-  // For production use, require DB-backed admin password (bcrypt via pgcrypto)
   try {
     const sql = neon();
 
@@ -39,14 +37,12 @@ export default async (event, context) => {
     }
 
     // Fallback: accept `v=` or `p=` query parameter in case Authorization header
-    // is stripped by a proxy or during dev. This keeps the function robust in
-    // environments where headers aren't forwarded correctly.
+    // is stripped by a proxy or during dev.
     if (!provided) {
       try {
         if (event.queryStringParameters && (event.queryStringParameters.v || event.queryStringParameters.p)) {
           provided = event.queryStringParameters.v || event.queryStringParameters.p;
         } else {
-          // Edge-style or other runtime may include a full request URL
           const maybeUrl = event.rawUrl || (event.request && event.request.url);
           if (maybeUrl) {
             try {
@@ -58,7 +54,7 @@ export default async (event, context) => {
           }
         }
       } catch (e) {
-        // ignore any parsing errors and fall through to unauthorized
+        // ignore
       }
     }
 
@@ -66,11 +62,16 @@ export default async (event, context) => {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
 
-    // Production: verify credential against DB-hashed admin password
-
     // Check admins table for matching bcrypt hash (Postgres crypt())
     const adminRow = await sql`SELECT password_hash FROM admins WHERE username = 'admin' LIMIT 1`;
+
+    // If no admin row exists, allow env fallback if set and matches the provided password
+    const envPass = (typeof process !== 'undefined' && process.env && process.env.NETLIFY_VIEW_PASSWORD) ? process.env.NETLIFY_VIEW_PASSWORD : null;
     if (!adminRow || adminRow.length === 0) {
+      if (envPass && provided === envPass) {
+        const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
+        return new Response(JSON.stringify({ rows }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
       return new Response(JSON.stringify({ error: 'No admin configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 
@@ -82,30 +83,12 @@ export default async (event, context) => {
     `;
     const isMatch = verify && verify[0] ? verify[0].match : false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    
-=======
-=======
->>>>>>> parent of 064a416 (gtg)
-=======
->>>>>>> parent of 064a416 (gtg)
-    if (showLogs) {
-      try {
-        console.log('[auth-log] admin_row_exists=', !!(adminRow && adminRow.length), 'isMatch=', !!isMatch);
-      } catch (e) {}
-    }
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 064a416 (gtg)
-=======
->>>>>>> parent of 064a416 (gtg)
-=======
->>>>>>> parent of 064a416 (gtg)
-
+    // If DB verify fails, allow NETLIFY_VIEW_PASSWORD plaintext fallback
     if (!isMatch) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      if (!(envPass && provided === envPass)) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      }
+      // env fallback matched; continue
     }
 
     const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
