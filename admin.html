@@ -31,10 +31,19 @@
       document.getElementById('results').innerHTML = '';
       if (!pass) { status.textContent = 'Enter password'; return; }
       try {
-        // Send password as query param `p` to avoid any header stripping in dev
-        const res = await fetch('/.netlify/functions/list-contacts?p=' + encodeURIComponent(pass), {
-          method: 'GET'
-        });
+        // If running on localhost, prefer the `?p=` fallback so local
+        // `netlify dev` (which may not forward Authorization headers) works.
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+        let res;
+        if (isLocal) {
+          const url = '/.netlify/functions/list-contacts?p=' + encodeURIComponent(pass);
+          res = await fetch(url, { method: 'GET' });
+        } else {
+          res = await fetch('/.netlify/functions/list-contacts', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + pass }
+          });
+        }
         const json = await res.json();
         if (!res.ok) {
           status.textContent = json.error || 'Access denied';

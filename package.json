@@ -1,5 +1,14 @@
 {
+  "name": "ryanswebservices-scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "create-admin": "node scripts/create-admin.js",
+    "check-admin": "node scripts/check-admin.js"
+  },
   "dependencies": {
+    "pg": "^8.11.0",
+    "dotenv": "^16.1.4",
     "@netlify/neon": "^0.1.0"
   }
 }

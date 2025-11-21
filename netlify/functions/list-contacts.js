@@ -11,60 +11,74 @@ export default async (event, context) => {
   let auth = null;
   try {
     if (event.headers && event.headers.authorization) auth = event.headers.authorization;
-    else if (event.request && event.request.headers) auth = Object.fromEntries(event.request.headers).authorization;
-    else if (event.authorization) auth = event.authorization;
+    else if (event.request) {
+      try {
+        // Edge-style headers map
+        if (typeof event.request.headers.get === 'function') {
+          auth = event.request.headers.get('authorization');
+        } else if (event.request.headers) {
+          auth = Object.fromEntries(event.request.headers).authorization;
+        }
+      } catch (e) {
+        // ignore
+      }
+    } else if (event.authorization) auth = event.authorization;
   } catch (e) {
     auth = null;
   }
+  
 
-  // Read expected password from env and normalize (strip optional surrounding quotes)
-  const expectedRaw = process.env.NETLIFY_VIEW_PASSWORD || process.env.VIEW_PASSWORD || '';
-  const expected = String(expectedRaw).replace(/^\s*"|"\s*$/g, '').trim();
-  if (!expected) {
-    return new Response(JSON.stringify({ error: 'Admin password not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
-  }
-
-  // Expect header like: Bearer thepassword
-  const providedRaw = auth;
-  const provided = providedRaw && providedRaw.startsWith('Bearer ') ? providedRaw.slice(7) : providedRaw;
-
-  // Also accept password via query param ?p= for easier browser access
-  let providedFromQuery = null;
-  try {
-    // Common Node-style
-    if (event.queryStringParameters && event.queryStringParameters.p) {
-      providedFromQuery = event.queryStringParameters.p;
-    } else {
-      // Try several shapes where the full URL may be provided
-      const maybeUrl = event.request && event.request.url ? event.request.url : (event.url || event.rawUrl || event.path || '');
-      if (maybeUrl) {
-        try {
-          const url = maybeUrl.startsWith('http') ? new URL(maybeUrl) : new URL(maybeUrl, 'http://localhost');
-          providedFromQuery = url.searchParams.get('p');
-        } catch (e) {
-          providedFromQuery = null;
-        }
-      }
-    }
-  } catch (e) {
-    providedFromQuery = null;
-  }
-
-  const finalProvided = provided || providedFromQuery;
-  console.log('Provided from header:', provided);
-  console.log('Provided from query:', providedFromQuery);
-  console.log('Final provided:', finalProvided);
-
-  // Debug log provided vs expected (do not expose in production logs)
-  console.log('Admin provided (final):', finalProvided);
-  console.log('Admin expected:', expected);
-
-  if (!finalProvided || finalProvided !== expected) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
-  }
-
+  // For production use, require DB-backed admin password (bcrypt via pgcrypto)
   try {
     const sql = neon();
+
+    // Get provided password from Authorization header
+    const providedRaw = auth;
+    let provided = providedRaw && providedRaw.startsWith('Bearer ') ? providedRaw.slice(7) : providedRaw;
+
+    // Development convenience: when running under `netlify dev` allow a query
+    // parameter `?p=` to provide the password. This is gated by the
+    // `NETLIFY_DEV` env var so it won't be available in production.
+    if (!provided && (process.env.NETLIFY_DEV || process.env.NODE_ENV === 'development')) {
+      try {
+        if (event.queryStringParameters && event.queryStringParameters.p) {
+          provided = event.queryStringParameters.p;
+        } else if (event.request && event.request.url) {
+          const u = new URL(event.request.url);
+          const p = u.searchParams.get('p');
+          if (p) provided = p;
+        } else if (event.url) {
+          const u = new URL(event.url);
+          const p = u.searchParams.get('p');
+          if (p) provided = p;
+        }
+      } catch (e) {
+        // ignore parse errors
+      }
+    }
+
+    if (!provided) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+    }
+
+    // Check admins table for matching bcrypt hash (Postgres crypt())
+    const adminRow = await sql`SELECT password_hash FROM admins WHERE username = 'admin' LIMIT 1`;
+    if (!adminRow || adminRow.length === 0) {
+      return new Response(JSON.stringify({ error: 'No admin configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    }
+
+    const verify = await sql`
+      SELECT (password_hash = crypt(${provided}, password_hash)) AS match
+      FROM admins
+      WHERE username = 'admin'
+      LIMIT 1
+    `;
+    const isMatch = verify && verify[0] ? verify[0].match : false;
+
+    if (!isMatch) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+    }
+
     const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
     return new Response(JSON.stringify({ rows }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (err) {
