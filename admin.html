@@ -31,11 +31,8 @@
       document.getElementById('results').innerHTML = '';
       if (!pass) { status.textContent = 'Enter password'; return; }
       try {
-        // Send both Authorization header and a query parameter `v=` so the
-        // request works even if a proxy strips Authorization. The function
-        // accepts either source and will use DB-hash verification.
-        const url = '/.netlify/functions/list-contacts?v=' + encodeURIComponent(pass);
-        const res = await fetch(url, {
+        // Send the password in the Authorization header (Bearer token) only.
+        const res = await fetch('/.netlify/functions/list-contacts', {
           method: 'GET',
           headers: { 'Authorization': 'Bearer ' + pass }
         });
