@@ -32,9 +32,35 @@ export default async (event, context) => {
   try {
     const sql = neon();
 
-    // Get provided password from Authorization header only (Bearer <token>)
-    const providedRaw = auth;
-    const provided = providedRaw && typeof providedRaw === 'string' && providedRaw.startsWith('Bearer ') ? providedRaw.slice(7) : null;
+    // Get provided password from Authorization header (Bearer <token>)
+    let provided = null;
+    if (auth && typeof auth === 'string' && auth.startsWith('Bearer ')) {
+      provided = auth.slice(7);
+    }
+
+    // Fallback: accept `v=` or `p=` query parameter in case Authorization header
+    // is stripped by a proxy or during dev. This keeps the function robust in
+    // environments where headers aren't forwarded correctly.
+    if (!provided) {
+      try {
+        if (event.queryStringParameters && (event.queryStringParameters.v || event.queryStringParameters.p)) {
+          provided = event.queryStringParameters.v || event.queryStringParameters.p;
+        } else {
+          // Edge-style or other runtime may include a full request URL
+          const maybeUrl = event.rawUrl || (event.request && event.request.url);
+          if (maybeUrl) {
+            try {
+              const u = new URL(maybeUrl, 'http://localhost');
+              provided = u.searchParams.get('v') || u.searchParams.get('p');
+            } catch (e) {
+              // ignore URL parse errors
+            }
+          }
+        }
+      } catch (e) {
+        // ignore any parsing errors and fall through to unauthorized
+      }
+    }
 
     if (!provided) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
