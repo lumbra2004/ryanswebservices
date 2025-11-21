@@ -8,6 +8,8 @@ body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg);
 .navlinks{margin-left:auto;display:flex;gap:.35rem}
 .navlinks a{color:var(--dark);text-decoration:none;padding:.5rem .75rem;border-radius:10px;font-weight:600}
 .navlinks a:hover{background:rgba(201,75,75,0.06)}
+.hamburger{display:none;border:0;background:transparent;font-size:1.25rem;padding:.4rem;border-radius:8px;cursor:pointer}
+.hamburger:focus{outline:2px solid rgba(0,0,0,0.08)}
 .hero{display:grid;grid-template-columns:1fr 420px;align-items:center;gap:2rem;padding:4rem 0}
 .hero-copy h1{font-size:2.6rem;margin:0}
 .hero-copy p{color:var(--muted);margin-top:.6rem}
@@ -42,4 +44,14 @@ body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg);
 .small{font-size:.9rem;color:var(--muted)}
 .footer{padding:2rem 0;color:var(--muted);text-align:center;margin-top:2rem}
 @media (max-width:900px){.hero{grid-template-columns:1fr;padding:2rem 0}.features,.menu-grid{grid-template-columns:1fr}.menu-item img{width:94px;height:66px}.grid-two{grid-template-columns:1fr}.navlinks{display:none}}
+
+/* Mobile nav behavior */
+@media (max-width:900px){
+	.hamburger{display:inline-flex;margin-left:auto}
+	.nav{position:relative}
+	.navlinks.open{display:flex;flex-direction:column;position:absolute;right:1rem;top:56px;background:var(--card);padding:.75rem;border-radius:10px;box-shadow:0 14px 40px rgba(8,24,18,0.08);min-width:180px}
+	.navlinks.open a{display:block;padding:.6rem .9rem}
+	.cta{display:block;width:100%;text-align:center}
+	.search{width:100%}
+}
 

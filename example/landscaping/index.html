@@ -11,7 +11,8 @@
   <header class="header">
     <div class="container nav">
       <div class="brand">Example Landscaping</div>
-      <nav class="navlinks">
+      <button class="hamburger" aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">☰</button>
+      <nav id="site-nav" class="navlinks" role="navigation">
         <a href="/example/landscaping/index.html">Home</a>
         <a href="/example/landscaping/services.html">Services</a>
         <a href="/example/landscaping/gallery.html">Gallery</a>
@@ -107,16 +108,25 @@
     (function(){
       document.getElementById('year').textContent = new Date().getFullYear();
       document.getElementById('quickBtn').addEventListener('click', function(){
-        const name = document.getElementById('qname').value.trim();
-        const contact = document.getElementById('qphone').value.trim();
-        if(!name || !contact){ alert('Please enter your name and contact'); return }
-        alert('Thanks — we will reach out about your estimate.');
-        document.getElementById('qname').value=''; document.getElementById('qphone').value='';
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('quickBtn').addEventListener('click', function(){
+      const name = document.getElementById('qname').value.trim();
+      const contact = document.getElementById('qphone').value.trim();
+      if(!name || !contact){ alert('Please enter your name and contact'); return }
+      alert('Thanks — we will reach out about your estimate.');
+      document.getElementById('qname').value=''; document.getElementById('qphone').value='';
+    })
+    ;(function(){
+      const btn = document.querySelector('.hamburger');
+      const nav = document.querySelector('.navlinks');
+      if(!btn||!nav) return;
+      btn.addEventListener('click', ()=>{
+        const open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open? 'true':'false');
       });
-
-      // Parallax enhancement: subtle translate of hero content on scroll
-      // Enabled only for non-touch devices on wider screens to avoid mobile performance issues.
-      const hero = document.querySelector('.hero');
+    })();
+  </script>
       const heroInner = document.querySelector('.hero-inner');
       let enabled = false;
       let ticking = false;

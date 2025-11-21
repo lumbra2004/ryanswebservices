@@ -11,7 +11,8 @@
   <header class="header">
     <div class="container nav">
       <div class="brand">Example Cafe</div>
-      <nav class="navlinks">
+      <button class="hamburger" aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">☰</button>
+      <nav id="site-nav" class="navlinks" role="navigation">
         <a href="/example/cafe/index.html">Home</a>
         <a href="/example/cafe/menu.html">Menu</a>
         <a href="/example/cafe/about.html">About</a>
@@ -42,5 +43,16 @@
   <footer class="footer">
     <div class="container">© Example Cafe</div>
   </footer>
+  <script>
+    (function(){
+      const btn = document.querySelector('.hamburger');
+      const nav = document.querySelector('.navlinks');
+      if(!btn||!nav) return;
+      btn.addEventListener('click', ()=>{
+        const open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open? 'true':'false');
+      });
+    })();
+  </script>
 </body>
 </html>
