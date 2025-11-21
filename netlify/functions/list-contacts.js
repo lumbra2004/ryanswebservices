@@ -84,8 +84,11 @@ export default async (event, context) => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
+=======
+>>>>>>> parent of 064a416 (gtg)
 =======
 >>>>>>> parent of 064a416 (gtg)
     if (showLogs) {
@@ -94,6 +97,9 @@ export default async (event, context) => {
       } catch (e) {}
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 064a416 (gtg)
+=======
 >>>>>>> parent of 064a416 (gtg)
 =======
 >>>>>>> parent of 064a416 (gtg)
