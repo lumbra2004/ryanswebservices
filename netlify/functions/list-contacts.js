@@ -83,13 +83,19 @@ export default async (event, context) => {
     const isMatch = verify && verify[0] ? verify[0].match : false;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
+=======
+>>>>>>> parent of 064a416 (gtg)
     if (showLogs) {
       try {
         console.log('[auth-log] admin_row_exists=', !!(adminRow && adminRow.length), 'isMatch=', !!isMatch);
       } catch (e) {}
     }
+<<<<<<< HEAD
+>>>>>>> parent of 064a416 (gtg)
+=======
 >>>>>>> parent of 064a416 (gtg)
 
     if (!isMatch) {
