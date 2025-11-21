@@ -31,11 +31,21 @@
       document.getElementById('results').innerHTML = '';
       if (!pass) { status.textContent = 'Enter password'; return; }
       try {
-        // Send the password via query parameter `v` so production and local
-        // deployments both authenticate reliably. Note: query params can be
-        // visible in logs; consider rotating the secret after setup.
-        const url = '/.netlify/functions/list-contacts?v=' + encodeURIComponent(pass);
-        const res = await fetch(url, { method: 'GET' });
+        // Use a localhost-friendly fallback: when running on localhost
+        // send the password as a query parameter `p=` because the local
+        // Netlify dev proxy can sometimes not forward Authorization headers.
+        // In production the header will be used.
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+        let res;
+        if (isLocal) {
+          const url = '/.netlify/functions/list-contacts?p=' + encodeURIComponent(pass);
+          res = await fetch(url, { method: 'GET' });
+        } else {
+          res = await fetch('/.netlify/functions/list-contacts', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + pass }
+          });
+        }
         const json = await res.json();
         if (!res.ok) {
           status.textContent = json.error || 'Access denied';
