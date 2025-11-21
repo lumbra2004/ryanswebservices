@@ -10,7 +10,7 @@
 <body>
   <main>
     <h1>Auto Shop</h1>
-    <img src="https://images.unsplash.com/photo-1514474959185-1472d4c4e1f4?auto=format&fit=crop&w=800&q=80" alt="Auto Shop Garage">
+    <img src="stock-images/autoshop.jpg" alt="Auto Shop Garage">
     <p>This project is a dynamic website for an auto repair shop, featuring service listings, appointment booking, and customer testimonials. The site is designed for trust and convenience.</p>
     <ul>
       <li>Service listings</li>
@@ -18,7 +18,16 @@
       <li>Customer testimonials</li>
       <li>Location map</li>
     </ul>
-    <a href="index.html">&#8592; Back to Portfolio</a>
+    <div style="margin-top:1.25rem;display:flex;gap:0.5rem;align-items:center;">
+      <a href="index.html">&#8592; Back to Portfolio</a>
+      <button id="open-example" style="margin-left:auto;padding:.5rem 1rem;border-radius:6px;border:0;background:#4f8cff;color:#fff;cursor:pointer">Open Example Page</button>
+    </div>
+    <script>
+      document.getElementById('open-example').addEventListener('click', function(){
+        // change the target below if you want a different example page
+        window.location.href = 'example/autoshop';
+      });
+    </script>
   </main>
 </body>
 </html>

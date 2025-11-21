@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Modern Auto Shop — Example</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f8fb;--card:#ffffff;--muted:#6b7280;--accent:#0f62fe;--accent-2:#0b7cff;--radius:12px;
+      --glass: rgba(255,255,255,0.72);
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg);color:#0f1724;-webkit-font-smoothing:antialiased}
+
+    /* HERO: full-bleed image with subtle parallax */
+    .site-hero{position:relative;background-image:linear-gradient(180deg,rgba(3,37,84,0.55),rgba(3,37,84,0.12)), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=80');background-size:cover;background-position:center;height:520px;display:flex;align-items:center;overflow:hidden}
+    .site-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,37,84,0.25),rgba(3,37,84,0.06));pointer-events:none}
+    .hero-inner{max-width:1300px;margin:0 auto;padding:3.5rem 1rem;display:flex;gap:2rem;align-items:center}
+    /* make hero image appear to scroll on supporting browsers */
+    .site-hero{background-attachment:fixed}
+    .hero-copy{max-width:780px;color:#fff}
+    .hero-copy h1{color:#fff;margin:0;font-size:2.6rem;line-height:1.02}
+    .hero-copy p{color:rgba(255,255,255,0.95);margin:.6rem 0 0;font-size:1.05rem}
+    .hero-cta{margin-top:1rem}
+    .hero-cta a{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:.85rem 1.2rem;border-radius:12px;text-decoration:none;font-weight:700}
+
+    /* wave divider */
+    .wave{display:block}
+
+    .container{max-width:1300px;margin:2rem auto;padding:0 1rem}
+    .layout{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;margin-top:1.5rem}
+    .card{background:var(--card);border-radius:12px;padding:1.25rem;box-shadow:0 8px 30px rgba(12,34,80,0.06)}
+
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .service{padding:1rem;border-radius:10px;border:1px solid #eef6ff;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .service h4{margin:.5rem 0}
+
+    .reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1rem}
+    .review{padding:1rem;border-radius:10px;border:1px solid #eef6ff;background:linear-gradient(180deg,#fff,#fbfdff)}
+
+    .scheduler{position:sticky;top:90px}
+
+    .features{display:flex;gap:1rem;margin-top:1.25rem}
+    .feature{flex:1;background:linear-gradient(180deg,#fff,#fbfdff);padding:1rem;border-radius:10px;text-align:center}
+
+    label{display:block;font-size:.9rem;margin-bottom:.35rem;color:var(--muted)}
+    input,select,textarea{width:100%;padding:.6rem;border-radius:8px;border:1px solid #e6eef8;background:transparent}
+    button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;color:#fff;padding:.7rem 1rem;border-radius:10px;font-weight:700;cursor:pointer}
+
+    /* header / nav */
+    header{display:flex;align-items:center;gap:1rem;padding:0 1rem}
+    .brand{display:none}
+    nav{margin-left:auto;display:flex;gap:.5rem}
+    nav a{color:var(--muted);background:transparent;padding:.5rem .8rem;border-radius:8px;text-decoration:none;font-weight:700}
+    nav a:hover{background:rgba(15,98,254,0.08);color:var(--accent-2)}
+    .scrolled nav a{color:#0f1724;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(12,34,80,0.08)}
+
+    footer{margin-top:3rem;padding:1.5rem 0;color:var(--muted);text-align:center}
+
+    @media (max-width:1000px){
+      .layout{grid-template-columns:1fr}
+      .services{grid-template-columns:1fr}
+      .reviews{grid-template-columns:1fr}
+      .site-hero{background-attachment:scroll}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <div style="font-weight:800">Example Auto Shop</div>
+          <div style="font-size:.85rem;color:var(--muted)">Trusted. Fast. Local.</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#services">Services</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#appointment">Book</a>
+      </nav>
+    </header>
+
+    <div class="site-hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <h1>Example Auto Shop — Reliable, Local Service</h1>
+          <p>Friendly, expert technicians using factory-grade tools. Same-day or next-day turnaround on most services.</p>
+          <div class="hero-cta"><a href="#appointment">Request an Appointment</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- decorative wave divider -->
+    <svg class="wave" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0,64L48,53.3C96,43,192,21,288,16C384,11,480,21,576,42.7C672,64,768,96,864,101.3C960,107,1056,85,1152,80C1248,75,1344,85,1392,90.7L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+
+    <div class="container">
+      <div style="margin-top:-40px;background:transparent">
+        <div class="layout">
+          <div>
+            <div class="card">
+              <h1 style="margin-top:0">Premium Auto Repair & Maintenance</h1>
+              <p style="color:var(--muted)">Expert technicians, transparent pricing, and fast turnaround — keeping your vehicle safe and road-ready.</p>
+
+              <div class="features">
+                <div class="feature">
+                  <strong>Trusted Technicians</strong>
+                  <div style="color:var(--muted);margin-top:.5rem">ASE-certified mechanics and factory-grade tools.</div>
+                </div>
+                <div class="feature">
+                  <strong>Transparent Pricing</strong>
+                  <div style="color:var(--muted);margin-top:.5rem">Clear estimates and no surprise fees.</div>
+                </div>
+                <div class="feature">
+                  <strong>Fast Turnaround</strong>
+                  <div style="color:var(--muted);margin-top:.5rem">Same-day or next-day service for most repairs.</div>
+                </div>
+              </div>
+
+              <h2 style="margin-top:1rem">Our Services</h2>
+              <div class="services" id="services">
+                <div class="service">
+                  <div style="font-size:1rem;font-weight:700">Oil & Filter</div>
+                  <h4>Full Synthetic Change</h4>
+                  <p style="color:var(--muted)">30-point inspection and premium oils.</p>
+                </div>
+                <div class="service">
+                  <div style="font-size:1rem;font-weight:700">Brake Service</div>
+                  <h4>Pads, Rotors & Inspection</h4>
+                  <p style="color:var(--muted)">Comprehensive brake checks and replacements.</p>
+                </div>
+                <div class="service">
+                  <div style="font-size:1rem;font-weight:700">Diagnostics</div>
+                  <h4>Engine & Electrical</h4>
+                  <p style="color:var(--muted)">Computer diagnostics and electrical repairs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="scheduler" id="appointment">
+            <div class="card">
+              <h3 style="margin-top:0">Request Appointment</h3>
+              <p style="color:var(--muted);margin-top:0">Select a date/time and we'll confirm availability.</p>
+              <form id="apptForm" onsubmit="return false;">
+                <div style="margin-bottom:.6rem">
+                  <label for="name">Full name</label>
+                  <input id="name" name="name" required placeholder="Jane Customer">
+                </div>
+                <div style="margin-bottom:.6rem">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" required placeholder="you@example.com">
+                </div>
+                <div style="margin-bottom:.6rem">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" placeholder="(555) 555-0123">
+                </div>
+                <div style="margin-bottom:.6rem">
+                  <label for="service">Service</label>
+                  <select id="service" name="service">
+                    <option>Full Synthetic Oil Change</option>
+                    <option>Brake Service</option>
+                    <option>Engine Diagnostics</option>
+                    <option>Tire Rotation & Balance</option>
+                  </select>
+                </div>
+                <div style="display:flex;gap:.6rem;margin-bottom:.6rem">
+                  <div style="flex:1">
+                    <label for="date">Date</label>
+                    <input id="date" name="date" type="date" required>
+                  </div>
+                  <div style="flex:1">
+                    <label for="time">Time</label>
+                    <input id="time" name="time" type="time" required>
+                  </div>
+                </div>
+                <div style="display:flex;gap:.6rem;align-items:center">
+                  <button class="primary" id="bookBtn">Request</button>
+                  <div id="apptStatus" style="color:var(--muted);font-size:.95rem"></div>
+                </div>
+                <small style="display:block;margin-top:.6rem;color:var(--muted)">We will contact you to confirm the details.</small>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <section style="margin-top:1.5rem">
+      <h2 id="reviews">What our customers say</h2>
+      <div class="reviews">
+        <div class="review">
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong>Robin M.</strong><span class="stars">★★★★★</span></div>
+          <p style="color:var(--muted)">"Fast, fair pricing, and the team explained everything. My car has never run better."</p>
+        </div>
+        <div class="review">
+          <div style="display:flex;justify-content:space-between;align-items:center"><strong>Alex P.</strong><span class="stars">★★★★★</span></div>
+          <p style="color:var(--muted)">"Booked an oil change and they squeezed me in same day. Very professional."</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;background:var(--card);padding:1rem;border-radius:12px;box-shadow:0 6px 16px rgba(12,34,80,0.04)">
+        <h3 style="margin:0">Location & Hours</h3>
+        <p style="margin:.4rem 0;color:var(--muted)">123 Main St, YourCity</p>
+        <p style="margin:.2rem 0;color:var(--muted)"><strong>Mon-Fri:</strong> 8am – 6pm &middot; <strong>Sat:</strong> 9am – 2pm</p>
+        <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px dashed #eef6ff">
+          <h4 style="margin:.2rem 0">Holiday Hours</h4>
+          <ul style="margin:.2rem 0 0;color:var(--muted);padding-left:1.05rem">
+            <li>Thanksgiving Day: Closed</li>
+            <li>Christmas Eve: 9am – 1pm</li>
+            <li>Christmas Day: Closed</li>
+            <li>New Year's Day: Closed</li>
+          </ul>
+        </div>
+      </div>
+      <div style="width:320px;background:linear-gradient(180deg,#fff,#fbfdff);padding:1rem;border-radius:12px;box-shadow:0 6px 16px rgba(12,34,80,0.04);text-align:center">
+        <h4 style="margin:.2rem 0">Call to schedule</h4>
+        <div style="font-size:1.25rem;font-weight:700;color:var(--accent)">1 (802) 123-4567</div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Example Auto Shop — Example site
+    </footer>
+  </div>
+
+  <script>
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // scroll state for nav styling
+    (function(){
+      const onScroll = () => {
+        if (window.scrollY > 40) document.body.classList.add('scrolled'); else document.body.classList.remove('scrolled');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // Simple client-side appointment handler (no backend)
+    const form = document.getElementById('apptForm');
+    const status = document.getElementById('apptStatus');
+    const btn = document.getElementById('bookBtn');
+
+    btn.addEventListener('click', async () => {
+      status.textContent = '';
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const service = document.getElementById('service').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+
+      if (!name || !email || !date || !time) {
+        status.textContent = 'Please complete all fields.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Requesting...';
+
+      // Simulate API call
+      await new Promise(r => setTimeout(r, 900));
+
+      const appt = { name, email, phone, service, date, time, created: new Date().toISOString() };
+      // store locally for demo purposes
+      const stored = JSON.parse(localStorage.getItem('demo_appointments') || '[]');
+      stored.unshift(appt);
+      localStorage.setItem('demo_appointments', JSON.stringify(stored));
+
+      status.style.color = 'green';
+      status.textContent = 'Appointment requested — we will contact you to confirm.';
+      btn.disabled = false;
+      btn.textContent = 'Request Booking';
+
+      // optional: clear form
+      // form.reset();
+    });
+  </script>
+</body>
+</html>
