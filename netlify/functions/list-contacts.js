@@ -32,42 +32,38 @@ export default async (event, context) => {
   try {
     const sql = neon();
 
-    // Get provided password from Authorization header
+    // Determine provided credential from several sources (header or query)
     const providedRaw = auth;
-    let provided = providedRaw && providedRaw.startsWith('Bearer ') ? providedRaw.slice(7) : providedRaw;
+    let provided = providedRaw && typeof providedRaw === 'string' && providedRaw.startsWith('Bearer ') ? providedRaw.slice(7) : providedRaw;
 
-    // Development convenience: when running under `netlify dev` allow a query
-    // parameter `?p=` to provide the password. This is gated by the
-    // `NETLIFY_DEV` env var so it won't be available in production.
-    if (!provided && (process.env.NETLIFY_DEV || process.env.NODE_ENV === 'development')) {
-      try {
-        if (event.queryStringParameters && event.queryStringParameters.p) {
-          provided = event.queryStringParameters.p;
+    // Always allow query params `v` or `p` as another input method — this
+    // helps with proxies or clients that strip Authorization headers.
+    try {
+      if (!provided) {
+        if (event.queryStringParameters && (event.queryStringParameters.v || event.queryStringParameters.p)) {
+          provided = event.queryStringParameters.v || event.queryStringParameters.p;
         } else if (event.request && event.request.url) {
           const u = new URL(event.request.url);
-          const p = u.searchParams.get('p');
-          if (p) provided = p;
+          const v = u.searchParams.get('v') || u.searchParams.get('p');
+          if (v) provided = v;
         } else if (event.url) {
           const u = new URL(event.url);
-          const p = u.searchParams.get('p');
-          if (p) provided = p;
+          const v = u.searchParams.get('v') || u.searchParams.get('p');
+          if (v) provided = v;
         }
-      } catch (e) {
-        // ignore parse errors
       }
+    } catch (e) {
+      // ignore parse errors
     }
 
     if (!provided) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Unauthorized', reason: 'no_credential' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
 
-    // Site-level password fallback: if you set `NETLIFY_VIEW_PASSWORD` in
-    // Netlify env vars, accept that plain password (useful for quick fixes).
-    // Prefer DB-hash verification when possible.
+    // Site-level password fallback: if you set `NETLIFY_VIEW_PASSWORD` in Netlify
+    // env vars, accept that plain password (useful for quick fixes). Prefer
+    // DB-hash verification when possible.
     const sitePassword = process.env.NETLIFY_VIEW_PASSWORD;
-    // Optional masked logging for debugging in production. Enable by setting
-    // SHOW_AUTH_LOGS=1 in your Netlify env vars. Logs will show only masked
-    // lengths/flags and NOT the raw password.
     const showLogs = process.env.SHOW_AUTH_LOGS === '1';
     if (showLogs) {
       try {

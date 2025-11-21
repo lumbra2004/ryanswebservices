@@ -1,0 +1,3 @@
+[build]
+  # Ensure Netlify picks up functions from this folder
+  functions = "netlify/functions"
