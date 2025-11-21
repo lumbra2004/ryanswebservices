@@ -32,6 +32,10 @@ export default async (event, context) => {
   try {
     const sql = neon();
 
+    // Optional masked auth logging for debugging header/query delivery issues.
+    // Enable by setting SHOW_AUTH_LOGS=1 in your Netlify site env (or local .env).
+    const showLogs = (typeof process !== 'undefined' && (process.env.SHOW_AUTH_LOGS === '1' || process.env.SHOW_AUTH_LOGS === 'true'));
+
     // Get provided password from Authorization header (Bearer <token>)
     let provided = null;
     if (auth && typeof auth === 'string' && auth.startsWith('Bearer ')) {
@@ -43,8 +47,10 @@ export default async (event, context) => {
     // environments where headers aren't forwarded correctly.
     if (!provided) {
       try {
+        let providedFromQuery = false;
         if (event.queryStringParameters && (event.queryStringParameters.v || event.queryStringParameters.p)) {
           provided = event.queryStringParameters.v || event.queryStringParameters.p;
+          providedFromQuery = true;
         } else {
           // Edge-style or other runtime may include a full request URL
           const maybeUrl = event.rawUrl || (event.request && event.request.url);
@@ -52,6 +58,7 @@ export default async (event, context) => {
             try {
               const u = new URL(maybeUrl, 'http://localhost');
               provided = u.searchParams.get('v') || u.searchParams.get('p');
+              if (provided) providedFromQuery = true;
             } catch (e) {
               // ignore URL parse errors
             }
@@ -60,6 +67,26 @@ export default async (event, context) => {
       } catch (e) {
         // ignore any parsing errors and fall through to unauthorized
       }
+    }
+
+    // Masking helper -- removes Bearer prefix and hides most characters
+    function maskSecret(s) {
+      try {
+        if (!s) return '';
+        let raw = s;
+        if (raw.startsWith('Bearer ')) raw = raw.slice(7);
+        if (raw.length <= 4) return '****';
+        return '***' + raw.slice(-4);
+      } catch (e) { return '****'; }
+    }
+
+    if (showLogs) {
+      try {
+        const rawAuth = auth || null;
+        const authPresent = !!rawAuth;
+        const authMask = maskSecret(rawAuth || provided);
+        console.log('[auth-log] authPresent=', authPresent, 'authMask=', authMask, 'providedLen=', provided ? provided.length : 0);
+      } catch (e) {}
     }
 
     if (!provided) {
@@ -82,7 +109,11 @@ export default async (event, context) => {
     `;
     const isMatch = verify && verify[0] ? verify[0].match : false;
 
-    // No debug logs in production: proceed silently on auth check
+    if (showLogs) {
+      try {
+        console.log('[auth-log] db_verify_match=', !!isMatch);
+      } catch (e) {}
+    }
 
     if (!isMatch) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
