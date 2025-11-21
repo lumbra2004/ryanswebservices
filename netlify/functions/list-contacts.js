@@ -65,8 +65,20 @@ export default async (event, context) => {
     // Netlify env vars, accept that plain password (useful for quick fixes).
     // Prefer DB-hash verification when possible.
     const sitePassword = process.env.NETLIFY_VIEW_PASSWORD;
+    // Optional masked logging for debugging in production. Enable by setting
+    // SHOW_AUTH_LOGS=1 in your Netlify env vars. Logs will show only masked
+    // lengths/flags and NOT the raw password.
+    const showLogs = process.env.SHOW_AUTH_LOGS === '1';
+    if (showLogs) {
+      try {
+        const masked = provided ? (provided.length > 4 ? provided.slice(0,2) + '…' + provided.slice(-2) : '***') : '(none)';
+        console.log('[auth-log] provided_len=', provided ? provided.length : 0, 'masked=', masked);
+        console.log('[auth-log] sitePassword_present=', !!sitePassword);
+      } catch (e) {}
+    }
     if (sitePassword && provided === sitePassword) {
       const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
+      if (showLogs) console.log('[auth-log] auth_via_site_password=true');
       return new Response(JSON.stringify({ rows }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
 
@@ -83,6 +95,12 @@ export default async (event, context) => {
       LIMIT 1
     `;
     const isMatch = verify && verify[0] ? verify[0].match : false;
+
+    if (showLogs) {
+      try {
+        console.log('[auth-log] admin_row_exists=', !!(adminRow && adminRow.length), 'isMatch=', !!isMatch);
+      } catch (e) {}
+    }
 
     if (!isMatch) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
