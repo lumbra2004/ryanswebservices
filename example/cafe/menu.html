@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Menu — Example Cafe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/cafe/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Cafe</div>
+      <nav class="navlinks">
+        <a href="/example/cafe/index.html">Home</a>
+        <a href="/example/cafe/menu.html">Menu</a>
+        <a href="/example/cafe/about.html">About</a>
+        <a href="/example/cafe/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top:1.25rem">
+      <h1>Menu</h1>
+      <p class="small">Filter by category, search items, and tap any item for details. No online ordering — menu is for browsing and in-person ordering.</p>
+
+      <div class="menu-controls">
+        <div class="filters" id="filters"></div>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <input id="search" class="search" placeholder="Search the menu">
+        </div>
+      </div>
+
+      <div id="menu" class="menu-grid" style="margin-top:1rem"></div>
+    </section>
+  </main>
+
+  <footer class="footer"> 
+    <div class="container">© Example Cafe</div>
+  </footer>
+
+  <script>
+    // Much bigger, fancier menu data
+    const MENU = [
+      {id:3,category:'Brunch',title:'Avocado Toast',price:9.5,desc:'Sourdough, smashed avocado, chili, lemon, olive oil.',img:'images/avacadotoast.jpg',tags:['VG'],pop:92,cal:420},
+    {id:8,category:'Brunch',title:'Ricotta Pancakes',price:13.0,desc:'Fluffy pancakes, ricotta, lemon curd, toasted hazelnuts.',img:'images/pancakes.jpg',tags:['Nuts'],pop:82,cal:760},
+      {id:9,category:'Small Plates',title:'Heirloom Tomato Salad',price:11.5,desc:'Heirloom tomatoes, basil, burrata, aged olive oil.',img:'images/tomsalad.jpg',tags:['V','GF'],pop:83,cal:260},
+      {id:10,category:'Mains',title:'Seared Salmon',price:22.0,desc:'Pan-seared salmon, charred broccolini, lemon-herb butter.',img:'images/searedsalmon.jpg',tags:['GF'],pop:90,cal:640},
+      {id:13,category:'Drinks',title:'Nitro Cold Brew',price:6.5,desc:'Slow-steeped cold brew infused with nitrogen.',img:'images/nitrocold.jpg',tags:['GF'],pop:80,cal:10},
+      {id:14,category:'Dessert',title:'Chocolate Fondant',price:9.0,desc:'Molten chocolate cake, vanilla ice cream.',img:'images/chocolatefond.avif',tags:[],pop:85,cal:560},
+      {id:15,category:'Drinks',title:'Matcha Latte',price:5.5,desc:'Ceremonial matcha, steamed milk.',img:'images/matchalatte.jpg',tags:['V'],pop:77,cal:180},
+      {id:16,category:'Small Plates',title:'Truffle Fries',price:8.5,desc:'Crisp fries, truffle oil, parmesan.',img:'images/trufflefries.jpg',tags:[],pop:79,cal:520},
+    ];
+
+    const categories = ['All',...Array.from(new Set(MENU.map(m=>m.category)))];
+    const filtersEl = document.getElementById('filters');
+    const menuEl = document.getElementById('menu');
+    const searchEl = document.getElementById('search');
+
+    function renderFilters(){
+      filtersEl.innerHTML = '';
+      categories.forEach(cat=>{
+        const btn = document.createElement('button'); btn.className='chip'+(cat==='All'? ' active':''); btn.textContent=cat;
+        btn.addEventListener('click', ()=>{ document.querySelectorAll('#filters .chip').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); renderMenu(); });
+        filtersEl.appendChild(btn);
+      });
+    }
+
+    function renderMenu(){
+      const active = document.querySelector('#filters .chip.active')?.textContent || 'All';
+      const q = (searchEl.value||'').toLowerCase().trim();
+      let items = MENU.filter(it=> (active==='All' || it.category===active) && (it.title.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q)) );
+      // default sort by popularity
+      items.sort((a,b)=>b.pop-a.pop);
+      menuEl.innerHTML = '';
+      items.forEach(it=>{
+        const el = document.createElement('div'); el.className='menu-item card';
+        const badges = (it.tags||[]).map(t=>`<span class="badge">${t}</span>`).join('');
+        const hot = it.pop>85? '<span class="badge hot">Popular</span>':'';
+        el.innerHTML = `<img src="${it.img}" alt="${it.title}"><div class="menu-meta"><h4>${it.title} <span class="price">$${it.price.toFixed(2)}</span></h4><div style="margin:.4rem 0">${badges}${hot}</div><p>${it.desc}</p></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem"><div class="small" style="color:var(--muted)">${it.cal} cal</div></div>`;
+        el.querySelector('.menu-meta').addEventListener('click', e=> showDetail(it));
+        menuEl.appendChild(el);
+      });
+    }
+
+    function showDetail(item){
+      const modal = document.createElement('div'); modal.style.position='fixed'; modal.style.inset=0; modal.style.display='flex'; modal.style.alignItems='center'; modal.style.justifyContent='center'; modal.style.background='rgba(0,0,0,0.5)';
+      modal.innerHTML = `<div class="modal-card"><div style="display:flex;gap:1rem"><img class="detail-img" src="${item.img}" alt="${item.title}"><div style="flex:1"><h3 style="margin:0">${item.title} <span style="color:var(--accent);font-weight:800">$${item.price.toFixed(2)}</span></h3><p class="small" style="margin:.2rem 0">${item.category} • ${item.cal} cal</p><div style="margin-top:.6rem"><div>${(item.tags||[]).map(t=>`<span class='badge'>${t}</span>`).join('')}</div><p style="margin-top:.6rem">${item.desc}</p><div style="margin-top:1rem"><button class="cta">Order In-Person</button> <button id="close" style="margin-left:.6rem;padding:.5rem 1rem;border-radius:8px;border:1px solid #eee;background:#fff">Close</button></div></div></div></div></div>`;
+      modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+      modal.querySelector('#close').addEventListener('click', ()=> modal.remove());
+      document.body.appendChild(modal);
+    }
+
+    renderFilters(); renderMenu();
+    searchEl.addEventListener('input', renderMenu);
+  </script>
+</body>
+</html>

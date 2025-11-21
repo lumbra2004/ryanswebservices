@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gallery — Example Landscaping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/landscaping/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Landscaping</div>
+      <nav class="navlinks">
+        <a href="/example/landscaping/index.html">Home</a>
+        <a href="/example/landscaping/services.html">Services</a>
+        <a href="/example/landscaping/gallery.html">Gallery</a>
+        <a href="/example/landscaping/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:2rem">
+    <h1 style="margin-top:0">Project Gallery</h1>
+    <p style="color:var(--muted)">A selection of recent projects showing design and implementation.</p>
+
+    <div class="gallery" style="margin-top:1rem">
+      <img src="images/image1.jpg" alt="1">
+      <img src="images/image2.jpg" alt="2">
+      <img src="images/image3.jpg" alt="3">
+      <img src="images/image4.jpg" alt="4">
+      <img src="images/image5.jpg" alt="5">
+      <img src="images/image6.jpg" alt="6">
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> Example Landscaping</div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

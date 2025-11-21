@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact — Example Cafe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/cafe/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Cafe</div>
+      <nav class="navlinks">
+        <a href="/example/cafe/index.html">Home</a>
+        <a href="/example/cafe/menu.html">Menu</a>
+        <a href="/example/cafe/about.html">About</a>
+        <a href="/example/cafe/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding:1.25rem 0">
+    <section>
+      <h1>Contact & Reservations</h1>
+      <div class="grid-two" style="margin-top:1rem">
+        <div>
+          <div class="card">
+            <h3 style="margin-top:0">Get in touch</h3>
+            <p class="small">Call or visit to reserve a table. For larger groups or events, email us and we'll follow up.</p>
+            <p class="small"><strong>Phone:</strong> (555) 555-0199<br><strong>Email:</strong> hello@examplecafe.com</p>
+          </div>
+
+          <div class="card" style="margin-top:1rem">
+            <h4 style="margin:0">Request a Reservation</h4>
+            <form id="resForm" onsubmit="return false" style="margin-top:.6rem">
+              <input class="search" id="name" placeholder="Name" required style="margin-bottom:.5rem">
+              <input class="search" id="phone" placeholder="Phone or email" required style="margin-bottom:.5rem">
+              <input class="search" id="date" placeholder="Date & time">
+              <div style="margin-top:.6rem"><button class="cta" id="resBtn">Request</button></div>
+            </form>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h4 style="margin:0">Location</h4>
+            <p class="small" style="margin:.4rem 0">123 Example St, Example City</p>
+            <div style="height:180px;background:#eee;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)">Map Placeholder</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© Example Cafe</div>
+  </footer>
+
+  <script>
+    document.getElementById('resBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if(!name||!phone){ alert('Please enter name and contact'); return }
+      alert('Thanks — we received your reservation request.');
+      document.getElementById('resForm').reset();
+    });
+  </script>
+</body>
+</html>

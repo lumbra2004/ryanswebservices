@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Services — Example Landscaping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/landscaping/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Landscaping</div>
+      <nav class="navlinks">
+        <a href="/example/landscaping/index.html">Home</a>
+        <a href="/example/landscaping/services.html">Services</a>
+        <a href="/example/landscaping/gallery.html">Gallery</a>
+        <a href="/example/landscaping/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:2rem">
+    <h1 style="margin-top:0">Services</h1>
+    <p style="color:var(--muted)">Comprehensive landscaping services tailored to your property.</p>
+
+    <section style="margin-top:1rem" class="services-list">
+      <div class="card">
+        <h3>Maintenance Plans</h3>
+        <p style="color:var(--muted)">Weekly or bi-weekly care, seasonal cleanups, and fertilization.</p>
+      </div>
+      <div class="card">
+        <h3>Landscape Design</h3>
+        <p style="color:var(--muted)">Custom planting plans and design consultations.</p>
+      </div>
+      <div class="card">
+        <h3>Hardscaping</h3>
+        <p style="color:var(--muted)">Patios, walkways, retaining walls, and outdoor living spaces.</p>
+      </div>
+      <div class="card">
+        <h3>Irrigation</h3>
+        <p style="color:var(--muted)">Efficient irrigation systems and winterization services.</p>
+      </div>
+    </section>
+
+    <section style="margin-top:1.5rem">
+      <h2>How it works</h2>
+      <ol style="color:var(--muted)">
+        <li>Schedule a site visit or send photos.</li>
+        <li>We provide a clear scope and estimate.</li>
+        <li>Approve the plan and schedule the work.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> Example Landscaping</div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

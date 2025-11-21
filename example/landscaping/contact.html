@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact — Example Landscaping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/landscaping/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Landscaping</div>
+      <nav class="navlinks">
+        <a href="/example/landscaping/index.html">Home</a>
+        <a href="/example/landscaping/services.html">Services</a>
+        <a href="/example/landscaping/gallery.html">Gallery</a>
+        <a href="/example/landscaping/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top:2rem;max-width:900px">
+    <h1 style="margin-top:0">Contact & Request Estimate</h1>
+    <p style="color:var(--muted)">Use the form below to request an estimate or schedule a consultation.</p>
+
+    <div class="card" style="margin-top:1rem">
+      <form id="contactForm" onsubmit="return false">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+          <input id="name" placeholder="Full name" required style="padding:.7rem;border-radius:8px;border:1px solid #e6efe9">
+          <input id="email" placeholder="Email or phone" required style="padding:.7rem;border-radius:8px;border:1px solid #e6efe9">
+        </div>
+        <div style="margin-top:.8rem">
+          <label for="service" style="display:block;margin-bottom:.4rem;color:var(--muted)">Service</label>
+          <select id="service" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #e6efe9">
+            <option>Maintenance</option>
+            <option>Design</option>
+            <option>Hardscaping</option>
+            <option>Irrigation</option>
+          </select>
+        </div>
+        <div style="margin-top:.8rem">
+          <label for="details" style="display:block;margin-bottom:.4rem;color:var(--muted)">Project details</label>
+          <textarea id="details" rows="6" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #e6efe9"></textarea>
+        </div>
+        <div style="margin-top:.8rem;display:flex;gap:.6rem;align-items:center">
+          <button class="cta" id="sendBtn">Send Request</button>
+          <div id="contactStatus" style="color:var(--muted)"></div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> Example Landscaping</div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('sendBtn').addEventListener('click', function(){
+      const name = document.getElementById('name').value.trim();
+      const contact = document.getElementById('email').value.trim();
+      if(!name || !contact){ alert('Please provide name and contact'); return }
+      document.getElementById('contactStatus').textContent = 'Request sent — we will contact you soon.';
+      document.getElementById('contactForm').reset();
+    })
+  </script>
+</body>
+</html>

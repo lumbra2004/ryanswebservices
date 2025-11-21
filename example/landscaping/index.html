@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Example Landscaping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/landscaping/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Landscaping</div>
+      <nav class="navlinks">
+        <a href="/example/landscaping/index.html">Home</a>
+        <a href="/example/landscaping/services.html">Services</a>
+        <a href="/example/landscaping/gallery.html">Gallery</a>
+        <a href="/example/landscaping/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1>Beautiful yards. Professional care.</h1>
+        <p>Example Landscaping provides seasonal maintenance, landscape design, and hardscaping. Modern service, sustainable practices, and great communication.</p>
+        <div style="margin-top:1rem"><a class="cta" href="contact.html">Request an Estimate</a></div>
+      </div>
+      <div style="margin-left:auto;max-width:420px">
+        <div class="card">
+          <strong>Get a free estimate</strong>
+          <p style="color:var(--muted);margin:.5rem 0">Tell us a bit about your project and we'll follow up within one business day.</p>
+          <form id="quick-contact" onsubmit="return false">
+            <input id="qname" placeholder="Your name" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #e6efe9;margin-bottom:.6rem">
+            <input id="qphone" placeholder="Phone or email" style="width:100%;padding:.6rem;border-radius:8px;border:1px solid #e6efe9;margin-bottom:.6rem">
+            <button class="cta" id="quickBtn">Request</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section style="margin-top:1.5rem;display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1">
+        <div class="card">
+          <h2 style="margin-top:0">Our Approach</h2>
+          <p style="color:var(--muted)">We blend practical horticulture with clean design. From weekly maintenance to full property transformations, our team handles projects with care and transparency.</p>
+          <div class="grid" style="margin-top:1rem">
+            <div class="card"><strong>Maintenance</strong><p style="color:var(--muted);margin-top:.4rem">Mowing, trimming, seasonal cleanup.</p></div>
+            <div class="card"><strong>Design</strong><p style="color:var(--muted);margin-top:.4rem">Planting plans, softscape design.</p></div>
+            <div class="card"><strong>Hardscaping</strong><p style="color:var(--muted);margin-top:.4rem">Patios, paths, and retaining walls.</p></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1rem">
+          <h3 style="margin-top:0">Why clients choose us</h3>
+          <ul style="color:var(--muted);margin:0;padding-left:1.05rem">
+            <li>Transparent pricing & clear scopes</li>
+            <li>Experienced professionals</li>
+            <li>Sustainable plant choices</li>
+            <li>On-time, on-budget delivery</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:1rem">
+          <h3 style="margin-top:0">Latest Projects</h3>
+          <div class="gallery">
+            <img src="images/image1.jpg" alt="project1">
+            <img src="images/image2.jpg" alt="project2">
+            <img src="images/image3.jpg" alt="project3">
+          </div>
+        </div>
+      </div>
+
+      <aside style="width:360px">
+        <div class="card">
+          <h4 style="margin:0">Contact</h4>
+          <p style="color:var(--muted);margin:.4rem 0">Phone: <strong>(555) 555-0123</strong></p>
+          <p style="color:var(--muted);margin:.4rem 0">Serving Example City & surrounding areas</p>
+          <a class="cta" href="contact.html">Request Estimate</a>
+        </div>
+
+        <div class="card" style="margin-top:1rem">
+          <h4 style="margin:0">Reviews</h4>
+          <div style="color:var(--muted);margin-top:.6rem">"Transformed our backyard — professional and timely." — Alex P.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section style="margin-top:1.5rem">
+      <h2>Testimonials</h2>
+      <div class="testimonials">
+        <div class="card">"Great attention to detail."<div style="color:var(--muted);margin-top:.6rem">— Robin</div></div>
+        <div class="card">"Thoughtful design and fast crew."<div style="color:var(--muted);margin-top:.6rem">— Sam</div></div>
+        <div class="card">"Our yard looks brand new."<div style="color:var(--muted);margin-top:.6rem">— Jamie</div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> Example Landscaping — Built as a demo</div>
+  </footer>
+
+  <script>
+    (function(){
+      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById('quickBtn').addEventListener('click', function(){
+        const name = document.getElementById('qname').value.trim();
+        const contact = document.getElementById('qphone').value.trim();
+        if(!name || !contact){ alert('Please enter your name and contact'); return }
+        alert('Thanks — we will reach out about your estimate.');
+        document.getElementById('qname').value=''; document.getElementById('qphone').value='';
+      });
+
+      // Parallax enhancement: subtle translate of hero content on scroll
+      // Enabled only for non-touch devices on wider screens to avoid mobile performance issues.
+      const hero = document.querySelector('.hero');
+      const heroInner = document.querySelector('.hero-inner');
+      let enabled = false;
+      let ticking = false;
+
+      function canEnableParallax(){
+        return !('ontouchstart' in window) && window.innerWidth > 900;
+      }
+
+      function onScroll(){
+        if(!enabled) return;
+        if(!ticking){
+          window.requestAnimationFrame(function(){
+            const y = window.scrollY || window.pageYOffset;
+            const translate = Math.min(120, y * 0.12);
+            if(heroInner) heroInner.style.transform = `translateY(${translate}px)`;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      function enable(){
+        if(!hero || !heroInner) return;
+        if(enabled) return;
+        enabled = true;
+        heroInner.style.willChange = 'transform';
+        window.addEventListener('scroll', onScroll, {passive:true});
+        onScroll();
+      }
+
+      function disable(){
+        if(!enabled) return;
+        enabled = false;
+        window.removeEventListener('scroll', onScroll);
+        if(heroInner) heroInner.style.transform = '';
+        if(heroInner) heroInner.style.willChange = '';
+        // nothing to reset for background element
+      }
+
+      function update(){
+        if(canEnableParallax()) enable(); else disable();
+      }
+
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

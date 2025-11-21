@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Example Cafe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/example/cafe/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">Example Cafe</div>
+      <nav class="navlinks">
+        <a href="/example/cafe/index.html">Home</a>
+        <a href="/example/cafe/menu.html">Menu</a>
+        <a href="/example/cafe/about.html">About</a>
+        <a href="/example/cafe/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Fresh. Local. Delicious.</h1>
+        <p>Modern cafe serving seasonal small plates, house-roasted coffee, and thoughtfully crafted drinks. No online ordering — we focus on in-person hospitality.</p>
+        <div style="margin-top:1rem">
+          <a class="cta" href="menu.html">Explore the Menu</a>
+          <a class="cta" href="contact.html" style="background:#fff;color:var(--accent);margin-left:.6rem;padding:.6rem 1rem;border:1px solid rgba(0,0,0,0.06)">Book a Table</a>
+        </div>
+      </div>
+
+      <aside style="margin-left:auto;max-width:420px">
+        <div class="card">
+          <strong>Hours</strong>
+          <p class="small" style="margin:.4rem 0">Mon–Fri: 7am–4pm<br>Sat–Sun: 8am–5pm</p>
+          <strong style="display:block;margin-top:.6rem">Location</strong>
+          <p class="small">123 Example St, Example City</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="features">
+      <div class="card"><strong>Seasonal Produce</strong><p class="small">Menus that change with the harvest.</p></div>
+      <div class="card"><strong>House Roasts</strong><p class="small">Coffee roasted weekly on-site.</p></div>
+      <div class="card"><strong>Community Focus</strong><p class="small">Local suppliers & sustainable practices.</p></div>
+    </section>
+
+    <section style="margin-top:1.5rem" class="grid-two">
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Chef's Notes</h3>
+          <p class="small">We aim for approachable dishes with bold flavors — small plates designed for sharing or a light meal.</p>
+        </div>
+
+        <div class="card" style="margin-top:1rem">
+          <h3 style="margin-top:0">Community Events</h3>
+          <p class="small">Weekly tastings, local artist nights, and seasonal pop-ups. Sign up in person or via our contact page.</p>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h4 style="margin:0">Newsletter</h4>
+          <p class="small" style="margin:.5rem 0">Get seasonal updates and event invites.</p>
+          <input class="search" placeholder="Your email">
+          <div style="margin-top:.6rem"><a class="cta" href="#">Subscribe</a></div>
+        </div>
+      </aside>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> Example Cafe — Demo</div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
