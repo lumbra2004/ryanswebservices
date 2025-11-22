@@ -59,13 +59,22 @@
   </footer>
 
   <script>
-    document.getElementById('resBtn').addEventListener('click', ()=>{
+    async function sendReservation(){
       const name = document.getElementById('name').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const date = document.getElementById('date').value.trim();
       if(!name||!phone){ alert('Please enter name and contact'); return }
-      alert('Thanks — we received your reservation request.');
-      document.getElementById('resForm').reset();
-    });
+      try{
+        const res = await fetch('/.netlify/functions/send-email',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ name, contact: phone, service: 'Reservation', details: date, source:'Cafe Reservation' })
+        });
+        if(!res.ok){ const t = await res.text(); throw new Error(t||res.statusText) }
+        alert('Thanks — we received your reservation request.');
+        document.getElementById('resForm').reset();
+      }catch(err){ console.error(err); alert('Could not send reservation — please try again later.'); }
+    }
+    document.getElementById('resBtn').addEventListener('click', sendReservation);
   </script>
   <script>
     (function(){

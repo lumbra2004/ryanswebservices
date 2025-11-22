@@ -58,13 +58,27 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('sendBtn').addEventListener('click', function(){
+    async function sendContact(){
       const name = document.getElementById('name').value.trim();
       const contact = document.getElementById('email').value.trim();
+      const service = document.getElementById('service').value;
+      const details = document.getElementById('details').value.trim();
       if(!name || !contact){ alert('Please provide name and contact'); return }
-      document.getElementById('contactStatus').textContent = 'Request sent — we will contact you soon.';
-      document.getElementById('contactForm').reset();
-    })
+      try{
+        const res = await fetch('/.netlify/functions/send-email', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ name, contact, service, details, source:'Landscaping Contact' })
+        });
+        if(!res.ok){ const text = await res.text(); throw new Error(text||res.statusText) }
+        document.getElementById('contactStatus').textContent = 'Request sent — we will contact you soon.';
+        document.getElementById('contactForm').reset();
+      }catch(err){
+        console.error(err);
+        alert('Could not send request right now. Please try again later.');
+      }
+    }
+    document.getElementById('sendBtn').addEventListener('click', sendContact);
   </script>
   <script>
     (function(){

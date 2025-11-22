@@ -293,52 +293,62 @@
 
     <section id="contact">
         <h2>Contact Me</h2>
-        <form id="contactForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" rows="5" placeholder="How can I help your business?" required></textarea>
-            <button type="submit">Send Message</button>
-            <div id="formStatus" style="margin-top:1em;"></div>
-        </form>
-        <script>
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const form = e.target;
-            const statusDiv = document.getElementById('formStatus');
-            statusDiv.textContent = '';
-            const data = {
-                name: form.name.value,
-                email: form.email.value,
-                message: form.message.value
-            };
-            try {
-                console.log('Submitting contact form, payload:', data);
-                const response = await fetch('/.netlify/functions/submit-contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                console.log('Fetch response status:', response.status);
-                const result = await response.json();
-                console.log('Response JSON:', result);
-                if (result.success) {
-                    statusDiv.style.color = 'green';
-                    statusDiv.textContent = 'Message sent! Thank you.';
-                    form.reset();
-                } else {
-                    statusDiv.style.color = 'red';
-                    statusDiv.textContent = result.error || 'Something went wrong.';
-                    if (result.received) {
-                        console.log('Server received:', result.received);
-                    }
-                }
-            } catch (err) {
-                console.error('Fetch error:', err);
-                statusDiv.style.color = 'red';
-                statusDiv.textContent = 'Network error. Please try again.';
-            }
-        });
-        </script>
+
+        <form id="contactForm" class="gform pure-form pure-form-stacked" method="POST" data-email="ryanlumbra@icloud.com"
+  action="https://script.google.com/macros/s/AKfycbzpMxq6Rxh50nHKH5BNa7vPp6b5fNfKgZGKxmJ1J_Ihd7irVz6EL2zLcqIlbqhitpu3/exec">
+    <!-- change the form action to your script url -->
+
+    <div class="form-elements">
+      <fieldset class="pure-group">
+        <label for="name">Name: </label>
+        <input id="name" name="name" placeholder="What your Mom calls you" />
+      </fieldset>
+
+      <fieldset class="pure-group">
+        <label for="message">Message: </label>
+        <textarea id="message" name="message" rows="10"
+        placeholder="Tell us what's on your mind..."></textarea>
+      </fieldset>
+
+      <fieldset class="pure-group">
+        <label for="email"><em>Your</em> Email Address:</label>
+        <input id="email" name="email" type="email" value=""
+        required placeholder="your.name@email.com"/>
+      </fieldset>
+
+      <fieldset class="pure-group">
+        <label for="color">Favourite Color: </label>
+        <input id="color" name="color" placeholder="green" />
+      </fieldset>
+
+      <fieldset class="pure-group honeypot-field">
+        <label for="honeypot">To help avoid spam, utilize a Honeypot technique with a hidden text field; must be empty to submit the form! Otherwise, we assume the user is a spam bot.</label>
+        <input id="honeypot" type="text" name="honeypot" value="" />
+      </fieldset>
+
+      <button class="button-success pure-button button-xlarge">
+        <i class="fa fa-paper-plane"></i>&nbsp;Send</button>
+    </div>
+
+    <!-- Customise the Thankyou Message People See when they submit the form: -->
+    <div class="thankyou_message" style="display:none;">
+      <h2><em>Thanks</em> for contacting me!
+        I will get back to you soon!</h2>
+    </div>
+
+  </form>
+
+  <!-- Submit the Form to Google Using "AJAX" -->
+  <script data-cfasync="false" src="form-submission-handler.js"></script>
+<!-- END -->
+
+
+
+
+
+
+
+
     </section>
 
     <footer>
