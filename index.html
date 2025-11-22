@@ -14,7 +14,7 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RYANS WEBSERVICES | Professional Web Design for Small Businesses</title>
+    <title>Ryan's Webservices | Professional Web Design for Small Businesses</title>
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
@@ -260,6 +260,32 @@
             line-height: 1.7;
             font-size: 1rem;
         }
+        
+        /* Service card slide-in animation */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .service-card {
+            opacity: 0;
+        }
+        
+        .service-card.animate {
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .service-card.animate:nth-child(1) { animation-delay: 0.1s; }
+        .service-card.animate:nth-child(2) { animation-delay: 0.2s; }
+        .service-card.animate:nth-child(3) { animation-delay: 0.3s; }
+        .service-card.animate:nth-child(4) { animation-delay: 0.4s; }
+        .service-card.animate:nth-child(5) { animation-delay: 0.5s; }
         
         /* Portfolio/Examples Section */
         .portfolio-grid {
@@ -521,6 +547,47 @@
                 font-size: 1rem;
             }
             
+            /* Collapsible sections on mobile */
+            .section-header {
+                cursor: pointer;
+                position: relative;
+                padding: 1rem;
+                margin: -1rem -1rem 2rem -1rem;
+                border-radius: 12px;
+                transition: background 0.3s ease;
+            }
+            
+            .section-header:hover {
+                background: rgba(0, 102, 255, 0.05);
+            }
+            
+            .section-header::after {
+                content: '\25BC';
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1rem;
+                color: var(--primary);
+                transition: transform 0.3s ease;
+            }
+            
+            .section-header.collapsed::after {
+                transform: translateY(-50%) rotate(-90deg);
+            }
+            
+            .services-grid,
+            .portfolio-grid {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .services-grid.expanded,
+            .portfolio-grid.expanded {
+                max-height: 5000px;
+            }
+            
             .service-card,
             .portfolio-item {
                 -webkit-tap-highlight-color: transparent;
@@ -655,7 +722,7 @@
     <!-- Services Section -->
     <section id="services">
         <div class="section-header">
-            <h2 class="section-title">What I Do</h2>
+            <h2 class="section-title">Services I Offer</h2>
             <p class="section-subtitle">Comprehensive web services designed to help your business succeed online</p>
         </div>
         
@@ -682,6 +749,12 @@
                 <div class="service-icon">💎</div>
                 <h3>Fair Pricing</h3>
                 <p>Professional quality at prices small businesses can afford. No hidden fees, no surprises - just honest, transparent pricing.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📧</div>
+                <h3>Custom Email Setup</h3>
+                <p>Professional branded email addresses for your business (you@yourbusiness.com). Build credibility and trust with custom email that matches your domain.</p>
             </div>
         </div>
     </section>
@@ -776,6 +849,68 @@
             <p><strong>Privacy Policy:</strong> Your information is secure and will only be used to respond to your inquiry. We operate solely within the United States and do not share your personal information with third parties. By submitting this form, you consent to us contacting you regarding your business needs.</p>
         </div>
     </section>
+
+    <script>
+        // Intersection Observer for scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // Mobile collapsible sections
+        function initMobileCollapse() {
+            if (window.innerWidth <= 639) {
+                const servicesHeader = document.querySelector('#services .section-header');
+                const portfolioHeader = document.querySelector('#portfolio .section-header');
+                const servicesGrid = document.querySelector('.services-grid');
+                const portfolioGrid = document.querySelector('.portfolio-grid');
+                
+                // Start collapsed
+                servicesHeader.classList.add('collapsed');
+                portfolioHeader.classList.add('collapsed');
+                
+                // Toggle services section
+                servicesHeader.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                    servicesGrid.classList.toggle('expanded');
+                });
+                
+                // Toggle portfolio section
+                portfolioHeader.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                    portfolioGrid.classList.toggle('expanded');
+                });
+            }
+        }
+        
+        // Initialize on load and resize
+        initMobileCollapse();
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 639) {
+                // Remove collapsed state on larger screens
+                document.querySelectorAll('.section-header').forEach(header => {
+                    header.classList.remove('collapsed');
+                });
+                document.querySelectorAll('.services-grid, .portfolio-grid').forEach(grid => {
+                    grid.classList.add('expanded');
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
