@@ -9,11 +9,17 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:400,700&display=swap" rel="stylesheet">
     <style>
+        /* Mobile-first base styles */
+        * {
+            box-sizing: border-box;
+        }
+        
         .hero-bg {
             position: relative;
             width: 100vw;
-            min-height: 55vh;
-            background: linear-gradient(90deg, rgba(45,62,80,0.7) 0%, rgba(79,140,255,0.5) 100%), url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+            min-height: 60vh;
+            background: linear-gradient(135deg, rgba(45,62,80,0.85) 0%, rgba(79,140,255,0.6) 100%), url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            background-attachment: scroll;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -25,41 +31,52 @@
             z-index: 2;
             color: #fff;
             text-align: center;
-            padding: 4rem 2rem 3rem 2rem;
+            padding: 2.5rem 1.5rem 2rem;
             width: 100%;
+            max-width: 1200px;
         }
         .hero-content h1 {
-            font-size: 3.2rem;
+            font-size: 2rem;
             font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            margin-bottom: 1rem;
-            letter-spacing: 1.5px;
-            text-shadow: 0 4px 24px rgba(45,62,80,0.25);
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+            text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            line-height: 1.2;
         }
         .hero-content p {
-            font-size: 1.35rem;
+            font-size: 1.1rem;
             opacity: 0.97;
-            margin-bottom: 2.2rem;
-            text-shadow: 0 2px 12px rgba(45,62,80,0.18);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            line-height: 1.5;
         }
         .hero-nav {
-            margin-top: 1.2rem;
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
         }
         .hero-nav a {
             color: #fff;
-            margin: 0 1.2rem;
             text-decoration: none;
             font-weight: 700;
             font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
             letter-spacing: 0.5px;
-            font-size: 1.05rem;
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            transition: background 0.2s, color 0.2s;
-            background: rgba(45,62,80,0.18);
+            font-size: 0.95rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .hero-nav a:hover {
+        .hero-nav a:hover,
+        .hero-nav a:active {
             background: #fff;
             color: #4f8cff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         header {
             display: none;
@@ -67,9 +84,13 @@
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
-            color: #222;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: #1a202c;
             min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         header {
             background: linear-gradient(90deg, #2d3e50 0%, #4f8cff 100%);
@@ -112,52 +133,107 @@
         }
         section {
             max-width: 950px;
-            margin: 2.5rem auto;
-            background: rgba(255,255,255,0.85);
-            border-radius: 18px;
-            box-shadow: 0 4px 32px rgba(79,140,255,0.07);
-            padding: 2.5rem 2rem;
-            backdrop-filter: blur(2px);
-            animation: fadeInUp 0.8s cubic-bezier(.39,.575,.56,1.000);
+            margin: 1.5rem auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(79,140,255,0.08), 0 2px 8px rgba(0,0,0,0.04);
+            padding: 2rem 1.25rem;
+            border: 1px solid rgba(255,255,255,0.8);
+            animation: fadeInUp 0.6s cubic-bezier(.39,.575,.56,1.000);
+        }
+        section h2 {
+            color: #2d3e50;
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f8cff, #7ba3ff);
+            border-radius: 2px;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .services, .portfolio, .testimonials {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
         }
         .service, .project, .testimonial {
-            flex: 1 1 250px;
-            background: rgba(255,255,255,0.7);
-            border-radius: 14px;
-            padding: 1.7rem 1.2rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 16px rgba(79,140,255,0.08);
-            transition: transform 0.18s, box-shadow 0.18s;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+            border-radius: 16px;
+            padding: 1.75rem 1.5rem;
+            box-shadow: 0 4px 16px rgba(79,140,255,0.06), 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(79,140,255,0.08);
+            position: relative;
+            overflow: hidden;
         }
-        .service:hover, .project:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 8px 32px rgba(79,140,255,0.13);
+        .service::before, .project::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f8cff, #7ba3ff);
+            transform: scaleX(0);
+            transition: transform 0.35s ease;
+        }
+        .service:hover, .project:hover,
+        .service:active, .project:active {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(79,140,255,0.12), 0 4px 8px rgba(0,0,0,0.04);
+            border-color: rgba(79,140,255,0.2);
+        }
+        .service:hover::before, .project:hover::before {
+            transform: scaleX(1);
         }
         .service h3, .project h3 {
             margin-top: 0;
+            margin-bottom: 0.75rem;
             font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            color: #4f8cff;
+            color: #2d3e50;
+            font-size: 1.3rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+        .service p, .project p {
+            color: #4a5568;
+            line-height: 1.7;
+            margin: 0;
         }
         .portfolio img {
             width: 100%;
-            border-radius: 8px;
-            margin-bottom: 0.7rem;
-            box-shadow: 0 2px 12px rgba(79,140,255,0.10);
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 16px rgba(79,140,255,0.12);
+            display: block;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .project:hover img {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(79,140,255,0.18);
+        }
+        .project a {
+            text-decoration: none;
+            color: inherit;
         }
         .testimonial {
             font-style: italic;
-            background: rgba(79,140,255,0.07);
-            border-left: 4px solid #4f8cff;
+            background: linear-gradient(135deg, rgba(79,140,255,0.06), rgba(123,163,255,0.04));
+            border-left: 5px solid #4f8cff;
+            color: #4a5568;
         }
         .testimonial strong {
             display: block;
@@ -170,61 +246,158 @@
             flex-direction: column;
             gap: 1rem;
         }
+        fieldset {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2d3e50;
+            font-size: 0.95rem;
+        }
         input, textarea {
-            padding: 0.85rem;
-            border: 1.5px solid #b6c6e3;
-            border-radius: 6px;
-            font-size: 1.05rem;
-            background: rgba(255,255,255,0.95);
-            transition: border 0.2s;
+            width: 100%;
+            padding: 0.95rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #ffffff;
+            transition: all 0.3s ease;
         }
         input:focus, textarea:focus {
-            border: 1.5px solid #4f8cff;
+            border: 2px solid #4f8cff;
             outline: none;
+            box-shadow: 0 0 0 4px rgba(79,140,255,0.12);
+            background: #ffffff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
         }
         button {
-            background: linear-gradient(90deg, #4f8cff 0%, #2d3e50 100%);
+            background: linear-gradient(135deg, #4f8cff 0%, #3a7bd5 100%);
             color: #fff;
             border: none;
-            padding: 0.85rem 1.7rem;
-            border-radius: 6px;
-            font-size: 1.08rem;
+            padding: 1.1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
             font-weight: 700;
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
             cursor: pointer;
-            transition: background 0.2s, transform 0.15s;
-            box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(79,140,255,0.25);
+            min-height: 48px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
-        button:hover {
-            background: linear-gradient(90deg, #2d3e50 0%, #4f8cff 100%);
-            transform: translateY(-2px) scale(1.04);
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        button:hover,
+        button:active {
+            background: linear-gradient(135deg, #3a7bd5 0%, #2d5eb5 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(79,140,255,0.35);
+        }
+        button:active {
+            transform: translateY(-1px);
         }
         footer {
             text-align: center;
-            padding: 1.7rem 0;
-            background: linear-gradient(90deg, #2d3e50 0%, #4f8cff 100%);
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, #2d3e50 0%, #4f8cff 100%);
             color: #fff;
             margin-top: 2.5rem;
-            border-top-left-radius: 32px;
-            border-top-right-radius: 32px;
-            font-size: 1.05rem;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            font-size: 0.95rem;
             letter-spacing: 0.5px;
         }
-        @media (max-width: 900px) {
+        /* Honeypot anti-spam field - hidden */
+        .honeypot-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        
+        .thankyou_message {
+            background: linear-gradient(135deg, #4f8cff 0%, #3a7bd5 100%);
+            color: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(79,140,255,0.25);
+            margin-top: 1.5rem;
+        }
+        .thankyou_message h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .thankyou_message h2::after {
+            display: none;
+        }
+        
+        /* Tablet and up */
+        @media (min-width: 600px) {
+            .hero-content h1 {
+                font-size: 2.75rem;
+            }
+            .hero-content p {
+                font-size: 1.25rem;
+            }
+            .hero-nav a {
+                font-size: 1rem;
+            }
+            .services, .portfolio {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
             section {
-                padding: 1.5rem 0.5rem;
+                padding: 2.5rem 2rem;
+                margin: 2rem auto;
+            }
+            button {
+                width: auto;
+                min-width: 200px;
             }
         }
-        @media (max-width: 700px) {
-            .services, .portfolio, .testimonials {
-                flex-direction: column;
+        
+        /* Desktop */
+        @media (min-width: 900px) {
+            .hero-bg {
+                background-attachment: fixed;
             }
-            header {
-                border-bottom-left-radius: 18px;
-                border-bottom-right-radius: 18px;
+            .hero-content h1 {
+                font-size: 3.5rem;
             }
-            footer {
-                border-top-left-radius: 18px;
-                border-top-right-radius: 18px;
+            .hero-content p {
+                font-size: 1.35rem;
+            }
+            .services {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            .portfolio {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
             }
         }
     </style>
@@ -301,13 +474,13 @@
     <div class="form-elements">
       <fieldset class="pure-group">
         <label for="name">Name: </label>
-        <input id="name" name="name" placeholder="What your Mom calls you" />
+        <input id="name" name="name" placeholder="John Doe" />
       </fieldset>
 
       <fieldset class="pure-group">
-        <label for="message">Message: </label>
+        <label for="message">How can I help your business</label>
         <textarea id="message" name="message" rows="10"
-        placeholder="Tell us what's on your mind..."></textarea>
+        placeholder="..."></textarea>
       </fieldset>
 
       <fieldset class="pure-group">
@@ -317,12 +490,12 @@
       </fieldset>
 
       <fieldset class="pure-group">
-        <label for="color">Favourite Color: </label>
-        <input id="color" name="color" placeholder="green" />
+        <label for="color">How did you hear about us?</label>
+        <input id="color" name="color" placeholder="..." />
       </fieldset>
 
       <fieldset class="pure-group honeypot-field">
-        <label for="honeypot">To help avoid spam, utilize a Honeypot technique with a hidden text field; must be empty to submit the form! Otherwise, we assume the user is a spam bot.</label>
+        <label for="honeypot">Dont enter anything here</label>
         <input id="honeypot" type="text" name="honeypot" value="" />
       </fieldset>
 
@@ -341,12 +514,6 @@
   <!-- Submit the Form to Google Using "AJAX" -->
   <script data-cfasync="false" src="form-submission-handler.js"></script>
 <!-- END -->
-
-
-
-
-
-
 
 
     </section>

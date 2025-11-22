@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ryan's Web Solutions — Modern Small Business Sites</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Modern, mobile-first styles */
+        :root{ --bg:#f6f8fb; --card:#ffffff; --muted:#6b7788; --accent:#2563eb; --accent-2:#06b6d4; --text:#0f1724; --radius:14px; --container:1100px }
+        *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased}
+        .site-header{max-width:var(--container);margin:0 auto;padding:24px 20px;display:flex;align-items:center;justify-content:space-between}
+        .brand{display:flex;align-items:center;gap:14px}
+        .brand-logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-family:Montserrat,Inter}
+        .hero{max-width:var(--container);margin:18px auto 6px;padding:28px 20px;border-radius:18px;background:linear-gradient(180deg,#ffffff, #fbfdff);box-shadow:0 10px 30px rgba(16,24,40,0.06);display:flex;gap:20px;align-items:center}
+        .hero-graphic{width:220px;height:140px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,#e6f0ff,#f4fffd);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700}
+        main{max-width:var(--container);margin:22px auto;padding:0 20px}
+        .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+        .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+        .portfolio{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+        .contact-wrap{display:flex;gap:20px;align-items:flex-start}
+        .contact-card{flex:1;background:linear-gradient(180deg,#0f1724 0%, #071425 100%);color:var(--text);border-radius:16px;padding:18px;box-shadow:0 18px 50px rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.03)}
+        form{display:block}
+        .field{position:relative;margin-bottom:12px}
+        .field label{position:absolute;left:12px;top:10px;font-size:0.9rem;color:rgba(255,255,255,0.6);pointer-events:none;transition:transform .16s ease,color .16s}
+        .field input,.field textarea{width:100%;padding:14px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+        .form-footer{display:flex;align-items:center;gap:12px;margin-top:12px}
+        .form-status{color:rgba(255,255,255,0.78);font-size:0.95rem;min-height:1.1rem}
+        .thankyou_message{display:none;margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(124,195,255,0.03),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--text)}
+        footer{background:transparent;padding:22px 20px;color:var(--muted)}
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="brand"><div class="brand-logo">RW</div><div><h1 style="font-size:1rem;margin:0">Ryan's Web Solutions</h1><div class="small">Small business websites — fast and modern</div></div></div></header>
+<section class="hero"><div class="hero-left"><h2>Create a modern website that wins customers</h2><p class="lead">I build clean, responsive small-business sites with fast turnaround and clear results. Includes contact forms, menus, galleries, and basic SEO.</p><div class="hero-actions"><button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get started</button><button class="btn btn-ghost">See examples</button></div></div><div class="hero-graphic">Examples</div></section>
+<main>
+<section id="services" class="grid"><div class="card"><h3>Design & Branding</h3><p class="muted">Custom, on-brand layouts built for conversion.</p></div><div class="card"><h3>Mobile First</h3><p class="muted">Optimized for phones and tablets — fast and accessible.</p></div><div class="card"><h3>Support & Updates</h3><p class="muted">Ongoing maintenance and help when you need it.</p></div></section>
+<section id="portfolio" class="portfolio"><a class="project" href="auto-shop.html"><img src="stock-images/autopage.png" alt="Auto shop"><div class="meta"><h4>Auto Shop</h4><p class="muted">Service listings and bookings.</p></div></a><a class="project" href="restaurant-cafe.html"><img src="stock-images/cafepage.png" alt="Cafe"><div class="meta"><h4>Restaurant / Cafe</h4><p class="muted">Menus and reservations.</p></div></a><a class="project" href="landscaping.html"><img src="stock-images/landscapepage.png" alt="Landscaping"><div class="meta"><h4>Landscaping</h4><p class="muted">Project galleries and contact.</p></div></a></section>
+<section id="contact" style="margin-top:18px">
+<h2 style="margin:0 0 12px 0">Contact</h2>
+<div class="contact-wrap">
+<div class="contact-card" role="region" aria-labelledby="contact-heading">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div><div id="contact-heading" style="font-size:1.05rem;font-weight:600">Let's talk about your project</div><div class="small" style="margin-top:6px;color:rgba(255,255,255,0.7)">Fast replies on business days — send details for a quick estimate.</div></div></div>
+<form id="contactForm" class="gform" method="POST" data-email="ryanlumbra@icloud.com" action="https://script.google.com/macros/s/AKfycbzpMxq6Rxh50nHKH5BNa7vPp6b5fNfKgZGKxmJ1J_Ihd7irVz6EL2zLcqIlbqhitpu3/exec">
+<div class="form-elements"><div class="field"><label for="name">Name</label><input id="name" name="name" placeholder="" autocomplete="name" /></div><div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" required autocomplete="email" placeholder="" /></div><div class="field"><label for="message">Message</label><textarea id="message" name="message" placeholder="" rows="5"></textarea></div><div class="field" style="display:none"><label for="color">How did you hear about this site?</label><input id="color" name="color" placeholder="" /></div><div class="field" style="position:absolute;left:-9999px;"><label for="honeypot">Leave this empty</label><input id="honeypot" type="text" name="honeypot" value="" autocomplete="off" /></div><div class="form-footer"><button id="submitBtn" class="btn btn-primary" type="submit"><span class="spinner" aria-hidden="true"></span><span style="margin-left:8px">Send message</span></button><div id="formStatus" class="form-status" aria-live="polite"></div></div><div class="thankyou_message" style="display:none;margin-top:12px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)"><h3 style="margin:0;color:var(--text)"><em>Thanks</em> for contacting me — I will get back to you soon!</h3></div></div></form>
+</div>
+<aside class="contact-side"><div class="side-card"><strong>Contact</strong><div style="margin-top:8px;color:rgba(255,255,255,0.85)">ryanlumbra@icloud.com</div><div style="margin-top:10px;color:rgba(255,255,255,0.85)"><strong>Phone</strong><div class="small" style="margin-top:6px">(555) 555-5555</div></div><div style="margin-top:12px;color:rgba(255,255,255,0.85)" class="small">Prefer an estimate? Include your website and a short description of goals.</div></div></aside>
+</div>
+</section>
+</main>
+<footer style="max-width:var(--container);margin:28px auto;padding:18px 20px;text-align:center;color:var(--muted)">&copy; 2025 Ryan's Web Solutions. All rights reserved.</footer>
+<script data-cfasync="false" src="form-submission-handler.js"></script>
+<script>
+(function(){
+const form=document.getElementById('contactForm'); if(!form) return; const btn=form.querySelector('#submitBtn'); const spinner=btn && btn.querySelector('.spinner'); const status=document.getElementById('formStatus'); const thank=form.querySelector('.thankyou_message'); function setLoading(on){ if(!btn) return; if(on){ btn.classList.add('button-loading'); btn.disabled=true; if(spinner) spinner.style.display='inline-block'; if(status) { status.textContent='Sending…'; status.style.opacity=1 }} else { btn.classList.remove('button-loading'); btn.disabled=false; if(spinner) spinner.style.display='none'; }} form.addEventListener('submit',function(){ setLoading(true); window.__contactFormFallback=setTimeout(function(){ setLoading(false); if(status){ status.textContent='If this did not send, please try again or email directly.'; status.style.color='#ffbaba' } },12000); },{passive:true}); if(thank && status){ const mo=new MutationObserver(function(){ const visible=window.getComputedStyle(thank).display!=='none'; if(visible){ clearTimeout(window.__contactFormFallback); setLoading(false); status.textContent='Message sent — thank you!'; status.style.color='#b7ffda'; setTimeout(()=>{ status.textContent = '' },5000); } }); mo.observe(thank,{attributes:true,attributeFilter:['style','class']}); }})();
+</script>
+<script>
+(function(){ const fields=document.querySelectorAll('.field'); fields.forEach(f=>{ const input=f.querySelector('input,textarea'); if(!input) return; function refresh(){ if(input.value && input.value.trim()!=='') f.classList.add('filled'); else f.classList.remove('filled'); } input.addEventListener('input',refresh); setTimeout(refresh,10); }); })();
+</script>
+<script>
+(function(){ const thank=document.querySelector('.thankyou_message'); const status=document.getElementById('formStatus'); if(!thank||!status) return; const mo=new MutationObserver(function(){ const visible=window.getComputedStyle(thank).display!=='none'; if(visible){ status.textContent='Message delivered — I will reply soon.'; status.style.color='#b7ffda' } }); mo.observe(thank,{attributes:true,attributeFilter:['style','class']}); })();
+</script>
+</body>
+</html>
