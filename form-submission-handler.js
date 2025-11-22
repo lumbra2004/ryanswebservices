@@ -61,6 +61,12 @@
       return false;
     }
 
+    // Show sending message
+    var sendingMessage = document.getElementById('sendingMessage');
+    if (sendingMessage) {
+      sendingMessage.classList.add('active');
+    }
+
     disableAllButtons(form);
     var url = form.action;
     var xhr = new XMLHttpRequest();

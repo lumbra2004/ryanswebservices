@@ -14,330 +14,427 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan's Web Services | Small Business Websites</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:400,700&display=swap" rel="stylesheet">
+    <title>RYANS WEBSERVICES | Professional Web Design for Small Businesses</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Mobile-first base styles */
+        /* CSS Reset & Base Styles */
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
-        .hero-bg {
-            position: relative;
-            width: 100vw;
-            min-height: 60vh;
-            background: linear-gradient(135deg, rgba(45,62,80,0.85) 0%, rgba(79,140,255,0.6) 100%), url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
-            background-attachment: scroll;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1;
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --primary-light: #3385FF;
+            --secondary: #00D4FF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B4BFCD;
+            --text-light: #8B95A5;
+            --bg-dark: #0A0E1A;
+            --bg-darker: #050810;
+            --bg-card: #151922;
+            --bg-card-hover: #1A1F2E;
+            --border-dark: #1F2937;
+            --border-light: #2D3748;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 16px 48px rgba(0, 102, 255, 0.2);
         }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            color: #fff;
-            text-align: center;
-            padding: 2.5rem 1.5rem 2rem;
-            width: 100%;
-            max-width: 1200px;
-        }
-        .hero-content h1 {
-            font-size: 2rem;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            margin-bottom: 0.75rem;
-            letter-spacing: 1px;
-            text-shadow: 0 4px 24px rgba(0,0,0,0.3);
-            line-height: 1.2;
-        }
-        .hero-content p {
-            font-size: 1.1rem;
-            opacity: 0.97;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.2);
-            line-height: 1.5;
-        }
-        .hero-nav {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-        .hero-nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            letter-spacing: 0.5px;
-            font-size: 0.95rem;
-            padding: 0.65rem 1.25rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .hero-nav a:hover,
-        .hero-nav a:active {
-            background: #fff;
-            color: #4f8cff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        header {
-            display: none;
-        }
+        
         body {
-            font-family: 'Roboto', Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
-            color: #1a202c;
-            min-height: 100vh;
-            line-height: 1.6;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
-        header {
-            background: linear-gradient(90deg, #2d3e50 0%, #4f8cff 100%);
-            color: #fff;
-            padding: 2.5rem 0 2rem 0;
-            text-align: center;
-            box-shadow: 0 4px 24px rgba(79,140,255,0.10);
-            border-bottom-left-radius: 32px;
-            border-bottom-right-radius: 32px;
-        }
-        header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 2.8rem;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            letter-spacing: 1px;
-        }
-        header p {
-            margin: 0;
-            font-size: 1.25rem;
-            opacity: 0.95;
-        }
-        nav {
-            margin-top: 1.2rem;
-        }
-        nav a {
-            color: #fff;
-            margin: 0 1.2rem;
-            text-decoration: none;
-            font-weight: 700;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            letter-spacing: 0.5px;
-            font-size: 1.05rem;
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            transition: background 0.2s, color 0.2s;
-        }
-        nav a:hover {
-            background: #fff;
-            color: #4f8cff;
-        }
-        section {
-            max-width: 950px;
-            margin: 1.5rem auto;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(79,140,255,0.08), 0 2px 8px rgba(0,0,0,0.04);
-            padding: 2rem 1.25rem;
-            border: 1px solid rgba(255,255,255,0.8);
-            animation: fadeInUp 0.6s cubic-bezier(.39,.575,.56,1.000);
-        }
-        section h2 {
-            color: #2d3e50;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
+        
+        /* Hero Section - Premium Design */
+        .hero {
+            background: linear-gradient(165deg, #050810 0%, #0A0E1A 50%, #050810 100%);
+            color: var(--text-primary);
+            padding: 4rem 1.5rem 5rem;
             position: relative;
-            padding-bottom: 0.75rem;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-dark);
         }
-        section h2::after {
+        
+        .hero::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #4f8cff, #7ba3ff);
-            border-radius: 2px;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
         }
-        .services, .portfolio, .testimonials {
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .brand-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-white);
+            padding: 1.1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.35);
+            border: 2px solid var(--primary);
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 102, 255, 0.45);
+        }
+        
+        .hero-cta:active {
+            transform: translateY(0);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 4rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: transparent;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* Services Grid */
+        .services-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1.25rem;
+            gap: 2rem;
+            margin-top: 3rem;
         }
-        .service, .project, .testimonial {
-            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-            border-radius: 16px;
-            padding: 1.75rem 1.5rem;
-            box-shadow: 0 4px 16px rgba(79,140,255,0.06), 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(79,140,255,0.08);
+        
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
-        .service::before, .project::before {
+        
+        .service-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #4f8cff, #7ba3ff);
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
             transform: scaleX(0);
-            transition: transform 0.35s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .service:hover, .project:hover,
-        .service:active, .project:active {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 32px rgba(79,140,255,0.12), 0 4px 8px rgba(0,0,0,0.04);
-            border-color: rgba(79,140,255,0.2);
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
         }
-        .service:hover::before, .project:hover::before {
+        
+        .service-card:hover::before {
             transform: scaleX(1);
         }
-        .service h3, .project h3 {
-            margin-top: 0;
-            margin-bottom: 0.75rem;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            color: #2d3e50;
-            font-size: 1.3rem;
-            line-height: 1.3;
+        
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 102, 255, 0.25);
+        }
+        
+        .service-card h3 {
+            font-size: 1.4rem;
             font-weight: 700;
-        }
-        .service p, .project p {
-            color: #4a5568;
-            line-height: 1.7;
-            margin: 0;
-        }
-        .portfolio img {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
+            color: var(--text-primary);
             margin-bottom: 1rem;
-            box-shadow: 0 4px 16px rgba(79,140,255,0.12);
-            display: block;
-            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            letter-spacing: -0.3px;
         }
-        .project:hover img {
-            transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(79,140,255,0.18);
+        
+        .service-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
         }
-        .project a {
+        
+        /* Portfolio/Examples Section */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .portfolio-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             color: inherit;
-        }
-        .testimonial {
-            font-style: italic;
-            background: linear-gradient(135deg, rgba(79,140,255,0.06), rgba(123,163,255,0.04));
-            border-left: 5px solid #4f8cff;
-            color: #4a5568;
-        }
-        .testimonial strong {
             display: block;
-            margin-top: 1rem;
-            font-style: normal;
-            color: #2d3e50;
         }
+        
+        .portfolio-item:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+        
+        .portfolio-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .portfolio-item:hover .portfolio-image {
+            transform: scale(1.05);
+        }
+        
+        .portfolio-content {
+            padding: 2rem 1.75rem;
+        }
+        
+        .portfolio-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .portfolio-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        /* Contact Section */
+        #contact {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 32px;
+            padding: 4rem 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        
+        .contact-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .contact-email {
+            font-size: 1.125rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            max-width: 650px;
+            margin: 0 auto;
         }
+        
         fieldset {
             border: none;
-            margin: 0;
-            padding: 0;
+            margin-bottom: 1.5rem;
         }
+        
         label {
             display: block;
-            margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #2d3e50;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
             font-size: 0.95rem;
         }
-        input, textarea {
+        
+        input,
+        textarea {
             width: 100%;
-            padding: 0.95rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
             font-size: 1rem;
-            font-family: 'Roboto', Arial, sans-serif;
-            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-darker);
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
-        input:focus, textarea:focus {
-            border: 2px solid #4f8cff;
+        
+        input:focus,
+        textarea:focus {
             outline: none;
-            box-shadow: 0 0 0 4px rgba(79,140,255,0.12);
-            background: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.2);
+            background: var(--bg-card);
         }
+        
         textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 140px;
         }
-        button {
-            background: linear-gradient(135deg, #4f8cff 0%, #3a7bd5 100%);
-            color: #fff;
+        
+        button[type="submit"] {
+            width: 100%;
+            max-width: 300px;
+            background: var(--primary);
+            color: var(--bg-white);
             border: none;
-            padding: 1.1rem 2rem;
+            padding: 1.2rem 2rem;
             border-radius: 12px;
             font-size: 1.05rem;
             font-weight: 700;
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 20px rgba(79,140,255,0.25);
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
+            margin-top: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
             min-height: 48px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+        
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 102, 255, 0.4);
         }
-        button:hover::before {
-            left: 100%;
+        
+        button[type="submit"]:active {
+            transform: translateY(0);
         }
-        button:hover,
-        button:active {
-            background: linear-gradient(135deg, #3a7bd5 0%, #2d5eb5 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(79,140,255,0.35);
-        }
-        button:active {
-            transform: translateY(-1px);
-        }
+        
+        /* Footer */
         footer {
+            background: var(--bg-darker);
+            border-top: 1px solid var(--border-dark);
+            color: var(--text-secondary);
             text-align: center;
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, #2d3e50 0%, #4f8cff 100%);
-            color: #fff;
-            margin-top: 2.5rem;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
         }
-        /* Honeypot anti-spam field - hidden */
+        
+        footer p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+        
+        /* Honeypot - Hidden */
         .honeypot-field {
             position: absolute;
             left: -9999px;
@@ -347,183 +444,341 @@
         }
         
         .thankyou_message {
-            background: linear-gradient(135deg, #4f8cff 0%, #3a7bd5 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--bg-white);
             padding: 2rem;
             border-radius: 16px;
             text-align: center;
-            box-shadow: 0 8px 24px rgba(79,140,255,0.25);
-            margin-top: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
         }
+        
         .thankyou_message h2 {
-            color: #ffffff;
+            color: var(--bg-white);
             margin: 0;
             font-size: 1.5rem;
         }
-        .thankyou_message h2::after {
-            display: none;
+        
+        .privacy-policy {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-dark);
+            text-align: center;
         }
         
-        /* Tablet and up */
-        @media (min-width: 600px) {
-            .hero-content h1 {
-                font-size: 2.75rem;
+        .privacy-policy p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        
+        .sending-message {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .sending-message.active {
+            display: block;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 639px) {
+            .hero {
+                padding: 3rem 1rem 4rem;
             }
-            .hero-content p {
-                font-size: 1.25rem;
+            
+            .brand-name {
+                font-size: 0.9rem;
+                letter-spacing: 2px;
             }
-            .hero-nav a {
+            
+            .hero h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.05rem;
+            }
+            
+            .hero-cta {
+                width: 100%;
+                padding: 1.2rem 2rem;
                 font-size: 1rem;
             }
-            .services, .portfolio {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
+            
+            .section-title {
+                font-size: 1.75rem;
             }
-            section {
-                padding: 2.5rem 2rem;
-                margin: 2rem auto;
+            
+            .section-subtitle {
+                font-size: 1rem;
             }
-            button {
-                width: auto;
-                min-width: 200px;
+            
+            .service-card,
+            .portfolio-item {
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .service-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+            }
+            
+            .service-card h3,
+            .portfolio-content h3 {
+                font-size: 1.25rem;
+            }
+            
+            .portfolio-image {
+                height: 200px;
+            }
+            
+            #contact {
+                margin: 1.5rem 1rem;
+                padding: 3rem 1.5rem;
+            }
+            
+            .contact-header h2 {
+                font-size: 1.75rem;
+            }
+            
+            .contact-email {
+                font-size: 1rem;
+            }
+            
+            input,
+            textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            button[type="submit"] {
+                width: 100%;
+                max-width: none;
+                font-size: 1.05rem;
+                padding: 1.2rem 2rem;
+            }
+            
+            .privacy-policy p {
+                font-size: 0.8rem;
             }
         }
         
-        /* Desktop */
-        @media (min-width: 900px) {
-            .hero-bg {
-                background-attachment: fixed;
+        /* Responsive Design - Tablet */
+        @media (min-width: 640px) {
+            .hero h1 {
+                font-size: 3.25rem;
             }
-            .hero-content h1 {
-                font-size: 3.5rem;
-            }
-            .hero-content p {
+            
+            .hero-subtitle {
                 font-size: 1.35rem;
             }
-            .services {
+            
+            .services-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
+                gap: 2.5rem;
             }
-            .portfolio {
+            
+            .portfolio-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2.5rem;
+            }
+        }
+        
+        /* Responsive Design - Desktop */
+        @media (min-width: 1024px) {
+            .hero {
+                padding: 6rem 2rem 7rem;
+            }
+            
+            .hero h1 {
+                font-size: 4.5rem;
+                max-width: 900px;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            section {
+                padding: 5rem 2rem;
+            }
+            
+            .section-title {
+                font-size: 2.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem;
+            }
+            
+            .portfolio-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 2rem;
+                gap: 3rem;
+            }
+            
+            .portfolio-image {
+                height: 260px;
+            }
+            
+            button[type="submit"] {
+                width: auto;
+                min-width: 250px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-bg">
+    <!-- Hero Section -->
+    <div class="hero">
         <div class="hero-content">
-            <h1>Ryan's Web Services</h1>
-            <p>Professional, affordable websites for small businesses</p>
-            <div class="hero-nav">
-                <a href="#services">Services</a>
-                <a href="#portfolio">Examples</a>
-                <a href="#contact">Contact</a>
-            </div>
+            <div class="brand-name">RYANS WEBSERVICES</div>
+            <h1>Attract New Customers with a <span>Professional Website</span></h1>
+            <p class="hero-subtitle">High-quality web design that helps your small business stand out online and drive real results.</p>
+            <a href="#contact" class="hero-cta">Get Started Today</a>
         </div>
     </div>
 
-    <section id="about">
-        <h2>About Me</h2>
-        <p>Hi! I'm Ryan, a web developer passionate about helping small businesses grow online. I specialize in creating modern, responsive, and effective websites that help you reach more customers and make a great first impression.</p>
-    </section>
-
+    <!-- Services Section -->
     <section id="services">
-        <h2>Services</h2>
-        <div class="services">
-            <div class="service">
-                <h3>Custom Website Design</h3>
-                <p>Beautiful, unique designs tailored to your brand and business goals.</p>
-            </div>
-            <div class="service">
-                <h3>Mobile Optimization</h3>
-                <p>Websites that look and work great on any device, from phones to desktops.</p>
-            </div>
-            <div class="service">
-                <h3>SEO & Performance</h3>
-                <p>Optimized for search engines and fast loading to help you get found and keep customers engaged.</p>
-            </div>
-            <div class="service">
-                <h3>Ongoing Support</h3>
-                <p>Reliable maintenance and updates so your site always stays fresh and secure.</p>
-            </div>
+        <div class="section-header">
+            <h2 class="section-title">What I Do</h2>
+            <p class="section-subtitle">Comprehensive web services designed to help your business succeed online</p>
         </div>
-    </section>
-
-    <section id="portfolio">
-        <h2>Explore Examples</h2>
-        <div class="portfolio">
-                <a class="project" href="auto-shop.html" style="text-decoration:none;color:inherit;">
-                    <img src="stock-images/autopage.png" alt="Auto Shop Garage with Mechanics">
-                    <h3>Auto Shop</h3>
-                    <p>Dynamic website for an auto repair shop, featuring service listings, appointment booking, and customer testimonials.</p>
-                </a>
-                <a class="project" href="restaurant-cafe.html" style="text-decoration:none;color:inherit;">
-                    <img src="stock-images/cafepage.png" alt="Restaurant/Cafe Project">
-                    <h3>Restaurant / Cafe</h3>
-                    <p>Modern, inviting website for a restaurant or café, with an interactive menu, and reservation features.</p>
-                </a>
-                <a class="project" href="landscaping.html" style="text-decoration:none;color:inherit;">
-                    <img src="stock-images/landscapepage.png" alt="Landscaping Crew at Work">
-                    <h3>Landscaping</h3>
-                    <p>Professional site for a landscaping business, showcasing services, project galleries, and easy contact options.</p>
-                </a>
-        </div>
-    </section>
-
-    <section id="contact">
         
-        <h2>Contact Me&nbsp;&nbsp;&nbsp;&nbsp;</h2><h3>Email: contact@ryanswebservices.com</h3>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3>Custom Web Design</h3>
+                <p>Beautiful, unique websites tailored to your brand and business goals. Stand out from the competition with a design that's truly yours.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>SEO & Performance</h3>
+                <p>Get found on Google with optimized websites built for speed and search engines. Drive more traffic to your business.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📱</div>
+                <h3>Mobile Optimization</h3>
+                <p>Your website will look perfect on every device - from smartphones to tablets to desktop computers. Reach customers anywhere.</p>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">💎</div>
+                <h3>Fair Pricing</h3>
+                <p>Professional quality at prices small businesses can afford. No hidden fees, no surprises - just honest, transparent pricing.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio">
+        <div class="section-header">
+            <h2 class="section-title">See Some Example Sites</h2>
+            <p class="section-subtitle">Real websites built for real businesses - browse examples to see what I can create for you</p>
+        </div>
+        
+        <div class="portfolio-grid">
+            <a href="auto-shop.html" class="portfolio-item">
+                <img src="stock-images/autopage.png" alt="Auto Shop Website" class="portfolio-image">
+                <div class="portfolio-content">
+                    <h3>Auto Shop</h3>
+                    <p>Dynamic website for an auto repair shop with service listings, appointment booking, and customer testimonials.</p>
+                </div>
+            </a>
+            
+            <a href="restaurant-cafe.html" class="portfolio-item">
+                <img src="stock-images/cafepage.png" alt="Restaurant Website" class="portfolio-image">
+                <div class="portfolio-content">
+                    <h3>Restaurant / Cafe</h3>
+                    <p>Modern, inviting website for a restaurant or café with an interactive menu and reservation features.</p>
+                </div>
+            </a>
+            
+            <a href="landscaping.html" class="portfolio-item">
+                <img src="stock-images/landscapepage.png" alt="Landscaping Website" class="portfolio-image">
+                <div class="portfolio-content">
+                    <h3>Landscaping</h3>
+                    <p>Professional site for a landscaping business showcasing services, project galleries, and easy contact options.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="contact-header">
+            <h2>Request a quote today!</h2>
+            <p class="contact-email">Email: contact@ryanswebservices.com</p>
+        </div>
 
         <form id="contactForm" class="gform pure-form pure-form-stacked" method="POST" data-email="ryanlumbra@icloud.com"
-  action="https://script.google.com/macros/s/AKfycbzpMxq6Rxh50nHKH5BNa7vPp6b5fNfKgZGKxmJ1J_Ihd7irVz6EL2zLcqIlbqhitpu3/exec">
-    <!-- change the form action to your script url -->
+            action="https://script.google.com/macros/s/AKfycbzpMxq6Rxh50nHKH5BNa7vPp6b5fNfKgZGKxmJ1J_Ihd7irVz6EL2zLcqIlbqhitpu3/exec">
+            
+            <div class="form-elements">
+                <fieldset>
+                    <label for="name">Name</label>
+                    <input id="name" name="name" placeholder="Your name" required>
+                </fieldset>
 
-    <div class="form-elements">
-      <fieldset class="pure-group">
-        <label for="name">Name: </label>
-        <input id="name" name="name" placeholder="John Doe" />
-      </fieldset>
+                <fieldset>
+                    <label for="email">Email Address</label>
+                    <input id="email" name="email" type="email" placeholder="your.email@example.com" required>
+                </fieldset>
 
-      <fieldset class="pure-group">
-        <label for="message">How can I help your business</label>
-        <textarea id="message" name="message" rows="10"
-        placeholder="..."></textarea>
-      </fieldset>
+                <fieldset>
+                    <label for="message">How can I help your business?</label>
+                    <textarea id="message" name="message" rows="6" placeholder="Tell me about your business and what you're looking for..." required></textarea>
+                </fieldset>
 
-      <fieldset class="pure-group">
-        <label for="email"><em>Your</em> Email Address:</label>
-        <input id="email" name="email" type="email" value=""
-        required placeholder="your.name@email.com"/>
-      </fieldset>
+                <fieldset>
+                    <label for="color">How did you hear about us?</label>
+                    <input id="color" name="where" placeholder="Google search, referral, etc.">
+                </fieldset>
 
-      <fieldset class="pure-group">
-        <label for="color">How did you hear about this site?</label>
-        <input id="color" name="where" placeholder="..." />
-      </fieldset>
+                <fieldset class="honeypot-field">
+                    <label for="honeypot">Don't enter anything here</label>
+                    <input id="honeypot" type="text" name="honeypot" value="">
+                </fieldset>
 
-      <fieldset class="pure-group honeypot-field">
-        <label for="honeypot">Dont enter anything here</label>
-        <input id="honeypot" type="text" name="honeypot" value="" />
-      </fieldset>
+                <button type="submit" class="button-success pure-button button-xlarge">
+                    Send Message
+                </button>
+                
+                <div class="sending-message" id="sendingMessage">
+                    📤 Sending your message...
+                </div>
+            </div>
 
-      <button class="button-success pure-button button-xlarge">
-        <i class="fa fa-paper-plane"></i>&nbsp;Send</button>
-    </div>
+            <div class="thankyou_message" style="display:none;">
+                <h2>Thanks for contacting me! I will get back to you soon!</h2>
+            </div>
+        </form>
 
-    <!-- Customise the Thankyou Message People See when they submit the form: -->
-    <div class="thankyou_message" style="display:none;">
-      <h2><em>Thanks</em> for contacting me!
-        I will get back to you soon!</h2>
-    </div>
+        <script data-cfasync="false" src="form-submission-handler.js"></script>
+        
+        <div class="privacy-policy">
+            <p><strong>Privacy Policy:</strong> Your information is secure and will only be used to respond to your inquiry. We operate solely within the United States and do not share your personal information with third parties. By submitting this form, you consent to us contacting you regarding your business needs.</p>
+        </div>
+    </section>
 
-  </form>
-
-  <!-- Submit the Form to Google Using "AJAX" -->
-  <script data-cfasync="false" src="form-submission-handler.js"></script>
-<!-- END -->
+</body>
+</html>
 
 
     </section>
