@@ -365,9 +365,46 @@
         
         .contact-email {
             font-size: 1.125rem;
-            color: var(--primary);
+            color: var(--text-primary);
             font-weight: 600;
             margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(0, 212, 255, 0.1));
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            backdrop-filter: blur(10px);
+            line-height: 1;
+        }
+        
+        .copy-email-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+            line-height: 1;
+        }
+        
+        .copy-email-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        }
+        
+        .copy-email-btn.copied {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
         
         form {
@@ -797,8 +834,15 @@
     <!-- Contact Section -->
     <section id="contact">
         <div class="contact-header">
-            <h2>Request a quote today!</h2>
-            <p class="contact-email">Email: contact@ryanswebservices.com</p>
+            <h2>Let's Build Something Great Together!</h2>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                <p class="contact-email">contact@ryanswebservices.com</p>
+                <button class="copy-email-btn" onclick="copyEmail()">
+                    <span id="copyIcon">📋</span>
+                    <span id="copyText">Copy</span>
+                </button>
+            </div>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 1rem;">I will respond as soon as possible.</p>
         </div>
 
         <form id="contactForm" class="gform pure-form pure-form-stacked" method="POST" data-email="ryanlumbra@icloud.com"
@@ -806,23 +850,23 @@
             
             <div class="form-elements">
                 <fieldset>
-                    <label for="name">Name</label>
-                    <input id="name" name="name" placeholder="Your name" required>
+                    <label for="name">What's your name?</label>
+                    <input id="name" name="name" placeholder="John Smith" required>
                 </fieldset>
 
                 <fieldset>
-                    <label for="email">Email Address</label>
+                    <label for="email">Your email address</label>
                     <input id="email" name="email" type="email" placeholder="your.email@example.com" required>
                 </fieldset>
 
                 <fieldset>
-                    <label for="message">How can I help your business?</label>
-                    <textarea id="message" name="message" rows="6" placeholder="Tell me about your business and what you're looking for..." required></textarea>
+                    <label for="message">Tell me about your business!</label>
+                    <textarea id="message" name="message" rows="6" placeholder="I'd love to hear about your business and what you're looking to achieve. The more details you share, the better I can help!" required></textarea>
                 </fieldset>
 
                 <fieldset>
-                    <label for="color">How did you hear about us?</label>
-                    <input id="color" name="where" placeholder="Google search, referral, etc.">
+                    <label for="color">How did you find me?<span style="font-weight: 400; opacity: 0.7;">(Optional)</span></label>
+                    <input id="color" name="where" placeholder="Google, friend referral, social media...">
                 </fieldset>
 
                 <fieldset class="honeypot-field">
@@ -831,7 +875,7 @@
                 </fieldset>
 
                 <button type="submit" class="button-success pure-button button-xlarge">
-                    Send Message
+                    Let's Get Started!
                 </button>
                 
                 <div class="sending-message" id="sendingMessage">
@@ -845,6 +889,29 @@
         </form>
 
         <script data-cfasync="false" src="form-submission-handler.js"></script>
+        
+        <script>
+        function copyEmail() {
+            const email = 'contact@ryanswebservices.com';
+            navigator.clipboard.writeText(email).then(function() {
+                const btn = document.querySelector('.copy-email-btn');
+                const icon = document.getElementById('copyIcon');
+                const text = document.getElementById('copyText');
+                
+                btn.classList.add('copied');
+                icon.textContent = '✓';
+                text.textContent = 'Copied!';
+                
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    icon.textContent = '📋';
+                    text.textContent = 'Copy';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy email:', err);
+            });
+        }
+        </script>
         
         <div class="privacy-policy">
             <p><strong>Privacy Policy:</strong> Your information is secure and will only be used to respond to your inquiry. We operate solely within the United States and do not share your personal information with third parties. By submitting this form, you consent to us contacting you regarding your business needs.</p>
