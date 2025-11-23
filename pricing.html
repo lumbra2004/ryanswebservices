@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17751846529"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17751846529');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | Ryan's Webservice</title>
+    <meta name="description" content="Transparent pricing for professional web design services. Choose from our Starter, Professional, or Premium packages with flexible maintenance plans.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ryanswebservices.com/pricing">
+    <meta property="og:title" content="Pricing | Ryan's Webservice">
+    <meta property="og:description" content="Transparent pricing for professional web design services. Choose from our Starter, Professional, or Premium packages.">
+    <meta property="og:image" content="https://ryanswebservices.com/stock-images/social-preview.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ryanswebservices.com/pricing">
+    <meta property="twitter:title" content="Pricing | Ryan's Webservice">
+    <meta property="twitter:description" content="Transparent pricing for professional web design services. Choose from our Starter, Professional, or Premium packages.">
+    <meta property="twitter:image" content="https://ryanswebservices.com/stock-images/social-preview.png">
+    
+    <!-- Meta Pixel Code --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '1524340988599573'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=1524340988599573&ev=PageView&noscript=1"/></noscript><!-- End Meta Pixel Code -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --primary-light: #3385FF;
+            --secondary: #00D4FF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B4BFCD;
+            --text-light: #8B95A5;
+            --bg-darker: #050810;
+            --bg-dark: #0A0E1A;
+            --card-bg: #151922;
+            --card-hover: #1A1F2E;
+            --border-dark: #1F2937;
+            --border-light: #2D3748;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 26, 0.8);
+            border-bottom: 1px solid var(--border-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: left;
+            padding: 5rem 0 3rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(0, 212, 255, 0.15));
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(0, 102, 255, 0.2);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.08), rgba(0, 212, 255, 0.05));
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -12px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .plan-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            position: relative;
+            cursor: help;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: var(--secondary);
+            font-weight: 800;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .features-list li.not-included {
+            opacity: 0.4;
+        }
+
+        .features-list li.not-included::before {
+            content: "—";
+            color: var(--text-light);
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline;
+            border-bottom: 1px dotted var(--text-secondary);
+            transition: border-color 0.3s ease;
+        }
+
+        .tooltip:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            background: linear-gradient(135deg, rgba(26, 31, 46, 0.98), rgba(21, 25, 34, 0.98));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            color: var(--text-primary);
+            text-align: left;
+            border-radius: 12px;
+            padding: 1.25rem;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 300px;
+            box-shadow: 0 20px 60px rgba(0, 102, 255, 0.4), 0 0 0 1px rgba(0, 102, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            pointer-events: none;
+        }
+
+        .tooltip-text::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: var(--primary) transparent transparent transparent;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(26, 31, 46, 0.98) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Maintenance tooltip adjustments */
+        .maintenance-card ul li {
+            cursor: help;
+            position: relative;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.4);
+        }
+
+        .featured .cta-button {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        /* Maintenance Section */
+        .maintenance-section {
+            margin: 5rem 0;
+            text-align: left;
+        }
+
+        .maintenance-section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .maintenance-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .maintenance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .maintenance-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .maintenance-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 102, 255, 0.15);
+        }
+
+        .maintenance-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .maintenance-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .maintenance-card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .maintenance-card ul li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .maintenance-card ul li::before {
+            content: "✓";
+            color: var(--secondary);
+            font-weight: 800;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: 5rem 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .faq-section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+        }
+
+        .faq-item h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-dark);
+            margin-top: 5rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.25rem;
+            }
+
+            header {
+                padding: 1rem 0;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .hero {
+                padding: 3rem 0 2rem;
+            }
+
+            .hero-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 1rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .pricing-card {
+                padding: 1.75rem;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+                margin-top: 0;
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+
+            .featured-badge {
+                top: -10px;
+                right: 20px;
+                font-size: 0.7rem;
+                padding: 0.35rem 1rem;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+
+            .features-list li {
+                padding: 0.6rem 0;
+                font-size: 0.95rem;
+            }
+
+            .cta-button {
+                padding: 0.9rem 1.75rem;
+                font-size: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .maintenance-section {
+                margin: 3rem 0;
+            }
+
+            .maintenance-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .maintenance-card {
+                padding: 1.75rem;
+            }
+
+            .maintenance-card ul li {
+                padding: 0.4rem 0;
+                font-size: 0.9rem;
+            }
+
+            .faq-section {
+                margin: 3rem auto;
+            }
+
+            .faq-item {
+                padding: 1.25rem;
+            }
+
+            .faq-item h3 {
+                font-size: 1.1rem;
+            }
+
+            .faq-item p {
+                font-size: 0.95rem;
+            }
+
+            .tooltip-text {
+                width: 280px;
+                font-size: 0.85rem;
+                padding: 1rem;
+                left: 50%;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            .tooltip:hover .tooltip-text {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            footer {
+                padding: 2rem 0;
+                margin-top: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .hero {
+                padding: 2.5rem 0 1.5rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+
+            .plan-name {
+                font-size: 1.3rem;
+            }
+
+            .price {
+                font-size: 2.2rem;
+            }
+
+            .maintenance-card {
+                padding: 1.5rem;
+            }
+
+            .maintenance-price {
+                font-size: 2rem;
+            }
+
+            .tooltip-text {
+                width: 250px;
+                font-size: 0.8rem;
+                padding: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Ryan's Webservice</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">💎 Transparent Pricing</div>
+                <h1>Simple, Fair Pricing</h1>
+                <p>Choose the perfect plan for your business. All packages include responsive design, fast loading times, and professional support.</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="pricing-grid">
+                <!-- Starter Package -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">Starter</h3>
+                    <p class="plan-description">Perfect for small businesses getting started online</p>
+                    <div class="price">$89</div>
+                    <span class="price-period">one-time payment</span>
+
+                    <ul class="features-list">
+                        <li><span class="tooltip">Up to 3 pages<span class="tooltip-text">Perfect for small businesses! Includes a home page, about page, and contact page to establish your online presence.</span></span></li>
+                        <li><span class="tooltip">Mobile-optimized design<span class="tooltip-text">Your site will look stunning on all devices! Fast loading, touch-friendly buttons, and perfect layouts on phones, tablets, and desktops.</span></span></li>
+                        <li><span class="tooltip">Contact form integration<span class="tooltip-text">Never miss a lead! Professional contact forms that send submissions directly to your email with spam protection included.</span></span></li>
+                        <li><span class="tooltip">Search Engine Optimization<span class="tooltip-text">Get found on Google! We optimize your site structure, meta tags, and content so customers can easily discover your business online.</span></span></li>
+                        <li><span class="tooltip">Social media links<span class="tooltip-text">Connect all your platforms! Beautifully designed social media buttons linking to your Facebook, Instagram, LinkedIn, and more.</span></span></li>
+                        <li><span class="tooltip">Customer reviews & testimonials<span class="tooltip-text">Build trust instantly! Showcase your best customer reviews to convert more visitors into paying customers.</span></span></li>
+                        <li><span class="tooltip">Unlimited revisions<span class="tooltip-text">Perfect results guaranteed! We'll keep refining your website until you're 100% satisfied with every detail.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Analytics dashboard<span class="tooltip-text">Available in Professional tier. Track visitor behavior, page views, and conversion rates to grow your business smarter.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Database integration<span class="tooltip-text">Available in Premium tier. Store customer data, manage inventory, or create member areas with secure database functionality.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Appointment scheduling<span class="tooltip-text">Available in Premium tier. Let customers book appointments 24/7 with automated scheduling and email reminders.</span></span></li>
+                    </ul>
+
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
+                </div>
+
+                <!-- Professional Package (Featured) -->
+                <div class="pricing-card featured">
+                    <div class="featured-badge">Most Popular</div>
+                    <h3 class="plan-name">Professional</h3>
+                    <p class="plan-description">Ideal for growing businesses that need more features</p>
+                    <div class="price">$149</div>
+                    <span class="price-period">one-time payment</span>
+
+                    <ul class="features-list">
+                        <li><span class="tooltip">Up to 7 pages<span class="tooltip-text">Expand your online presence! Perfect for businesses that need service pages, portfolios, team bios, FAQs, and more.</span></span></li>
+                        <li><span class="tooltip">Mobile-optimized design<span class="tooltip-text">Your site will look stunning on all devices! Fast loading, touch-friendly buttons, and perfect layouts on phones, tablets, and desktops.</span></span></li>
+                        <li><span class="tooltip">Advanced contact forms<span class="tooltip-text">Powerful multi-step forms! Collect detailed information, file uploads, and automatically organize leads for easy follow-up.</span></span></li>
+                        <li><span class="tooltip">Search Engine Optimization<span class="tooltip-text">Get found on Google! We optimize your site structure, meta tags, and content so customers can easily discover your business online.</span></span></li>
+                        <li><span class="tooltip">Social media integration<span class="tooltip-text">Full social connectivity! Embedded feeds, share buttons, and automatic post displays to boost engagement and followers.</span></span></li>
+                        <li><span class="tooltip">Analytics dashboard<span class="tooltip-text">Make data-driven decisions! See exactly where visitors come from, what they click, and how to improve conversions.</span></span></li>
+                        <li><span class="tooltip">Customer reviews & testimonials<span class="tooltip-text">Build trust instantly! Showcase your best customer reviews to convert more visitors into paying customers.</span></span></li>
+                        <li><span class="tooltip">Image gallery/portfolio<span class="tooltip-text">Show off your work! Beautiful galleries to display your products, projects, or services with professional lightbox effects.</span></span></li>
+                        <li><span class="tooltip">Blog/news section<span class="tooltip-text">Boost your SEO! Regular content updates keep your site fresh, engage visitors, and rank higher in search results.</span></span></li>
+                        <li><span class="tooltip">Unlimited revisions<span class="tooltip-text">Perfect results guaranteed! We'll keep refining your website until you're 100% satisfied with every detail.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Google Analytics tracking<span class="tooltip-text">Available in Premium tier. Advanced insights with conversion tracking, e-commerce data, and custom reporting dashboards.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Database integration<span class="tooltip-text">Available in Premium tier. Store customer data, manage inventory, or create member areas with secure database functionality.</span></span></li>
+                        <li class="not-included"><span class="tooltip">Appointment scheduling<span class="tooltip-text">Available in Premium tier. Let customers book appointments 24/7 with automated scheduling and email reminders.</span></span></li>
+                    </ul>
+
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
+                </div>
+
+                <!-- Premium Package -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">Premium</h3>
+                    <p class="plan-description">Complete solution for businesses wanting everything</p>
+                    <div class="price">$219</div>
+                    <span class="price-period">one-time payment</span>
+
+                    <ul class="features-list">
+                        <li><span class="tooltip">Up to 12 pages<span class="tooltip-text">Build a comprehensive web presence! Enough pages for full service catalogs, detailed case studies, team profiles, and more.</span></span></li>
+                        <li><span class="tooltip">Mobile-optimized design<span class="tooltip-text">Your site will look stunning on all devices! Fast loading, touch-friendly buttons, and perfect layouts on phones, tablets, and desktops.</span></span></li>
+                        <li><span class="tooltip">Advanced multi-step forms<span class="tooltip-text">Convert more leads! Complex forms broken into easy steps with conditional logic, progress bars, and save-and-resume features.</span></span></li>
+                        <li><span class="tooltip">Search Engine Optimization<span class="tooltip-text">Get found on Google! We optimize your site structure, meta tags, and content so customers can easily discover your business online.</span></span></li>
+                        <li><span class="tooltip">Full social media integration<span class="tooltip-text">Complete social ecosystem! Auto-post updates, display feeds, enable social login, and track engagement across all platforms.</span></span></li>
+                        <li><span class="tooltip">Google Analytics tracking<span class="tooltip-text">Enterprise-level insights! Track conversions, monitor campaigns, analyze user behavior, and make informed business decisions.</span></span></li>
+                        <li><span class="tooltip">Database integration<span class="tooltip-text">Power your business! Secure data storage for customer records, inventory management, user accounts, and custom applications.</span></span></li>
+                        <li><span class="tooltip">Customer reviews & testimonials<span class="tooltip-text">Build trust instantly! Showcase your best customer reviews to convert more visitors into paying customers.</span></span></li>
+                        <li><span class="tooltip">Appointment scheduling system<span class="tooltip-text">Automate your bookings! 24/7 online scheduling with calendar sync, automated reminders, and no-show prevention.</span></span></li>
+                        <li><span class="tooltip">Priority support<span class="tooltip-text">VIP treatment! Get faster response times, dedicated assistance, and direct access for urgent issues or questions.</span></span></li>
+                        <li><span class="tooltip">Unlimited revisions<span class="tooltip-text">Perfect results guaranteed! We'll keep refining your website until you're 100% satisfied with every detail.</span></span></li>
+                    </ul>
+
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Plans -->
+        <section class="maintenance-section">
+            <div class="container">
+                <h2>Ongoing Maintenance Plans</h2>
+                <p>Keep your website secure, updated, and running smoothly with our affordable maintenance plans</p>
+
+                <div class="maintenance-grid">
+                    <div class="maintenance-card">
+                        <h3>Basic Care</h3>
+                        <div class="maintenance-price">$29<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
+                        <ul>
+                            <li><span class="tooltip">Monthly security updates<span class="tooltip-text">Stay protected! We patch vulnerabilities, update software, and monitor for threats to keep your site secure from hackers.</span></span></li>
+                            <li><span class="tooltip">Performance monitoring<span class="tooltip-text">Never go down! We track uptime, page speed, and server health 24/7, fixing issues before your customers notice.</span></span></li>
+                            <li><span class="tooltip">Backup & recovery<span class="tooltip-text">Sleep soundly! Automated daily backups stored securely off-site, with instant restoration if anything goes wrong.</span></span></li>
+                            <li><span class="tooltip">Minor content updates (1 hour/month)<span class="tooltip-text">Keep it fresh! Text changes, image swaps, pricing updates—we handle the small stuff so you can focus on your business.</span></span></li>
+                            <li><span class="tooltip">Google Workspace (1 user included)<span class="tooltip-text">Professional email power! Get you@yourbusiness.com with 30GB storage, calendar, and cloud docs—everything to run your business.</span></span></li>
+                            <li><span class="tooltip">Support included<span class="tooltip-text">We're here to help! Quick responses to questions, technical guidance, and friendly assistance whenever you need it.</span></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="maintenance-card">
+                        <h3>Growth Plan</h3>
+                        <div class="maintenance-price">$59<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
+                        <ul>
+                            <li><span class="tooltip">Everything in Basic Care<span class="tooltip-text">All the security, backups, monitoring, and support from Basic Care—plus the enhanced features below!</span></span></li>
+                            <li><span class="tooltip">Weekly security updates<span class="tooltip-text">Extra protection! More frequent security patches and proactive threat monitoring keep you ahead of emerging vulnerabilities.</span></span></li>
+                            <li><span class="tooltip">SEO monitoring & reports<span class="tooltip-text">Climb the rankings! Monthly reports show your search position, keyword performance, and actionable tips to attract more customers.</span></span></li>
+                            <li><span class="tooltip">Content updates (3 hours/month)<span class="tooltip-text">Triple the changes! More time for blog posts, new pages, menu updates, or seasonal content to keep your site dynamic.</span></span></li>
+                            <li><span class="tooltip">Analytics reports<span class="tooltip-text">Know your audience! Detailed monthly insights on visitor behavior, traffic sources, and conversion opportunities.</span></span></li>
+                            <li><span class="tooltip">Google Workspace (1 user included)<span class="tooltip-text">Professional email power! Get you@yourbusiness.com with 30GB storage, calendar, and cloud docs—everything to run your business.</span></span></li>
+                            <li><span class="tooltip">Support included<span class="tooltip-text">We're here to help! Quick responses to questions, technical guidance, and friendly assistance whenever you need it.</span></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="maintenance-card">
+                        <h3>Premium Care</h3>
+                        <div class="maintenance-price">$99<span style="font-size: 1rem; color: var(--text-light);">/month</span></div>
+                        <ul>
+                            <li><span class="tooltip">Everything in Growth Plan<span class="tooltip-text">All the power of Growth Plan—security, SEO, analytics, and content updates—plus premium enhancements below!</span></span></li>
+                            <li><span class="tooltip">Daily security monitoring<span class="tooltip-text">Maximum protection! Round-the-clock surveillance with instant alerts and rapid response to any suspicious activity.</span></span></li>
+                            <li><span class="tooltip">Advanced SEO optimization<span class="tooltip-text">Dominate search results! Ongoing keyword research, content optimization, and technical SEO to outrank competitors.</span></span></li>
+                            <li><span class="tooltip">Content updates (5 hours/month)<span class="tooltip-text">Major flexibility! Enough time for significant changes, new features, seasonal campaigns, or regular content creation.</span></span></li>
+                            <li><span class="tooltip">A/B testing support<span class="tooltip-text">Optimize conversions! Test different headlines, layouts, and calls-to-action to discover what makes your customers buy.</span></span></li>
+                            <li><span class="tooltip">Google Workspace (1 user included)<span class="tooltip-text">Professional email power! Get you@yourbusiness.com with 30GB storage, calendar, and cloud docs—everything to run your business.</span></span></li>
+                            <li><span class="tooltip">Support included<span class="tooltip-text">We're here to help! Quick responses to questions, technical guidance, and friendly assistance whenever you need it.</span></span></li>
+                            <li><span class="tooltip">Quarterly strategy consultation<span class="tooltip-text">Expert guidance! Personalized sessions to review performance, plan improvements, and maximize your website's business impact.</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add-ons Section -->
+        <section class="maintenance-section">
+            <div class="container">
+                <h2>Additional Add-ons</h2>
+                <p>Enhance your website with professional tools and services</p>
+
+                <div style="text-align: center; margin: 2rem auto 3rem; padding: 2rem; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-dark); max-width: 900px;">
+                    <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-primary);">Google Workspace</h3>
+                    <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 0.5rem;">Professional email with your custom domain (you@yourbusiness.com)</p>
+                    <p style="color: var(--secondary); font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0;">✨ All maintenance plans include 1 Google Workspace user account</p>
+                </div>
+
+                <div class="maintenance-grid">
+                    <div class="maintenance-card">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Business Starter</div>
+                        <div class="maintenance-price" style="font-size: 2rem; margin: 0.5rem 0;">$7.20<span style="font-size: 0.9rem; color: var(--text-light);">/user/month</span></div>
+                        <ul style="font-size: 0.85rem;">
+                            <li><span class="tooltip">Custom email (you@yourcompany.com)<span class="tooltip-text">Build credibility! Professional branded email addresses make your business look established and trustworthy.</span></span></li>
+                            <li><span class="tooltip">30 GB cloud storage per user<span class="tooltip-text">Store everything! Plenty of space for emails, documents, photos, and files—accessible anywhere, anytime.</span></span></li>
+                            <li><span class="tooltip">Video meetings up to 100 participants<span class="tooltip-text">Connect face-to-face! Host client meetings, team huddles, or webinars with professional video conferencing.</span></span></li>
+                            <li><span class="tooltip">Standard security<span class="tooltip-text">Google-grade protection! Industry-leading spam filtering, virus protection, and secure email infrastructure.</span></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="maintenance-card">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Business Standard</div>
+                        <div class="maintenance-price" style="font-size: 2rem; margin: 0.5rem 0;">$14.40<span style="font-size: 0.9rem; color: var(--text-light);">/user/month</span></div>
+                        <ul style="font-size: 0.85rem;">
+                            <li><span class="tooltip">Everything in Business Starter<span class="tooltip-text">All the email, storage, meetings, and security from Starter—plus these powerful upgrades!</span></span></li>
+                            <li><span class="tooltip">2 TB cloud storage per user<span class="tooltip-text">Massive capacity! Store years of files, photos, and videos without worrying about running out of space.</span></span></li>
+                            <li><span class="tooltip">Video meetings up to 150 participants<span class="tooltip-text">Scale your reach! Host larger team meetings, client presentations, or training sessions with confidence.</span></span></li>
+                            <li><span class="tooltip">Enhanced security & management<span class="tooltip-text">Enterprise protection! Advanced admin controls, device management, and security policies to protect your business data.</span></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="maintenance-card">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Business Plus</div>
+                        <div class="maintenance-price" style="font-size: 2rem; margin: 0.5rem 0;">$21.60<span style="font-size: 0.9rem; color: var(--text-light);">/user/month</span></div>
+                        <ul style="font-size: 0.85rem;">
+                            <li><span class="tooltip">Everything in Business Standard<span class="tooltip-text">All Standard features—professional email, 2TB storage, 150-person meetings—plus maximum security and capacity!</span></span></li>
+                            <li><span class="tooltip">5 TB cloud storage per user<span class="tooltip-text">Virtually unlimited! Perfect for businesses with heavy media needs, large file sharing, or extensive archives.</span></span></li>
+                            <li><span class="tooltip">Video meetings up to 500 participants<span class="tooltip-text">Host massive events! Perfect for company-wide meetings, large webinars, or virtual conferences.</span></span></li>
+                            <li><span class="tooltip">Advanced security & compliance<span class="tooltip-text">Maximum protection! Data loss prevention, vault for retention, advanced endpoint management, and compliance tools.</span></span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-dark); max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.95rem;">💡 <strong>Setup included:</strong> We'll handle the complete Google Workspace setup and configuration for your business at no additional charge with any website package.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <h3>What's included in the one-time payment?</h3>
+                    <p>The one-time payment covers the complete design, development, and launch of your website. This includes all features listed in your chosen package, revisions, and initial setup.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Do I need a maintenance plan?</h3>
+                    <p>Yes, a maintenance plan is required to cover ongoing backend costs including hosting, security updates, and server management. These plans ensure your website remains secure, fast, and accessible 24/7. Choose the plan that best fits your budget and business needs.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I upgrade my package later?</h3>
+                    <p>Absolutely! You can upgrade your website at any time. We'll credit your original payment and only charge the difference plus any additional development time needed.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What if I need more pages than what's included?</h3>
+                    <p>Additional pages can be added for $25 per page. For larger projects, we can create a custom quote that better fits your needs.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Do you provide hosting?</h3>
+                    <p>I use 3rd party hosting included in the package, domain registration, and ongoing support to ensure your website runs smoothly.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What's your refund policy?</h3>
+                    <p>I am able to provide an 80% refund within the first 14 days of the websites release, However I do not charge until you look over the website and approve the design.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Ryan's Web Services. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
