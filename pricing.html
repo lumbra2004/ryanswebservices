@@ -255,6 +255,44 @@
         .features-list {
             list-style: none;
             margin: 2rem 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+
+        .features-list.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .toggle-details {
+            display: none;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .toggle-details:hover {
+            background: rgba(0, 102, 255, 0.15);
+        }
+
+        .toggle-details .arrow {
+            display: inline-block;
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-details.expanded .arrow {
+            transform: rotate(180deg);
         }
 
         .features-list li {
@@ -450,6 +488,14 @@
         .maintenance-card ul {
             list-style: none;
             margin-top: 1.5rem;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+
+        .maintenance-card ul.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin: 0;
         }
 
         .maintenance-card ul li {
@@ -684,6 +730,22 @@
                 width: 250px;
                 font-size: 0.8rem;
                 padding: 0.9rem;
+            }
+
+            .toggle-details {
+                display: block;
+            }
+
+            .features-list.collapsed {
+                max-height: 0;
+                opacity: 0;
+                margin: 0;
+            }
+
+            .maintenance-card ul.collapsed {
+                max-height: 0;
+                opacity: 0;
+                margin: 0;
             }
         }
     </style>
@@ -936,6 +998,83 @@
             <p>&copy; 2025 Ryan's Web Services. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Add toggle buttons and handle collapse functionality for mobile
+        function initCollapsible() {
+            // Check if mobile
+            if (window.innerWidth <= 480) {
+                // Handle pricing cards
+                const pricingCards = document.querySelectorAll('.pricing-card');
+                pricingCards.forEach(card => {
+                    const featuresList = card.querySelector('.features-list');
+                    const ctaButton = card.querySelector('.cta-button');
+                    
+                    if (featuresList && !card.querySelector('.toggle-details')) {
+                        // Start collapsed
+                        featuresList.classList.add('collapsed');
+                        
+                        // Create toggle button
+                        const toggleBtn = document.createElement('button');
+                        toggleBtn.className = 'toggle-details';
+                        toggleBtn.innerHTML = 'View Details <span class="arrow">▼</span>';
+                        
+                        // Insert before CTA button
+                        ctaButton.parentNode.insertBefore(toggleBtn, ctaButton);
+                        
+                        // Toggle functionality
+                        toggleBtn.addEventListener('click', function() {
+                            featuresList.classList.toggle('collapsed');
+                            this.classList.toggle('expanded');
+                            this.innerHTML = featuresList.classList.contains('collapsed') 
+                                ? 'View Details <span class="arrow">▼</span>' 
+                                : 'Hide Details <span class="arrow">▼</span>';
+                        });
+                    }
+                });
+                
+                // Handle maintenance cards
+                const maintenanceCards = document.querySelectorAll('.maintenance-card');
+                maintenanceCards.forEach(card => {
+                    const featuresList = card.querySelector('ul');
+                    
+                    if (featuresList && !card.querySelector('.toggle-details')) {
+                        // Start collapsed
+                        featuresList.classList.add('collapsed');
+                        
+                        // Create toggle button
+                        const toggleBtn = document.createElement('button');
+                        toggleBtn.className = 'toggle-details';
+                        toggleBtn.innerHTML = 'View Details <span class="arrow">▼</span>';
+                        
+                        // Append to card
+                        card.appendChild(toggleBtn);
+                        
+                        // Toggle functionality
+                        toggleBtn.addEventListener('click', function() {
+                            featuresList.classList.toggle('collapsed');
+                            this.classList.toggle('expanded');
+                            this.innerHTML = featuresList.classList.contains('collapsed') 
+                                ? 'View Details <span class="arrow">▼</span>' 
+                                : 'Hide Details <span class="arrow">▼</span>';
+                        });
+                    }
+                });
+            }
+        }
+        
+        // Initialize on load
+        initCollapsible();
+        
+        // Re-initialize on resize (in case user rotates device)
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                location.reload();
+            }, 250);
+        });
+    </script>
 </body>
 
 </html>
