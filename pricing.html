@@ -255,40 +255,61 @@
         .features-list {
             list-style: none;
             margin: 2rem 0;
-            transition: max-height 0.3s ease, opacity 0.3s ease;
         }
 
         .features-list.collapsed {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            margin: 0;
+            display: none;
         }
 
         .toggle-details {
             display: none;
             width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(0, 102, 255, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            color: var(--primary);
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.12), rgba(0, 212, 255, 0.08));
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            color: var(--text-primary);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 1rem 0;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        .toggle-details:hover {
-            background: rgba(0, 102, 255, 0.15);
+        .toggle-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.2), rgba(0, 212, 255, 0.15));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toggle-details:hover::before {
+            opacity: 1;
+        }
+
+        .toggle-details span {
+            position: relative;
+            z-index: 1;
         }
 
         .toggle-details .arrow {
             display: inline-block;
             margin-left: 0.5rem;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.8rem;
+        }
+
+        .toggle-details.expanded {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 102, 255, 0.08));
+            border-color: rgba(0, 212, 255, 0.4);
         }
 
         .toggle-details.expanded .arrow {
@@ -488,14 +509,10 @@
         .maintenance-card ul {
             list-style: none;
             margin-top: 1.5rem;
-            transition: max-height 0.3s ease, opacity 0.3s ease;
         }
 
         .maintenance-card ul.collapsed {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            margin: 0;
+            display: none;
         }
 
         .maintenance-card ul li {
@@ -680,6 +697,10 @@
 
             .tooltip:hover .tooltip-text {
                 transform: translateX(-50%) translateY(0);
+            }
+
+            .toggle-details {
+                display: block;
             }
 
             footer {
@@ -1002,8 +1023,10 @@
     <script>
         // Add toggle buttons and handle collapse functionality for mobile
         function initCollapsible() {
-            // Check if mobile
-            if (window.innerWidth <= 480) {
+            // Only add buttons on smaller screens
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
                 // Handle pricing cards
                 const pricingCards = document.querySelectorAll('.pricing-card');
                 pricingCards.forEach(card => {
@@ -1017,18 +1040,21 @@
                         // Create toggle button
                         const toggleBtn = document.createElement('button');
                         toggleBtn.className = 'toggle-details';
-                        toggleBtn.innerHTML = 'View Details <span class="arrow">▼</span>';
+                        toggleBtn.type = 'button';
+                        toggleBtn.innerHTML = '<span>View Details <span class="arrow">▼</span></span>';
                         
                         // Insert before CTA button
                         ctaButton.parentNode.insertBefore(toggleBtn, ctaButton);
                         
                         // Toggle functionality
-                        toggleBtn.addEventListener('click', function() {
+                        toggleBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
                             featuresList.classList.toggle('collapsed');
                             this.classList.toggle('expanded');
-                            this.innerHTML = featuresList.classList.contains('collapsed') 
-                                ? 'View Details <span class="arrow">▼</span>' 
-                                : 'Hide Details <span class="arrow">▼</span>';
+                            const isExpanded = !featuresList.classList.contains('collapsed');
+                            this.innerHTML = isExpanded 
+                                ? '<span>Hide Details <span class="arrow">▼</span></span>' 
+                                : '<span>View Details <span class="arrow">▼</span></span>';
                         });
                     }
                 });
@@ -1045,34 +1071,47 @@
                         // Create toggle button
                         const toggleBtn = document.createElement('button');
                         toggleBtn.className = 'toggle-details';
-                        toggleBtn.innerHTML = 'View Details <span class="arrow">▼</span>';
+                        toggleBtn.type = 'button';
+                        toggleBtn.innerHTML = '<span>View Details <span class="arrow">▼</span></span>';
                         
                         // Append to card
                         card.appendChild(toggleBtn);
                         
                         // Toggle functionality
-                        toggleBtn.addEventListener('click', function() {
+                        toggleBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
                             featuresList.classList.toggle('collapsed');
                             this.classList.toggle('expanded');
-                            this.innerHTML = featuresList.classList.contains('collapsed') 
-                                ? 'View Details <span class="arrow">▼</span>' 
-                                : 'Hide Details <span class="arrow">▼</span>';
+                            const isExpanded = !featuresList.classList.contains('collapsed');
+                            this.innerHTML = isExpanded 
+                                ? '<span>Hide Details <span class="arrow">▼</span></span>' 
+                                : '<span>View Details <span class="arrow">▼</span></span>';
                         });
                     }
+                });
+            } else {
+                // Remove collapse on desktop
+                document.querySelectorAll('.features-list, .maintenance-card ul').forEach(list => {
+                    list.classList.remove('collapsed');
+                });
+                document.querySelectorAll('.toggle-details').forEach(btn => {
+                    btn.remove();
                 });
             }
         }
         
         // Initialize on load
-        initCollapsible();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCollapsible);
+        } else {
+            initCollapsible();
+        }
         
-        // Re-initialize on resize (in case user rotates device)
+        // Handle resize with debounce
         let resizeTimer;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                location.reload();
-            }, 250);
+            resizeTimer = setTimeout(initCollapsible, 300);
         });
     </script>
 </body>
