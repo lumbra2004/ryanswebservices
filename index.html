@@ -14,8 +14,12 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan's Webservice | Professional Web Design for Small Businesses</title>
-    <meta name="description" content="Professional web design and development services for small businesses. Custom websites, SEO optimization, and mobile-responsive design at fair prices.">
+    <title>Affordable Web Design for Small Businesses | Custom Website Designer | Ryan's Webservice</title>
+    <meta name="description" content="Affordable web design services for small businesses. Professional custom website design, SEO optimization, mobile-responsive layouts, and ongoing support. Transform your online presence with a modern, high-converting website. Free consultation available!">
+    <meta name="keywords" content="web design, web designer, small business website, custom website design, SEO optimization, mobile responsive design, affordable web design, professional website, web development, website builder, freelance web designer, local web design, cheap website design, business website, ecommerce website, wordpress designer, responsive web design, website design services, web design company, website developer, modern web design, landing page design, website redesign, portfolio website">
+    <meta name="author" content="Ryan's Webservice">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ryanswebservices.com/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -23,6 +27,8 @@
     <meta property="og:title" content="Ryan's Webservice | Professional Web Design for Small Businesses">
     <meta property="og:description" content="Professional web design and development services for small businesses. Custom websites, SEO optimization, and mobile-responsive design at fair prices.">
     <meta property="og:image" content="https://ryanswebservices.com/stock-images/social-preview.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Ryan's Webservice">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -30,6 +36,62 @@
     <meta property="twitter:title" content="Ryan's Webservice | Professional Web Design for Small Businesses">
     <meta property="twitter:description" content="Professional web design and development services for small businesses. Custom websites, SEO optimization, and mobile-responsive design at fair prices.">
     <meta property="twitter:image" content="https://ryanswebservices.com/stock-images/social-preview.png">
+    
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Ryan's Webservice",
+      "description": "Professional web design and development services for small businesses",
+      "url": "https://ryanswebservices.com",
+      "logo": "https://ryanswebservices.com/stock-images/social-preview.png",
+      "image": "https://ryanswebservices.com/stock-images/social-preview.png",
+      "email": "contact@ryanswebservices.com",
+      "priceRange": "$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United States"
+      },
+      "serviceType": [
+        "Web Design",
+        "Web Development",
+        "SEO Optimization",
+        "Mobile Responsive Design",
+        "Custom Email Setup",
+        "Small Business Website Design",
+        "Affordable Website Design",
+        "Custom Website Development",
+        "WordPress Website Design",
+        "Landing Page Design",
+        "Website Redesign Services",
+        "E-commerce Website Development"
+      ],
+      "offers": {
+        "@type": "AggregateOffer",
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Ryan's Webservice",
+      "url": "https://ryanswebservices.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://ryanswebservices.com/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- Meta Pixel Code --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '1524340988599573'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=1524340988599573&ev=PageView&noscript=1"/></noscript><!-- End Meta Pixel Code -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -77,6 +139,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
         /* Header */
@@ -85,9 +148,16 @@
             backdrop-filter: blur(10px);
             background: rgba(10, 14, 26, 0.8);
             border-bottom: 1px solid var(--border-dark);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        header.header-hidden {
+            transform: translateY(-100%);
         }
 
         .container-nav {
@@ -138,10 +208,13 @@
         .hero {
             background: linear-gradient(165deg, #050810 0%, #0A0E1A 50%, #050810 100%);
             color: var(--text-primary);
-            padding: 4rem 1.5rem 5rem;
+            padding: 6rem 0 3rem;
             position: relative;
             overflow: hidden;
             border-bottom: 1px solid var(--border-dark);
+            max-width: none;
+            width: 100%;
+            margin: 0;
         }
         
         .hero::before {
@@ -169,26 +242,27 @@
         }
         
         .hero-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 1.5rem;
             position: relative;
             z-index: 2;
         }
         
         .brand-name {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 800;
-            letter-spacing: 3px;
+            letter-spacing: 2.5px;
             color: var(--secondary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
         }
         
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 900;
             line-height: 1.15;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             letter-spacing: -0.5px;
         }
         
@@ -200,12 +274,12 @@
         }
         
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             font-weight: 500;
             line-height: 1.6;
-            max-width: 600px;
+            max-width: 900px;
         }
         
         .hero-cta {
@@ -224,6 +298,27 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .hero-cta:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .hero-cta:hover {
@@ -234,6 +329,63 @@
         
         .hero-cta:active {
             transform: translateY(0);
+        }
+        
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .trust-badge-icon {
+            font-size: 1.25rem;
+        }
+        
+        /* Stats/Social Proof Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.05), rgba(0, 212, 255, 0.05));
+            border-radius: 16px;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
         }
         
         /* Section Styles */
@@ -646,7 +798,14 @@
             }
 
             .hero {
-                padding: 3rem 1rem 4rem;
+                padding: 5rem 0 2.5rem;
+                max-width: none;
+                width: 100%;
+                margin: 0;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
             }
             
             .brand-name {
@@ -766,6 +925,25 @@
             .privacy-policy p {
                 font-size: 0.8rem;
             }
+            
+            .trust-badges {
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            
+            .trust-badge {
+                font-size: 0.8rem;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin: 2rem auto;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
         }
         
         /* Responsive Design - Tablet */
@@ -792,16 +970,23 @@
         /* Responsive Design - Desktop */
         @media (min-width: 1024px) {
             .hero {
-                padding: 6rem 2rem 7rem;
+                padding: 7rem 0 4rem;
+                max-width: none;
+                width: 100%;
+                margin: 0;
+            }
+            
+            .hero-content {
+                padding: 0 2rem;
             }
             
             .hero h1 {
-                font-size: 4.5rem;
+                font-size: 3.5rem;
                 max-width: 900px;
             }
             
             .hero-subtitle {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             
             section {
@@ -850,93 +1035,127 @@
     </header>
 
     <!-- Hero Section -->
-    <div class="hero">
+    <section class="hero" aria-label="Hero Banner">
         <div class="hero-content">
-            <div class="brand-name">RYANS WEBSERVICES</div>
-            <h1>Attract New Customers with a <span>Professional Website</span></h1>
-            <p class="hero-subtitle">High-quality web design that helps your small business stand out online and drive real results.</p>
-            <a href="#contact" class="hero-cta">Get Started Today</a>
-        </div>
-    </div>
-
-    <!-- Services Section -->
-    <section id="services">
-        <div class="section-header">
-            <h2 class="section-title">Services I Offer</h2>
-            <p class="section-subtitle">Comprehensive web services designed to help your business succeed online</p>
-        </div>
-        
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">🎨</div>
-                <h3>Custom Web Design</h3>
-                <p>Beautiful, unique websites tailored to your brand and business goals. Stand out from the competition with a design that's truly yours.</p>
-            </div>
+            <p class="brand-name">RYANS WEBSERVICES</p>
+            <h1>Affordable <span>Custom Website Design</span> for Small Businesses</h1>
+            <p class="hero-subtitle">Professional web design and development services that help your small business attract customers, rank higher on Google, and drive real results. Modern, mobile-responsive websites at prices you can afford.</p>
+            <a href="#contact" class="hero-cta" aria-label="Contact us to get started"><span>Get Started Today</span></a>
             
-            <div class="service-card">
-                <div class="service-icon">🚀</div>
-                <h3>SEO & Performance</h3>
-                <p>Get found on Google with optimized websites built for speed and search engines. Drive more traffic to your business.</p>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">📱</div>
-                <h3>Mobile Optimization</h3>
-                <p>Your website will look perfect on every device - from smartphones to tablets to desktop computers. Reach customers anywhere.</p>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">💎</div>
-                <h3>Fair Pricing</h3>
-                <p>Professional quality at prices small businesses can afford. No hidden fees, no surprises - just honest, transparent pricing.</p>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">📧</div>
-                <h3>Custom Email Setup</h3>
-                <p>Professional branded email addresses for your business (you@yourbusiness.com). Build credibility and trust with custom email that matches your domain.</p>
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <span class="trust-badge-icon">✓</span>
+                    <span>Fast Turnaround</span>
+                </div>
+                <div class="trust-badge">
+                    <span class="trust-badge-icon">✓</span>
+                    <span>Mobile Optimized</span>
+                </div>
+                <div class="trust-badge">
+                    <span class="trust-badge-icon">✓</span>
+                    <span>SEO Ready</span>
+                </div>
+                <div class="trust-badge">
+                    <span class="trust-badge-icon">✓</span>
+                    <span>Affordable Pricing</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio">
-        <div class="section-header">
-            <h2 class="section-title">See Some Example Sites</h2>
-            <p class="section-subtitle">Real websites built for real businesses - browse examples to see what I can create for you</p>
+    <!-- Services Section -->
+    <section id="services" aria-labelledby="services-heading">
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Mobile Responsive</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">Fast</div>
+                <div class="stat-label">Delivery</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">SEO</div>
+                <div class="stat-label">Optimized</div>
+            </div>
         </div>
         
-        <div class="portfolio-grid">
-            <a href="auto-shop.html" class="portfolio-item">
-                <img src="stock-images/autopage.png" alt="Auto Shop Website" class="portfolio-image">
+        <div class="section-header">
+            <h2 id="services-heading" class="section-title">Professional Web Design Services</h2>
+            <p class="section-subtitle">Comprehensive website design and development services for small businesses, startups, and local companies looking to grow online</p>
+        </div>
+        
+        <div class="services-grid" role="list">
+            <article class="service-card" role="listitem">
+                <div class="service-icon" aria-hidden="true">🎨</div>
+                <h3>Custom Website Design</h3>
+                <p>Beautiful, custom-built websites designed specifically for your small business. Professional web design tailored to your brand, industry, and target audience. Stand out from competitors with a unique, modern website.</p>
+            </article>
+            
+            <article class="service-card" role="listitem">
+                <div class="service-icon" aria-hidden="true">🚀</div>
+                <h3>SEO Optimization & Fast Loading</h3>
+                <p>Get found on Google with SEO-optimized websites built for speed and search rankings. Professional on-page SEO, keyword optimization, and performance tuning to drive organic traffic and new customers to your small business.</p>
+            </article>
+            
+            <article class="service-card" role="listitem">
+                <div class="service-icon" aria-hidden="true">📱</div>
+                <h3>Mobile-Responsive Web Design</h3>
+                <p>Fully responsive website design that looks perfect on every device - smartphones, tablets, and desktops. Mobile-first design approach ensures your small business website works flawlessly on any screen size.</p>
+            </article>
+            
+            <article class="service-card" role="listitem">
+                <div class="service-icon" aria-hidden="true">💎</div>
+                <h3>Affordable Web Design Pricing</h3>
+                <p>Professional quality website design at affordable prices for small businesses. Transparent pricing with no hidden fees - get a custom business website without breaking the bank.</p>
+            </article>
+            
+            <article class="service-card" role="listitem">
+                <div class="service-icon" aria-hidden="true">📧</div>
+                <h3>Custom Email Setup</h3>
+                <p>Professional branded email addresses for your business (you@yourbusiness.com). Build credibility and trust with custom email that matches your domain.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" aria-labelledby="portfolio-heading">
+        <div class="section-header">
+            <h2 id="portfolio-heading" class="section-title">Website Design Portfolio & Examples</h2>
+            <p class="section-subtitle">Professional website examples for small businesses - see custom web designs for auto shops, restaurants, landscaping companies, and more</p>
+        </div>
+        
+        <div class="portfolio-grid" role="list">
+            <a href="auto-shop.html" class="portfolio-item" role="listitem" aria-label="View Auto Shop website example">
+                <img src="stock-images/autopage.png" alt="Custom auto repair shop website design - professional mechanic business website with online booking, service pages, and mobile-responsive layout" class="portfolio-image" loading="lazy">
                 <div class="portfolio-content">
-                    <h3>Auto Shop</h3>
-                    <p>Dynamic website for an auto repair shop with service listings, appointment booking, and customer testimonials.</p>
+                    <h3>Auto Repair Shop Website Design</h3>
+                    <p>Professional website design for auto mechanics and repair shops. Features online appointment booking, service listings, customer reviews, and mobile-friendly design.</p>
                 </div>
             </a>
             
-            <a href="restaurant-cafe.html" class="portfolio-item">
-                <img src="stock-images/cafepage.png" alt="Restaurant Website" class="portfolio-image">
+            <a href="restaurant-cafe.html" class="portfolio-item" role="listitem" aria-label="View Restaurant/Cafe website example">
+                <img src="stock-images/cafepage.png" alt="Restaurant website design - custom cafe and dining business website with online menu, reservation system, and food gallery" class="portfolio-image" loading="lazy">
                 <div class="portfolio-content">
-                    <h3>Restaurant / Cafe</h3>
-                    <p>Modern, inviting website for a restaurant or café with an interactive menu and reservation features.</p>
+                    <h3>Restaurant & Cafe Website Design</h3>
+                    <p>Modern restaurant website design with interactive digital menus, online reservation system, beautiful food photography galleries, and mobile ordering capabilities.</p>
                 </div>
             </a>
             
-            <a href="landscaping.html" class="portfolio-item">
-                <img src="stock-images/landscapepage.png" alt="Landscaping Website" class="portfolio-image">
+            <a href="landscaping.html" class="portfolio-item" role="listitem" aria-label="View Landscaping website example">
+                <img src="stock-images/landscapepage.png" alt="Landscaping company website design - professional lawn care and landscape business website with service pages, project galleries, and lead generation forms" class="portfolio-image" loading="lazy">
                 <div class="portfolio-content">
-                    <h3>Landscaping</h3>
-                    <p>Professional site for a landscaping business showcasing services, project galleries, and easy contact options.</p>
+                    <h3>Landscaping Company Website Design</h3>
+                    <p>Professional website design for landscaping and lawn care businesses. Showcase your services, before/after project galleries, customer testimonials, and generate leads with contact forms.</p>
                 </div>
             </a>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact">
+    <section id="contact" aria-labelledby="contact-heading">
         <div class="contact-header">
-            <h2>Let's Build Something Great Together!</h2>
+            <h2 id="contact-heading">Let's Build Something Great Together!</h2>
             <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap;">
                 <p class="contact-email">contact@ryanswebservices.com</p>
                 <button class="copy-email-btn" onclick="copyEmail()">
@@ -1081,6 +1300,32 @@
             }
         });
     </script>
+    
+    <script>
+        // Header hide/show on scroll
+        let lastScrollTop = 0;
+        let scrollThreshold = 5; // Minimum scroll distance to trigger
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Only hide/show if scrolled past threshold
+            if (Math.abs(scrollTop - lastScrollTop) < scrollThreshold) {
+                return;
+            }
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down & past 100px
+                header.classList.add('header-hidden');
+            } else {
+                // Scrolling up
+                header.classList.remove('header-hidden');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    </script>
 
 </body>
 </html>
@@ -1088,8 +1333,8 @@
 
     </section>
 
-    <footer>
-        &copy; 2025 Ryan's Web Services. All rights reserved.
+    <footer role="contentinfo">
+        <p>&copy; 2025 Ryan's Webservice. All rights reserved. | <a href="pricing.html" style="color: var(--primary); text-decoration: none;">View Pricing</a> | <a href="#contact" style="color: var(--primary); text-decoration: none;">Contact Us</a></p>
     </footer>
 
 </body>
