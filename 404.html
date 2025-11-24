@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17751846529"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17751846529');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Ryan's Webservice</title>
+    <meta name="description" content="Oops! The page you're looking for doesn't exist. Return to Ryan's Webservice homepage.">
+    
+    <!-- Meta Pixel Code --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '1524340988599573'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=1524340988599573&ev=PageView&noscript=1"/></noscript><!-- End Meta Pixel Code -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background: #050810;
+            min-height: 100%;
+        }
+        
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --primary-light: #3385FF;
+            --secondary: #00D4FF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B4BFCD;
+            --text-light: #8B95A5;
+            --bg-dark: #0A0E1A;
+            --bg-darker: #050810;
+            --bg-card: #151922;
+            --bg-card-hover: #1A1F2E;
+            --border-dark: #1F2937;
+            --border-light: #2D3748;
+            --shadow-xl: 0 16px 48px rgba(0, 102, 255, 0.2);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 26, 0.8);
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .container-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-light);
+        }
+        
+        /* 404 Content */
+        .error-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .error-container::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-20px) translateX(20px);
+            }
+        }
+
+        .error-content {
+            max-width: 700px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-number {
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.05em;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 96%, 100% {
+                text-shadow: none;
+            }
+            98% {
+                text-shadow: 0.05em 0 0 rgba(0, 212, 255, 0.8),
+                             -0.05em 0 0 rgba(0, 102, 255, 0.8);
+            }
+        }
+
+        .error-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .error-message {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 102, 255, 0.45);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(0, 102, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .helpful-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-dark);
+        }
+
+        .helpful-links h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .link-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .link-item span {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-darker);
+            border-top: 1px solid var(--border-dark);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            margin-top: auto;
+        }
+        
+        footer p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 639px) {
+            .container-nav {
+                padding: 0 1.25rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            header {
+                padding: 1rem 0;
+            }
+
+            .error-container {
+                padding: 3rem 1rem;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container-nav">
+            <div class="logo">Ryan's Webservice</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-number">404</div>
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-message">Oops! The page you're looking for seems to have wandered off. Don't worry though—let's get you back on track.</p>
+            
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary">← Back to Home</a>
+                <a href="pricing.html" class="btn btn-secondary">View Pricing</a>
+            </div>
+
+            <div class="helpful-links">
+                <h3>Maybe you were looking for:</h3>
+                <div class="links-grid">
+                    <a href="index.html#services" class="link-item">
+                        <span>🎨</span>
+                        Services
+                    </a>
+                    <a href="index.html#portfolio" class="link-item">
+                        <span>💼</span>
+                        Examples
+                    </a>
+                    <a href="index.html#contact" class="link-item">
+                        <span>📧</span>
+                        Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Ryan's Web Services. All rights reserved.</p>
+    </footer>
+</body>
+</html>
