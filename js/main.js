@@ -113,15 +113,20 @@ function initSettings() {
     const themeModeText = document.querySelector('#themeToggleItem .settings-menu-label span:last-child');
     const body = document.body;
     
+    // Exit if settings button doesn't exist on this page
+    if (!settingsButton || !settingsMenu) {
+        return;
+    }
+    
     // Check for saved theme preference or default to dark mode
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
         body.classList.add('light-mode');
-        themeToggle.classList.add('active');
-        themeIcon.textContent = '☀️';
+        if (themeToggle) themeToggle.classList.add('active');
+        if (themeIcon) themeIcon.textContent = '☀️';
         if (themeModeText) themeModeText.textContent = 'Light Mode';
     } else {
-        themeIcon.textContent = '🌙';
+        if (themeIcon) themeIcon.textContent = '🌙';
         if (themeModeText) themeModeText.textContent = 'Dark Mode';
     }
     
@@ -141,21 +146,24 @@ function initSettings() {
     });
     
     // Theme toggle functionality
-    document.getElementById('themeToggleItem').addEventListener('click', function(e) {
-        e.stopPropagation();
-        body.classList.toggle('light-mode');
-        themeToggle.classList.toggle('active');
-        
-        if (body.classList.contains('light-mode')) {
-            themeIcon.textContent = '☀️';
-            if (themeModeText) themeModeText.textContent = 'Light Mode';
-            localStorage.setItem('theme', 'light');
-        } else {
-            themeIcon.textContent = '🌙';
-            if (themeModeText) themeModeText.textContent = 'Dark Mode';
-            localStorage.setItem('theme', 'dark');
-        }
-    });
+    const themeToggleItem = document.getElementById('themeToggleItem');
+    if (themeToggleItem) {
+        themeToggleItem.addEventListener('click', function(e) {
+            e.stopPropagation();
+            body.classList.toggle('light-mode');
+            if (themeToggle) themeToggle.classList.toggle('active');
+            
+            if (body.classList.contains('light-mode')) {
+                if (themeIcon) themeIcon.textContent = '☀️';
+                if (themeModeText) themeModeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                if (themeIcon) themeIcon.textContent = '🌙';
+                if (themeModeText) themeModeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
 }
 
 // Initialize settings when DOM is ready

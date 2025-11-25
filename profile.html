@@ -28,6 +28,63 @@
             background-attachment: fixed;
         }
 
+        /* Light Mode Styles */
+        body.light-mode {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
+        }
+
+        body.light-mode .profile-header {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: #e2e8f0;
+        }
+
+        body.light-mode .profile-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #e2e8f0;
+            border-left-color: var(--primary);
+        }
+
+        body.light-mode .profile-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-mode .profile-avatar-large {
+            background: rgba(0, 102, 255, 0.08);
+            border-color: rgba(0, 102, 255, 0.2);
+        }
+
+        body.light-mode .member-badge {
+            background: rgba(0, 102, 255, 0.08);
+            border-color: rgba(0, 102, 255, 0.2);
+        }
+
+        body.light-mode .stat-value {
+            color: var(--text-primary);
+        }
+
+        body.light-mode .quick-link-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #e2e8f0;
+        }
+
+        body.light-mode .quick-link-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: var(--primary);
+        }
+
+        body.light-mode input,
+        body.light-mode textarea {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #e2e8f0;
+            color: var(--text-primary);
+        }
+
+        body.light-mode input:focus,
+        body.light-mode textarea:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
         .profile-container {
             max-width: 1200px;
             margin: 0 auto;

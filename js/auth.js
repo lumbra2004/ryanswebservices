@@ -498,7 +498,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
     
     if (mobileMenuToggle && navLinks) {
-        mobileMenuToggle.addEventListener('click', () => {
+        mobileMenuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             mobileMenuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
             document.body.classList.toggle('menu-open');
@@ -523,5 +524,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('menu-open');
             }
         });
+
+        // Ensure user button works in mobile nav
+        const userButton = document.getElementById('userButton');
+        if (userButton) {
+            userButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
     }
 });

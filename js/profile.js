@@ -231,47 +231,8 @@ class ProfileManager {
     setupEventListeners() {
         // Profile form submission
         const profileForm = document.getElementById('profileForm');
-        profileForm.addEventListener('submit', (e) => this.updateProfile(e));
-
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navLinks = document.querySelector('.nav-links');
-        
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                mobileMenuToggle.classList.toggle('active');
-                navLinks.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
-            });
-
-            // Close menu when clicking a link (but not buttons)
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenuToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
-                });
-            });
-
-            // Close menu when clicking overlay (but allow clicking inside nav)
-            document.addEventListener('click', (e) => {
-                if (navLinks.classList.contains('active') && 
-                    !navLinks.contains(e.target) && 
-                    !mobileMenuToggle.contains(e.target)) {
-                    mobileMenuToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
-                }
-            });
-        }
-
-        // Ensure user button works in mobile nav
-        const userButton = document.getElementById('userButton');
-        if (userButton) {
-            userButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
+        if (profileForm) {
+            profileForm.addEventListener('submit', (e) => this.updateProfile(e));
         }
     }
 
