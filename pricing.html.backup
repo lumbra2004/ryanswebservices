@@ -38,6 +38,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <style>
         /* CSS Reset & Base Styles */
@@ -48,7 +49,6 @@
         }
 
         html {
-            background: #050810;
             min-height: 100%;
         }
 
@@ -96,12 +96,13 @@
             -moz-osx-font-smoothing: grayscale;
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
-            max-width: 1400px !important;
-            margin: 0 auto !important;
-            padding: 0 2rem !important;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         /* Header */
@@ -113,11 +114,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-
-        body.light-mode header {
-            background: rgba(255, 255, 255, 0.8);
         }
 
         nav {
@@ -160,7 +156,7 @@
 
         /* Hero Section */
         .hero {
-            text-align: left;
+            text-align: center;
             padding: 5rem 0 3rem;
         }
 
@@ -173,16 +169,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
-            text-align: center;
         }
 
         .hero p {
             font-size: clamp(1.1rem, 2vw, 1.3rem);
             color: var(--text-secondary);
             max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
             margin: 0 auto 2rem;
             line-height: 1.7;
         }
@@ -202,12 +194,10 @@
         /* Pricing Grid */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            margin: 3rem 0;
+            margin: 3rem auto;
             max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .pricing-card {
@@ -218,6 +208,7 @@
             position: relative;
             transition: all 0.4s ease;
             backdrop-filter: blur(10px);
+            text-align: left;
         }
 
         .pricing-card:hover {
@@ -510,6 +501,7 @@
             border-radius: 16px;
             padding: 2rem;
             transition: all 0.3s ease;
+            text-align: left;
         }
 
         .maintenance-card:hover {
@@ -798,254 +790,6 @@
                 margin: 0;
             }
         }
-
-        /* Settings Button & Menu Styles */
-        .settings-button {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            color: white;
-        }
-
-        .settings-button:hover {
-            transform: translateY(-3px) scale(1.05) rotate(90deg);
-            box-shadow: 0 6px 24px rgba(0, 102, 255, 0.5);
-        }
-
-        .settings-button.active {
-            transform: rotate(90deg);
-        }
-
-        .settings-menu {
-            position: fixed;
-            bottom: 5.5rem;
-            right: 2rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 1rem;
-            min-width: 220px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px) scale(0.95);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 999;
-        }
-
-        .settings-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
-
-        .settings-menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            margin-bottom: 0.5rem;
-        }
-
-        .settings-menu-item:hover {
-            background: var(--card-hover);
-        }
-
-        .settings-menu-label {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            flex: 1;
-        }
-
-        .settings-menu-icon {
-            font-size: 1.25rem;
-        }
-
-        .toggle-switch {
-            width: 48px;
-            height: 26px;
-            background: var(--border-dark);
-            border-radius: 13px;
-            position: relative;
-            transition: background 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            top: 3px;
-            left: 3px;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: var(--primary);
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(22px);
-        }
-
-        /* Login Button & User Menu */
-        .login-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-        }
-
-        .user-menu {
-            position: relative;
-        }
-
-        .user-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-dark);
-            border-radius: 10px;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .user-button:hover {
-            background: var(--card-hover);
-            border-color: var(--primary);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: white;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: calc(100% + 0.5rem);
-            right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border-dark);
-            border-radius: 12px;
-            min-width: 200px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .user-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .user-dropdown-item {
-            padding: 0.75rem 1rem;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: background 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.9rem;
-            text-decoration: none;
-        }
-
-        .user-dropdown-item:first-child {
-            border-radius: 12px 12px 0 0;
-        }
-
-        .user-dropdown-item:last-child {
-            border-radius: 0 0 12px 12px;
-            border-top: 1px solid var(--border-dark);
-        }
-
-        .user-dropdown-item:hover {
-            background: var(--card-hover);
-        }
-
-        /* Header scroll behavior */
-        header {
-            transition: transform 0.3s ease;
-        }
-
-        header.header-hidden {
-            transform: translateY(-100%);
-        }
-
-        @media (max-width: 639px) {
-            .settings-button {
-                width: 50px;
-                height: 50px;
-                font-size: 1.3rem;
-                bottom: 1.5rem;
-                right: 1.5rem;
-            }
-
-            .settings-menu {
-                bottom: 5rem;
-                right: 1.5rem;
-            }
-
-            .user-button {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
-            }
-
-            .user-avatar {
-                width: 28px;
-                height: 28px;
-            }
-        }
     </style>
 </head>
 
@@ -1069,8 +813,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <span id="userName">John Doe</span>
                         </button>
                         <div id="userDropdown" class="user-dropdown">
-                            <a href="profile.html" class="user-dropdown-item">👤 Profile</a>
-                            <a href="profile.html" class="user-dropdown-item">⚙️ Settings</a>
+                            <div class="user-dropdown-item">👤 Profile</div>
+                            <div class="user-dropdown-item">⚙️ Settings</div>
                             <div id="logoutBtn" class="user-dropdown-item">🚪 Logout</div>
                         </div>
                     </div>
@@ -1088,7 +832,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </section>
 
-        <section class="container">
+        <section>
+            <div class="container">
             <div class="pricing-grid">
                 <!-- Starter Package -->
                 <div class="pricing-card">
@@ -1110,7 +855,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <li class="not-included"><span class="tooltip">Appointment scheduling<span class="tooltip-text">Available in Premium tier. Let customers book appointments 24/7 with automated scheduling and email reminders.</span></span></li>
                     </ul>
 
-                    <a class='cta-button' href='/#contact'>Get Started</a>
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
                 </div>
 
                 <!-- Professional Package (Featured) -->
@@ -1137,7 +882,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <li class="not-included"><span class="tooltip">Appointment scheduling<span class="tooltip-text">Available in Premium tier. Let customers book appointments 24/7 with automated scheduling and email reminders.</span></span></li>
                     </ul>
 
-                    <a class='cta-button' href='/#contact'>Get Started</a>
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
                 </div>
 
                 <!-- Premium Package -->
@@ -1161,9 +906,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <li><span class="tooltip">Unlimited revisions<span class="tooltip-text">Perfect results guaranteed! We'll keep refining your website until you're 100% satisfied with every detail.</span></span></li>
                     </ul>
 
-                    <a class='cta-button' href='/#contact'>Get Started</a>
+                    <a href="index.html#contact" class="cta-button">Get Started</a>
                 </div>
             </div>
+        </div>
         </section>
 
         <!-- Maintenance Plans -->
@@ -1486,8 +1232,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
 </body>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Ryan's Webservice</title>
+    <meta name="description" content="Manage your account, view orders, and access your files.">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--bg-darker) 100%);
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .profile-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            padding: 3rem 3.5rem;
+            background: rgba(10, 15, 25, 0.6);
+            border-radius: 0;
+            border: none;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(0, 102, 255, 0.02) 50%, transparent 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 102, 255, 0.03) 2px, rgba(0, 102, 255, 0.03) 4px);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .profile-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header-content {
+            flex: 1;
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: none;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            position: relative;
+            font-family: 'Courier New', monospace;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-large::after {
+            display: none;
+        }
+
+        .profile-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .profile-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+            font-family: 'Courier New', monospace;
+        }
+
+        .member-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 102, 255, 0.05);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 3px;
+            color: rgba(0, 102, 255, 0.9);
+            font-size: 0.85rem;
+            margin-top: 0;
+            backdrop-filter: none;
+            box-shadow: none;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .member-badge::before {
+            content: '●';
+            font-size: 0.6rem;
+            color: var(--primary);
+        }
+
+        .member-badge strong {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-card {
+            background: rgba(10, 15, 25, 0.4);
+            border-radius: 0;
+            padding: 2.5rem;
+            box-shadow: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 2px solid rgba(0, 102, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 102, 255, 0.02) 2px,
+                rgba(0, 102, 255, 0.02) 4px
+            );
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .profile-card:hover {
+            transform: translateX(2px);
+            border-left-color: var(--primary);
+            background: rgba(10, 15, 25, 0.6);
+        }
+
+        .profile-card h2 {
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        .profile-card h2::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .profile-info-item {
+            margin-bottom: 2rem;
+        }
+
+        .profile-info-item label {
+            display: block;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-info-item input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            backdrop-filter: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .profile-info-item input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: none;
+            transform: none;
+        }
+
+        .profile-info-item input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            display: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: none;
+            position: relative;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary::after {
+            display: none;
+        }
+
+        .btn-primary:hover {
+            transform: none;
+            background: var(--primary-dark);
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: none;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .orders-table th {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .orders-table th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .orders-table th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .orders-table td {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .orders-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .orders-table tbody tr:hover {
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-paid {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-completed {
+            background: rgba(33, 150, 243, 0.15);
+            color: #2196f3;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: var(--bg-darker);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .file-item:hover {
+            background: rgba(0, 102, 255, 0.05);
+            border-color: rgba(0, 102, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+        }
+
+        .file-details h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .file-details p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .file-download {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
+        }
+
+        .file-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+            text-align: left;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-link::before {
+            display: none;
+        }
+
+        .quick-link:hover {
+            background: rgba(0, 102, 255, 0.05);
+            transform: translateX(4px);
+            border-left-color: var(--primary);
+            box-shadow: none;
+        }
+
+        .quick-link-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: 2px;
+            filter: none;
+            transition: none;
+            flex-shrink: 0;
+        }
+
+        .quick-link:hover .quick-link-icon {
+            transform: none;
+            background: rgba(0, 102, 255, 0.15);
+        }
+
+        .quick-link div:last-child {
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced Table */
+        .orders-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .orders-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Profile Actions */
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .profile-actions .btn {
+            flex: 0 0 auto;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            padding-bottom: 0;
+            border: none;
+        }
+
+        .section-header h2::before {
+            display: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.875rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0, 102, 255, 0.08);
+            color: rgba(0, 102, 255, 0.9);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Full width cards */
+        .profile-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Enhanced animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-card {
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .profile-card:nth-child(1) { animation-delay: 0.1s; }
+        .profile-card:nth-child(2) { animation-delay: 0.2s; }
+        .profile-card:nth-child(3) { animation-delay: 0.3s; }
+        .profile-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container-nav">
+            <div class="logo">Ryan's Webservice</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="profile.html" class="active">Profile</a></li>
+                <li>
+                    <button id="loginBtn" class="login-btn" style="display: none;">Login</button>
+                    <div id="userMenu" class="user-menu" style="display: none;">
+                        <button id="userButton" class="user-button">
+                            <div id="userAvatar" class="user-avatar">RW</div>
+                            <span id="userName">User</span>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown">
+                            <a href="profile.html" class="user-dropdown-item">👤 Profile</a>
+                            <a href="profile.html" class="user-dropdown-item">⚙️ Settings</a>
+                            <div id="logoutBtn" class="user-dropdown-item">🚪 Logout</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar-large" id="profileAvatar">RW</div>
+            <div class="profile-header-content">
+                <h1 id="profileName">Loading...</h1>
+                <p id="profileEmail">Loading...</p>
+                <div class="member-badge">
+                    <span>Since</span>
+                    <strong id="memberSince">2025</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Profile Information -->
+            <div class="profile-card">
+                <h2>Profile Information</h2>
+                <form id="profileForm">
+                    <div class="profile-info-item">
+                        <label>Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your name">
+                    </div>
+                    <div class="profile-info-item">
+                        <label>Email</label>
+                        <input type="email" id="email" disabled>
+                    </div>
+                    <div class="profile-info-item">
+                        <label>Phone</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone">
+                    </div>
+                    <div class="profile-info-item">
+                        <label>Company</label>
+                        <input type="text" id="company" placeholder="Enter company name">
+                    </div>
+                    <div class="profile-actions">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('profileForm').reset()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="profile-card">
+                <h2>Quick Actions</h2>
+                <div class="quick-links">
+                    <a href="pricing.html" class="quick-link">
+                        <div class="quick-link-icon">→</div>
+                        <div>New Order</div>
+                    </a>
+                    <a href="index.html#contact" class="quick-link">
+                        <div class="quick-link-icon">○</div>
+                        <div>Support</div>
+                    </a>
+                    <a href="#" class="quick-link" onclick="alert('Billing portal coming soon!'); return false;">
+                        <div class="quick-link-icon">▭</div>
+                        <div>Billing</div>
+                    </a>
+                    <a href="#" class="quick-link" onclick="alert('Settings coming soon!'); return false;">
+                        <div class="quick-link-icon">◊</div>
+                        <div>Settings</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order History -->
+        <div class="profile-card full-width">
+            <div class="section-header">
+                <h2>Order History</h2>
+                <span class="badge" id="orderCount">0 Orders</span>
+            </div>
+            <div id="ordersContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading orders...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Files & Documents -->
+        <div class="profile-card full-width">
+            <div class="section-header">
+                <h2>Files & Documents</h2>
+                <span class="badge" id="fileCount">0 Files</span>
+            </div>
+            <div id="filesContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading files...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-button" id="settingsButton" aria-label="Settings">⚙️</button>
+
+    <!-- Settings Menu -->
+    <div class="settings-menu" id="settingsMenu">
+        <div class="settings-menu-item" id="themeToggleItem">
+            <div class="settings-menu-label">
+                <span class="settings-menu-icon" id="themeIcon">🌙</span>
+                <span id="themeLabelText">Dark Mode</span>
+            </div>
+            <div id="themeToggleSwitch" class="toggle-switch"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

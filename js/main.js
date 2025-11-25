@@ -103,3 +103,60 @@ function copyEmail() {
         console.error('Failed to copy email:', err);
     });
 }
+
+// Settings Menu & Theme Toggle
+function initSettings() {
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsMenu = document.getElementById('settingsMenu');
+    const themeToggle = document.getElementById('themeToggleSwitch');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeModeText = document.querySelector('#themeToggleItem .settings-menu-label span:last-child');
+    const body = document.body;
+    
+    // Check for saved theme preference or default to dark mode
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        body.classList.add('light-mode');
+        themeToggle.classList.add('active');
+        themeIcon.textContent = '☀️';
+        if (themeModeText) themeModeText.textContent = 'Light Mode';
+    } else {
+        themeIcon.textContent = '🌙';
+        if (themeModeText) themeModeText.textContent = 'Dark Mode';
+    }
+    
+    // Toggle settings menu
+    settingsButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        settingsMenu.classList.toggle('show');
+        settingsButton.classList.toggle('active');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!settingsMenu.contains(e.target) && e.target !== settingsButton) {
+            settingsMenu.classList.remove('show');
+            settingsButton.classList.remove('active');
+        }
+    });
+    
+    // Theme toggle functionality
+    document.getElementById('themeToggleItem').addEventListener('click', function(e) {
+        e.stopPropagation();
+        body.classList.toggle('light-mode');
+        themeToggle.classList.toggle('active');
+        
+        if (body.classList.contains('light-mode')) {
+            themeIcon.textContent = '☀️';
+            if (themeModeText) themeModeText.textContent = 'Light Mode';
+            localStorage.setItem('theme', 'light');
+        } else {
+            themeIcon.textContent = '🌙';
+            if (themeModeText) themeModeText.textContent = 'Dark Mode';
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+}
+
+// Initialize settings when DOM is ready
+document.addEventListener('DOMContentLoaded', initSettings);
