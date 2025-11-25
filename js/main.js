@@ -13,10 +13,13 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all service cards
-document.querySelectorAll('.service-card').forEach(card => {
-    observer.observe(card);
-});
+// Observe all service cards (if they exist)
+const serviceCards = document.querySelectorAll('.service-card');
+if (serviceCards.length > 0) {
+    serviceCards.forEach(card => {
+        observer.observe(card);
+    });
+}
 
 // Mobile collapsible sections
 function initMobileCollapse() {
@@ -25,6 +28,11 @@ function initMobileCollapse() {
         const portfolioHeader = document.querySelector('#portfolio .section-header');
         const servicesGrid = document.querySelector('.services-grid');
         const portfolioGrid = document.querySelector('.portfolio-grid');
+        
+        // Only initialize if elements exist
+        if (!servicesHeader || !portfolioHeader || !servicesGrid || !portfolioGrid) {
+            return;
+        }
         
         // Start collapsed
         servicesHeader.classList.add('collapsed');
@@ -108,15 +116,21 @@ function copyEmail() {
 function initSettings() {
     const settingsButton = document.getElementById('settingsButton');
     const settingsMenu = document.getElementById('settingsMenu');
+    
+    console.log('initSettings called');
+    console.log('settingsButton:', settingsButton);
+    console.log('settingsMenu:', settingsMenu);
+    
+    // Exit if settings button doesn't exist on this page
+    if (!settingsButton || !settingsMenu) {
+        console.log('Settings elements not found, exiting');
+        return;
+    }
+    
     const themeToggle = document.getElementById('themeToggleSwitch');
     const themeIcon = document.getElementById('themeIcon');
     const themeModeText = document.querySelector('#themeToggleItem .settings-menu-label span:last-child');
     const body = document.body;
-    
-    // Exit if settings button doesn't exist on this page
-    if (!settingsButton || !settingsMenu) {
-        return;
-    }
     
     // Check for saved theme preference or default to dark mode
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -132,6 +146,7 @@ function initSettings() {
     
     // Toggle settings menu
     settingsButton.addEventListener('click', function(e) {
+        console.log('Settings button clicked!');
         e.stopPropagation();
         settingsMenu.classList.toggle('show');
         settingsButton.classList.toggle('active');
@@ -164,7 +179,14 @@ function initSettings() {
             }
         });
     }
+    
+    console.log('Settings initialized successfully');
 }
 
 // Initialize settings when DOM is ready
-document.addEventListener('DOMContentLoaded', initSettings);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSettings);
+} else {
+    // DOM already loaded
+    initSettings();
+}

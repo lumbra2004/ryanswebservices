@@ -37,20 +37,27 @@ class ProfileManager {
                 .select('id')
                 .eq('user_id', this.currentUser.id);
 
-            // Update stat cards
-            document.getElementById('totalOrders').textContent = orders?.length || 0;
+            // Update stat cards (with null checks)
+            const totalOrdersEl = document.getElementById('totalOrders');
+            if (totalOrdersEl) totalOrdersEl.textContent = orders?.length || 0;
             
             const totalSpent = orders?.reduce((sum, order) => sum + parseFloat(order.amount), 0) || 0;
-            document.getElementById('totalSpent').textContent = '$' + totalSpent.toFixed(2);
+            const totalSpentEl = document.getElementById('totalSpent');
+            if (totalSpentEl) totalSpentEl.textContent = '$' + totalSpent.toFixed(2);
             
-            document.getElementById('totalFiles').textContent = files?.length || 0;
+            const totalFilesEl = document.getElementById('totalFiles');
+            if (totalFilesEl) totalFilesEl.textContent = files?.length || 0;
             
             const memberSince = new Date(this.currentUser.created_at).getFullYear();
-            document.getElementById('memberSince').textContent = memberSince;
+            const memberSinceEl = document.getElementById('memberSince');
+            if (memberSinceEl) memberSinceEl.textContent = memberSince;
 
-            // Update badges
-            document.getElementById('orderCount').textContent = `${orders?.length || 0} Orders`;
-            document.getElementById('fileCount').textContent = `${files?.length || 0} Files`;
+            // Update badges (with null checks)
+            const orderCountEl = document.getElementById('orderCount');
+            if (orderCountEl) orderCountEl.textContent = `${orders?.length || 0} Orders`;
+            
+            const fileCountEl = document.getElementById('fileCount');
+            if (fileCountEl) fileCountEl.textContent = `${files?.length || 0} Files`;
 
         } catch (error) {
             console.error('Error updating stats:', error);
