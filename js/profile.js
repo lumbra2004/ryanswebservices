@@ -238,13 +238,14 @@ class ProfileManager {
         const navLinks = document.querySelector('.nav-links');
         
         if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', () => {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 mobileMenuToggle.classList.toggle('active');
                 navLinks.classList.toggle('active');
                 document.body.classList.toggle('menu-open');
             });
 
-            // Close menu when clicking a link
+            // Close menu when clicking a link (but not buttons)
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenuToggle.classList.remove('active');
@@ -253,7 +254,7 @@ class ProfileManager {
                 });
             });
 
-            // Close menu when clicking overlay
+            // Close menu when clicking overlay (but allow clicking inside nav)
             document.addEventListener('click', (e) => {
                 if (navLinks.classList.contains('active') && 
                     !navLinks.contains(e.target) && 
@@ -262,6 +263,14 @@ class ProfileManager {
                     navLinks.classList.remove('active');
                     document.body.classList.remove('menu-open');
                 }
+            });
+        }
+
+        // Ensure user button works in mobile nav
+        const userButton = document.getElementById('userButton');
+        if (userButton) {
+            userButton.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
         }
     }

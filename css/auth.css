@@ -634,6 +634,17 @@
         position: relative;
     }
 
+    .nav-links .user-button {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        touch-action: manipulation;
+    }
+
+    .nav-links .user-button:active {
+        background: rgba(0, 102, 255, 0.15);
+    }
+
     .nav-links .user-dropdown {
         position: relative;
         top: 0;
@@ -642,6 +653,12 @@
         width: 100%;
         box-shadow: none;
         border: 1px solid var(--border-dark);
+        background: rgba(10, 15, 25, 0.8);
+    }
+
+    .nav-links .user-dropdown-item {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .login-btn {
@@ -649,5 +666,6 @@
         padding: 1rem;
         min-height: 54px;
         font-size: 1rem;
+        touch-action: manipulation;
     }
 }
