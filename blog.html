@@ -550,7 +550,7 @@
                 <span></span>
                 <span></span>
             </button>
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="/">Home</a></li>
                 <li><a href="/pricing.html">Pricing</a></li>
                 <li><a href="/blog.html" class="active">Blog</a></li>
@@ -602,7 +602,12 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         function toggleMobileMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
+            const navLinks = document.getElementById('navLinks');
+            const menuToggle = document.getElementById('mobileMenuToggle');
+            if (navLinks && menuToggle) {
+                navLinks.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+            }
         }
 
         function escapeHtml(text) {
@@ -737,7 +742,15 @@
         }
 
         // Load posts on page load
-        document.addEventListener('DOMContentLoaded', loadPosts);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            }
+        });
     </script>
 
     <!-- Message Button & Chat Widget -->
