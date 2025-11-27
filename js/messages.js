@@ -119,6 +119,44 @@ class MessagesSystem {
                 this.closeWidget();
             }
         });
+
+        // iOS scroll fix for messages area
+        this.setupTouchScrolling();
+    }
+
+    setupTouchScrolling() {
+        const messagesArea = document.getElementById('widgetMessages');
+        const widget = document.getElementById('chatWidget');
+        
+        if (!messagesArea || !widget) return;
+
+        let startY = 0;
+        let startScrollTop = 0;
+
+        // Handle touch on the entire widget
+        widget.addEventListener('touchstart', (e) => {
+            if (messagesArea.contains(e.target)) {
+                startY = e.touches[0].pageY;
+                startScrollTop = messagesArea.scrollTop;
+            }
+        }, { passive: true });
+
+        widget.addEventListener('touchmove', (e) => {
+            if (!messagesArea.contains(e.target)) {
+                // Touching outside messages area - prevent all scrolling
+                e.preventDefault();
+                return;
+            }
+
+            const currentY = e.touches[0].pageY;
+            const deltaY = startY - currentY;
+            
+            // Manually scroll the messages area
+            messagesArea.scrollTop = startScrollTop + deltaY;
+            
+            // Prevent default to stop page scrolling
+            e.preventDefault();
+        }, { passive: false });
     }
 
     async loadConversations() {
