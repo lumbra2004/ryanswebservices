@@ -3450,25 +3450,22 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
     }
     
     updateQuoteStats() {
-        const activeQuotes = this.customQuotes.filter(q => q.status === 'pending' || q.status === 'viewed').length;
+        const pendingQuotes = this.customQuotes.filter(q => q.status === 'pending').length;
+        const viewedQuotes = this.customQuotes.filter(q => q.status === 'viewed').length;
+        const redeemedQuotes = this.customQuotes.filter(q => q.status === 'redeemed').length;
         const totalValue = this.customQuotes.reduce((sum, q) => {
             return sum + (parseFloat(q.upfront_cost) || 0);
         }, 0);
-        const redeemedQuotes = this.customQuotes.filter(q => q.status === 'redeemed').length;
-        const expiredQuotes = this.customQuotes.filter(q => {
-            if (q.status === 'expired' || q.status === 'cancelled') return true;
-            if (q.valid_until && new Date(q.valid_until) < new Date() && q.status !== 'redeemed') return true;
-            return false;
-        }).length;
         
-        document.getElementById('activeQuotesCount')?.textContent && 
-            (document.getElementById('activeQuotesCount').textContent = activeQuotes);
-        document.getElementById('totalQuoteValue')?.textContent && 
-            (document.getElementById('totalQuoteValue').textContent = '$' + totalValue.toLocaleString());
-        document.getElementById('redeemedQuotesCount')?.textContent && 
-            (document.getElementById('redeemedQuotesCount').textContent = redeemedQuotes);
-        document.getElementById('expiredQuotesCount')?.textContent && 
-            (document.getElementById('expiredQuotesCount').textContent = expiredQuotes);
+        const pendingEl = document.getElementById('pendingQuotes');
+        const viewedEl = document.getElementById('viewedQuotes');
+        const redeemedEl = document.getElementById('redeemedQuotes');
+        const valueEl = document.getElementById('quotesValue');
+        
+        if (pendingEl) pendingEl.textContent = pendingQuotes;
+        if (viewedEl) viewedEl.textContent = viewedQuotes;
+        if (redeemedEl) redeemedEl.textContent = redeemedQuotes;
+        if (valueEl) valueEl.textContent = '$' + totalValue.toLocaleString();
     }
     
     filterQuotes(query = '', status = '') {
