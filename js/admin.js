@@ -13,6 +13,8 @@ class AdminPanel {
         this.requests = [];
         this.contacts = [];
         this.files = [];
+        this.payments = [];
+        this.currentSection = 'overview';
         
         this.init();
     }
@@ -49,7 +51,54 @@ class AdminPanel {
             reloadBtn.addEventListener('click', () => this.reloadData());
         }
 
-        // Search and filter inputs (these are in the dashboard)
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('adminSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar?.classList.toggle('open');
+                sidebarOverlay?.classList.toggle('active');
+            });
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar?.classList.remove('open');
+                sidebarOverlay.classList.remove('active');
+            });
+        }
+
+        // Global search
+        const globalSearchInput = document.getElementById('globalSearchInput');
+        if (globalSearchInput) {
+            globalSearchInput.addEventListener('input', (e) => this.handleGlobalSearch(e.target.value));
+            globalSearchInput.addEventListener('focus', () => {
+                if (globalSearchInput.value.length >= 2) {
+                    document.getElementById('globalSearchResults')?.classList.add('active');
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.global-search')) {
+                    document.getElementById('globalSearchResults')?.classList.remove('active');
+                }
+            });
+        }
+
+        // Sidebar navigation
+        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                this.switchSection(section);
+                
+                // Close mobile sidebar
+                sidebar?.classList.remove('open');
+                sidebarOverlay?.classList.remove('active');
+            });
+        });
+
+        // Search and filter inputs
         document.getElementById('userSearch')?.addEventListener('input', (e) => this.filterUsers(e.target.value));
         document.getElementById('userFilter')?.addEventListener('change', (e) => this.filterUsers(document.getElementById('userSearch').value, e.target.value));
         document.getElementById('orderSearch')?.addEventListener('input', (e) => this.filterOrders(e.target.value));
@@ -57,6 +106,117 @@ class AdminPanel {
         document.getElementById('fileSearch')?.addEventListener('input', (e) => this.filterFiles(e.target.value));
         document.getElementById('contactSearch')?.addEventListener('input', (e) => this.filterContacts(e.target.value));
         document.getElementById('contactStatusFilter')?.addEventListener('change', (e) => this.filterContacts(document.getElementById('contactSearch').value, e.target.value));
+        document.getElementById('paymentSearch')?.addEventListener('input', (e) => this.filterPayments(e.target.value));
+        document.getElementById('paymentStatusFilter')?.addEventListener('change', (e) => this.filterPayments(document.getElementById('paymentSearch')?.value, e.target.value));
+    }
+
+    switchSection(sectionName) {
+        // Update nav items
+        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === sectionName);
+        });
+        
+        // Update sections
+        document.querySelectorAll('.admin-section').forEach(section => {
+            section.classList.toggle('active', section.id === `section-${sectionName}`);
+        });
+        
+        this.currentSection = sectionName;
+    }
+
+    handleGlobalSearch(query) {
+        const resultsContainer = document.getElementById('globalSearchResults');
+        if (!resultsContainer) return;
+        
+        if (query.length < 2) {
+            resultsContainer.classList.remove('active');
+            return;
+        }
+        
+        const queryLower = query.toLowerCase();
+        let html = '';
+        
+        // Search users
+        const matchedUsers = this.users.filter(u => 
+            u.email?.toLowerCase().includes(queryLower) ||
+            u.full_name?.toLowerCase().includes(queryLower) ||
+            u.business_name?.toLowerCase().includes(queryLower)
+        ).slice(0, 5);
+        
+        if (matchedUsers.length > 0) {
+            html += `<div class="search-result-group">
+                <div class="search-result-group-title">👥 Users</div>
+                ${matchedUsers.map(u => `
+                    <div class="search-result-item" onclick="adminPanel.switchSection('users'); adminPanel.filterUsers('${u.email}');">
+                        <div class="result-icon">👤</div>
+                        <div class="result-info">
+                            <div class="result-title">${this.escapeHtml(u.full_name || u.email)}</div>
+                            <div class="result-subtitle">${this.escapeHtml(u.business_name || u.email)}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+        
+        // Search requests
+        const matchedRequests = this.requests.filter(r => 
+            r.service_name?.toLowerCase().includes(queryLower) ||
+            r.profiles?.email?.toLowerCase().includes(queryLower) ||
+            r.profiles?.full_name?.toLowerCase().includes(queryLower) ||
+            r.profiles?.business_name?.toLowerCase().includes(queryLower)
+        ).slice(0, 5);
+        
+        if (matchedRequests.length > 0) {
+            html += `<div class="search-result-group">
+                <div class="search-result-group-title">📋 Service Requests</div>
+                ${matchedRequests.map(r => `
+                    <div class="search-result-item" onclick="adminPanel.switchSection('requests'); adminPanel.filterRequests('${r.profiles?.email || ''}');">
+                        <div class="result-icon">📋</div>
+                        <div class="result-info">
+                            <div class="result-title">${this.escapeHtml(r.service_name)}</div>
+                            <div class="result-subtitle">${this.escapeHtml(r.profiles?.full_name || r.profiles?.email || 'Unknown')}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+        
+        // Search contacts
+        const matchedContacts = this.contacts.filter(c => 
+            c.name?.toLowerCase().includes(queryLower) ||
+            c.email?.toLowerCase().includes(queryLower) ||
+            c.message?.toLowerCase().includes(queryLower)
+        ).slice(0, 3);
+        
+        if (matchedContacts.length > 0) {
+            html += `<div class="search-result-group">
+                <div class="search-result-group-title">📬 Contacts</div>
+                ${matchedContacts.map(c => `
+                    <div class="search-result-item" onclick="adminPanel.switchSection('contacts'); adminPanel.filterContacts('${c.email}');">
+                        <div class="result-icon">📬</div>
+                        <div class="result-info">
+                            <div class="result-title">${this.escapeHtml(c.name)}</div>
+                            <div class="result-subtitle">${this.escapeHtml(c.email)}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+        
+        if (html === '') {
+            html = '<div class="empty-state" style="padding: 1rem;">No results found</div>';
+        }
+        
+        resultsContainer.innerHTML = html;
+        resultsContainer.classList.add('active');
+    }
+
+    filterRequests(searchTerm) {
+        const searchInput = document.getElementById('requestSearch');
+        if (searchInput) {
+            searchInput.value = searchTerm;
+        }
+        this.renderRequests('all', searchTerm);
     }
 
     async handleLogin(e) {
@@ -193,10 +353,10 @@ class AdminPanel {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'block';
         
-        const emailSpan = document.getElementById('adminUserEmail');
+        const emailSpan = document.getElementById('sidebarUserEmail');
         if (emailSpan) {
             const roleBadge = this.userRole === 'owner' ? '👑' : '🛡️';
-            emailSpan.textContent = `${roleBadge} ${this.currentUser.email} (${this.userRole})`;
+            emailSpan.textContent = `${roleBadge} ${this.currentUser.email}`;
         }
 
         // Setup event listeners for dashboard elements now that they're visible
@@ -257,7 +417,8 @@ class AdminPanel {
                 this.loadOrders(),
                 this.loadRequests(),
                 this.loadContacts(),
-                this.loadFiles()
+                this.loadFiles(),
+                this.loadPayments()
             ]);
 
             this.updateStats();
@@ -265,9 +426,254 @@ class AdminPanel {
             this.renderOrders();
             this.renderContacts();
             this.renderFiles();
+            this.renderPayments();
+            this.renderSubscriptions();
+            this.renderRecentActivity();
         } catch (error) {
             console.error('Error loading data:', error);
         }
+    }
+
+    async loadPayments() {
+        try {
+            // Get all paid service requests as payments
+            const { data: paidRequests, error } = await supabase
+                .from('service_requests')
+                .select('*, profiles:user_id(email, full_name, business_name)')
+                .in('status', ['paid', 'ready_to_purchase', 'pending'])
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            this.payments = paidRequests || [];
+        } catch (error) {
+            console.error('Error loading payments:', error);
+            this.payments = [];
+        }
+    }
+
+    renderPayments(filteredPayments = null) {
+        const container = document.getElementById('paymentsTableContainer');
+        if (!container) return;
+
+        const paymentsToRender = filteredPayments || this.payments;
+
+        if (paymentsToRender.length === 0) {
+            container.innerHTML = '<div class="empty-state">No payments found</div>';
+            return;
+        }
+
+        const statusColors = {
+            'paid': '#10b981',
+            'ready_to_purchase': '#fbbf24',
+            'pending': '#6b7280'
+        };
+
+        const statusLabels = {
+            'paid': '✅ Paid',
+            'ready_to_purchase': '⏳ Pending Payment',
+            'pending': '📋 Quote Pending'
+        };
+
+        const html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>One-Time</th>
+                        <th>Monthly</th>
+                        <th>Status</th>
+                        <th>Stripe ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${paymentsToRender.map(payment => {
+                        const customer = payment.profiles || {};
+                        const statusColor = statusColors[payment.status] || '#6b7280';
+                        const statusLabel = statusLabels[payment.status] || payment.status;
+                        const packageDetails = payment.package_details || {};
+                        const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
+                        
+                        return `
+                            <tr>
+                                <td>${new Date(payment.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <div style="font-weight: 500;">${this.escapeHtml(customer.full_name || 'N/A')}</div>
+                                    <div style="font-size: 0.8rem; color: #94a3b8;">${this.escapeHtml(customer.business_name || customer.email || '')}</div>
+                                </td>
+                                <td>${this.escapeHtml(payment.service_name)}</td>
+                                <td>$${parseFloat(payment.total_amount || 0).toLocaleString()}</td>
+                                <td>${monthlyCost > 0 ? `$${monthlyCost}/mo` : '-'}</td>
+                                <td>
+                                    <span style="display: inline-block; padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: ${statusColor}22; color: ${statusColor}; border: 1px solid ${statusColor}44;">
+                                        ${statusLabel}
+                                    </span>
+                                </td>
+                                <td style="font-family: monospace; font-size: 0.75rem; color: #94a3b8;">
+                                    ${payment.stripe_subscription_id ? payment.stripe_subscription_id.substring(0, 20) + '...' : '-'}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    renderSubscriptions() {
+        const container = document.getElementById('subscriptionsTableContainer');
+        if (!container) return;
+
+        const activeSubscriptions = this.requests.filter(r => r.stripe_subscription_id && r.status === 'paid');
+
+        if (activeSubscriptions.length === 0) {
+            container.innerHTML = '<div class="empty-state">No active subscriptions</div>';
+            return;
+        }
+
+        const html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Monthly Amount</th>
+                        <th>Started</th>
+                        <th>Subscription ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${activeSubscriptions.map(sub => {
+                        const customer = sub.profiles || {};
+                        const packageDetails = sub.package_details || {};
+                        const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
+                        
+                        return `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 500;">${this.escapeHtml(customer.full_name || customer.email || 'Unknown')}</div>
+                                    <div style="font-size: 0.8rem; color: #94a3b8;">${this.escapeHtml(customer.business_name || '')}</div>
+                                </td>
+                                <td>${this.escapeHtml(sub.service_name)}</td>
+                                <td style="color: #10b981; font-weight: 600;">$${monthlyCost}/mo</td>
+                                <td>${new Date(sub.created_at).toLocaleDateString()}</td>
+                                <td style="font-family: monospace; font-size: 0.75rem; color: #94a3b8;">
+                                    ${sub.stripe_subscription_id}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    renderRecentActivity() {
+        const container = document.getElementById('recentActivityContainer');
+        if (!container) return;
+
+        // Combine recent items from all sources
+        const activities = [];
+        
+        // Recent requests
+        this.requests.slice(0, 5).forEach(r => {
+            activities.push({
+                type: 'request',
+                icon: '📋',
+                title: `New request: ${r.service_name}`,
+                subtitle: r.profiles?.full_name || r.profiles?.email || 'Unknown user',
+                date: new Date(r.created_at),
+                color: '#8b5cf6'
+            });
+        });
+        
+        // Recent contacts
+        this.contacts.slice(0, 3).forEach(c => {
+            activities.push({
+                type: 'contact',
+                icon: '📬',
+                title: `Contact from ${c.name}`,
+                subtitle: c.email,
+                date: new Date(c.created_at),
+                color: '#f59e0b'
+            });
+        });
+        
+        // Recent users
+        this.users.slice(0, 3).forEach(u => {
+            activities.push({
+                type: 'user',
+                icon: '👤',
+                title: `New user: ${u.full_name || u.email}`,
+                subtitle: u.business_name || 'No business',
+                date: new Date(u.created_at),
+                color: '#3b82f6'
+            });
+        });
+        
+        // Sort by date
+        activities.sort((a, b) => b.date - a.date);
+        
+        if (activities.length === 0) {
+            container.innerHTML = '<div class="empty-state">No recent activity</div>';
+            return;
+        }
+        
+        const html = activities.slice(0, 10).map(activity => `
+            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="width: 40px; height: 40px; background: ${activity.color}22; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                    ${activity.icon}
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 500;">${this.escapeHtml(activity.title)}</div>
+                    <div style="font-size: 0.8rem; color: #94a3b8;">${this.escapeHtml(activity.subtitle)}</div>
+                </div>
+                <div style="font-size: 0.8rem; color: #64748b;">
+                    ${this.formatTimeAgo(activity.date)}
+                </div>
+            </div>
+        `).join('');
+        
+        container.innerHTML = html;
+    }
+
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        if (days < 7) return `${days}d ago`;
+        return date.toLocaleDateString();
+    }
+
+    filterPayments(searchTerm = '', statusFilter = 'all') {
+        let filtered = this.payments;
+
+        if (searchTerm) {
+            const query = searchTerm.toLowerCase();
+            filtered = filtered.filter(p => 
+                p.service_name?.toLowerCase().includes(query) ||
+                p.profiles?.email?.toLowerCase().includes(query) ||
+                p.profiles?.full_name?.toLowerCase().includes(query) ||
+                p.profiles?.business_name?.toLowerCase().includes(query)
+            );
+        }
+
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(p => p.status === statusFilter);
+        }
+
+        this.renderPayments(filtered);
     }
 
     async loadUsers() {
@@ -326,7 +732,7 @@ class AdminPanel {
                 const userIds = [...new Set(requests.map(r => r.user_id))];
                 const { data: profiles } = await supabase
                     .from('profiles')
-                    .select('id, email, full_name')
+                    .select('id, email, full_name, business_name')
                     .in('id', userIds);
 
                 // Merge profiles into requests
@@ -359,10 +765,12 @@ class AdminPanel {
         }
 
         if (searchTerm) {
+            const query = searchTerm.toLowerCase();
             filtered = filtered.filter(r => 
-                r.service_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                r.profiles?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                r.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
+                r.service_name?.toLowerCase().includes(query) ||
+                r.profiles?.email?.toLowerCase().includes(query) ||
+                r.profiles?.full_name?.toLowerCase().includes(query) ||
+                r.profiles?.business_name?.toLowerCase().includes(query)
             );
         }
 
@@ -659,14 +1067,55 @@ class AdminPanel {
 
     updateStats() {
         document.getElementById('totalUsers').textContent = this.users.length;
-        document.getElementById('totalOrders').textContent = this.orders.length;
+        document.getElementById('totalRequests').textContent = this.requests.length;
         
-        const totalRevenue = this.orders.reduce((sum, order) => {
-            return sum + (parseFloat(order.total_amount) || 0);
-        }, 0);
-        document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Calculate total revenue from paid requests
+        const paidRequests = this.requests.filter(r => r.status === 'paid');
+        const totalRevenue = paidRequests.reduce((sum, r) => sum + (parseFloat(r.total_amount) || 0), 0);
+        document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         
         document.getElementById('totalFiles').textContent = this.files.length;
+
+        // Payment summary stats
+        const totalPaidEl = document.getElementById('totalPaidRevenue');
+        if (totalPaidEl) {
+            totalPaidEl.textContent = '$' + totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        const pendingRequests = this.requests.filter(r => r.status === 'ready_to_purchase');
+        const pendingAmount = pendingRequests.reduce((sum, r) => sum + (parseFloat(r.total_amount) || 0), 0);
+        const pendingEl = document.getElementById('pendingPayments');
+        if (pendingEl) {
+            pendingEl.textContent = '$' + pendingAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        // Calculate monthly recurring revenue
+        const activeSubscriptions = this.requests.filter(r => r.stripe_subscription_id && r.status === 'paid');
+        const monthlyRecurring = activeSubscriptions.reduce((sum, r) => {
+            const pkg = r.package_details || {};
+            return sum + (pkg.maintenance_plan?.monthly_cost || 0) + (pkg.google_workspace?.monthly_cost || 0);
+        }, 0);
+        const monthlyEl = document.getElementById('monthlyRecurring');
+        if (monthlyEl) {
+            monthlyEl.textContent = '$' + monthlyRecurring.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+
+        const subscriptionsEl = document.getElementById('activeSubscriptions');
+        if (subscriptionsEl) {
+            subscriptionsEl.textContent = activeSubscriptions.length;
+        }
+
+        // Update contacts badge in nav
+        const newContacts = this.contacts.filter(c => c.status === 'new').length;
+        const navBadge = document.getElementById('navContactsBadge');
+        if (navBadge) {
+            if (newContacts > 0) {
+                navBadge.textContent = newContacts;
+                navBadge.style.display = 'inline-block';
+            } else {
+                navBadge.style.display = 'none';
+            }
+        }
     }
 
     renderUsers(filteredUsers = null) {
@@ -830,9 +1279,11 @@ class AdminPanel {
         let filtered = this.users;
 
         if (searchTerm) {
+            const query = searchTerm.toLowerCase();
             filtered = filtered.filter(user => 
-                (user.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (user.user_metadata?.full_name || user.full_name || '').toLowerCase().includes(searchTerm.toLowerCase())
+                (user.email || '').toLowerCase().includes(query) ||
+                (user.full_name || '').toLowerCase().includes(query) ||
+                (user.business_name || '').toLowerCase().includes(query)
             );
         }
 
@@ -840,6 +1291,8 @@ class AdminPanel {
             filtered = filtered.filter(user => user.email_confirmed_at || user.verified);
         } else if (filter === 'unverified') {
             filtered = filtered.filter(user => !user.email_confirmed_at && !user.verified);
+        } else if (filter === 'admin') {
+            filtered = filtered.filter(user => user.role === 'admin' || user.role === 'owner');
         }
 
         this.renderUsers(filtered);
