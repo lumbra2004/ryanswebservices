@@ -1100,6 +1100,10 @@
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Management</div>
+                    <div class="nav-item" data-section="analytics">
+                        <span class="icon">📊</span>
+                        <span>Visitor Analytics</span>
+                    </div>
                     <div class="nav-item" data-section="users">
                         <span class="icon">👥</span>
                         <span>Users</span>
@@ -1206,6 +1210,140 @@
                         <div class="table-content" id="recentActivityContainer">
                             <div class="loading">Loading recent activity...</div>
                         </div>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section class="admin-section" id="section-analytics">
+                    <div class="section-header">
+                        <h2>📊 Visitor Analytics</h2>
+                        <p>Track website visitors, locations, and engagement</p>
+                    </div>
+                    
+                    <!-- Date Range Filter -->
+                    <div class="filter-bar" style="margin-bottom: 1.5rem;">
+                        <div class="filter-group">
+                            <label>Time Period:</label>
+                            <select id="analyticsDateRange" onchange="adminPanel.loadAnalytics()">
+                                <option value="1">Today</option>
+                                <option value="7" selected>Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="adminPanel.loadAnalytics()">
+                            🔄 Refresh
+                        </button>
+                        <button class="btn-secondary" onclick="adminPanel.exportAnalytics()">
+                            📥 Export CSV
+                        </button>
+                    </div>
+                    
+                    <!-- Analytics Stats -->
+                    <div class="admin-grid">
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon blue">👁️</div>
+                            </div>
+                            <div class="stat-number" id="totalPageViews">0</div>
+                            <div class="stat-label">Page Views</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon green">👤</div>
+                            </div>
+                            <div class="stat-number" id="uniqueVisitors">0</div>
+                            <div class="stat-label">Unique Visitors</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon purple">⏱️</div>
+                            </div>
+                            <div class="stat-number" id="avgTimeOnSite">0s</div>
+                            <div class="stat-label">Avg. Time on Site</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon orange">📈</div>
+                            </div>
+                            <div class="stat-number" id="bounceRate">0%</div>
+                            <div class="stat-label">Bounce Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Charts Row -->
+                    <div class="analytics-charts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <!-- Top Pages -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>📄 Top Pages</h3>
+                            </div>
+                            <div class="table-content" id="topPagesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Top Locations -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>🌍 Top Locations</h3>
+                            </div>
+                            <div class="table-content" id="topLocationsContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Traffic Sources -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>🔗 Traffic Sources</h3>
+                            </div>
+                            <div class="table-content" id="trafficSourcesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Devices -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>📱 Devices & Browsers</h3>
+                            </div>
+                            <div class="table-content" id="devicesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Visitors Table -->
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3>👥 Recent Visitors</h3>
+                            <div class="table-actions">
+                                <input type="text" id="visitorSearch" placeholder="Search visitors..." 
+                                    onkeyup="adminPanel.filterVisitors()" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table" id="visitorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Page</th>
+                                        <th>Location</th>
+                                        <th>Device</th>
+                                        <th>Browser</th>
+                                        <th>Referrer</th>
+                                        <th>Duration</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="visitorsTableBody">
+                                    <tr><td colspan="8" class="loading">Loading visitor data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination" id="visitorsPagination"></div>
                     </div>
                 </section>
 
@@ -1654,6 +1792,22 @@
             <div class="modal-footer">
                 <button class="action-btn secondary" onclick="adminPanel.closeBlogModal()">Cancel</button>
                 <button class="action-btn" onclick="adminPanel.saveBlogPost()" style="background: linear-gradient(135deg, #10b981, #059669);">Save Post</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visitor Details Modal -->
+    <div class="modal-overlay" id="visitorModal" style="display: none;">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>👤 Visitor Details</h3>
+                <button class="modal-close" onclick="adminPanel.closeVisitorModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="visitorModalContent">
+                <div class="loading">Loading visitor details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeVisitorModal()">Close</button>
             </div>
         </div>
     </div>

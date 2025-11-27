@@ -16,6 +16,9 @@ class AdminPanel {
         this.payments = [];
         this.promoCodes = [];
         this.blogPosts = [];
+        this.pageVisits = [];
+        this.visitorPage = 1;
+        this.visitorsPerPage = 50;
         this.currentSection = 'overview';
         this.currentRefundOrder = null;
         this.currentEditingPost = null;
@@ -137,6 +140,8 @@ class AdminPanel {
         if (sectionName === 'payments') {
             this.renderPayments();
             this.renderSubscriptions();
+        } else if (sectionName === 'analytics') {
+            this.loadAnalytics();
         }
     }
 
@@ -2716,6 +2721,589 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
             console.error('Error deleting blog post:', error);
             alert('Error deleting post: ' + error.message);
         }
+    }
+    
+    // =====================
+    // ANALYTICS FUNCTIONS
+    // =====================
+    
+    async loadAnalytics() {
+        const days = parseInt(document.getElementById('analyticsDateRange')?.value || '7');
+        
+        try {
+            // Load page visits
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - days);
+            
+            const { data: visits, error } = await supabase
+                .from('page_visits')
+                .select('*')
+                .gte('visited_at', startDate.toISOString())
+                .order('visited_at', { ascending: false });
+            
+            if (error) {
+                if (error.message?.includes('does not exist')) {
+                    this.showAnalyticsSetupMessage();
+                    return;
+                }
+                throw error;
+            }
+            
+            this.pageVisits = visits || [];
+            
+            // Update stats
+            this.updateAnalyticsStats(visits, days);
+            
+            // Update charts/lists
+            this.renderTopPages(visits);
+            this.renderTopLocations(visits);
+            this.renderTrafficSources(visits);
+            this.renderDevices(visits);
+            this.renderVisitorsTable(visits);
+            
+        } catch (error) {
+            console.error('Error loading analytics:', error);
+            this.showAnalyticsError();
+        }
+    }
+    
+    showAnalyticsSetupMessage() {
+        const containers = ['topPagesContainer', 'topLocationsContainer', 'trafficSourcesContainer', 'devicesContainer'];
+        containers.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                        <p>📊 Analytics not set up yet</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Run <code>setup_analytics.sql</code> in Supabase SQL Editor</p>
+                    </div>
+                `;
+            }
+        });
+        
+        document.getElementById('visitorsTableBody').innerHTML = `
+            <tr><td colspan="8" style="text-align: center; padding: 2rem;">
+                Run <code>setup_analytics.sql</code> in Supabase to enable visitor tracking
+            </td></tr>
+        `;
+    }
+    
+    showAnalyticsError() {
+        document.getElementById('visitorsTableBody').innerHTML = `
+            <tr><td colspan="8" style="text-align: center; padding: 2rem; color: #f87171;">
+                Error loading analytics data. Please try again.
+            </td></tr>
+        `;
+    }
+    
+    updateAnalyticsStats(visits, days) {
+        // Total page views
+        document.getElementById('totalPageViews').textContent = visits.length.toLocaleString();
+        
+        // Unique visitors (by session_id or IP)
+        const uniqueSessions = new Set(visits.map(v => v.session_id || v.ip_address));
+        document.getElementById('uniqueVisitors').textContent = uniqueSessions.size.toLocaleString();
+        
+        // Average time on site
+        const validTimes = visits.filter(v => v.time_on_page > 0).map(v => v.time_on_page);
+        const avgTime = validTimes.length > 0 
+            ? Math.round(validTimes.reduce((a, b) => a + b, 0) / validTimes.length)
+            : 0;
+        document.getElementById('avgTimeOnSite').textContent = this.formatDuration(avgTime);
+        
+        // Bounce rate (sessions with only 1 page view)
+        const sessionPageCounts = {};
+        visits.forEach(v => {
+            sessionPageCounts[v.session_id] = (sessionPageCounts[v.session_id] || 0) + 1;
+        });
+        const sessions = Object.values(sessionPageCounts);
+        const bounces = sessions.filter(count => count === 1).length;
+        const bounceRate = sessions.length > 0 ? Math.round((bounces / sessions.length) * 100) : 0;
+        document.getElementById('bounceRate').textContent = bounceRate + '%';
+    }
+    
+    formatDuration(seconds) {
+        if (seconds < 60) return `${seconds}s`;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}m ${secs}s`;
+    }
+    
+    renderTopPages(visits) {
+        const container = document.getElementById('topPagesContainer');
+        if (!container) return;
+        
+        // Count pages
+        const pageCounts = {};
+        visits.forEach(v => {
+            const page = v.page_url || '/';
+            pageCounts[page] = (pageCounts[page] || 0) + 1;
+        });
+        
+        // Sort by count
+        const sorted = Object.entries(pageCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+        
+        if (sorted.length === 0) {
+            container.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-secondary);">No data yet</div>';
+            return;
+        }
+        
+        const maxCount = sorted[0][1];
+        container.innerHTML = sorted.map(([page, count]) => {
+            const percentage = Math.round((count / maxCount) * 100);
+            const displayPage = page.length > 30 ? page.substring(0, 30) + '...' : page;
+            return `
+                <div style="margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span style="font-size: 0.875rem;" title="${page}">${displayPage}</span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">${count}</span>
+                    </div>
+                    <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 3px;"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    renderTopLocations(visits) {
+        const container = document.getElementById('topLocationsContainer');
+        if (!container) return;
+        
+        // Count locations
+        const locationCounts = {};
+        visits.forEach(v => {
+            if (v.country) {
+                const location = v.city ? `${v.city}, ${v.country}` : v.country;
+                locationCounts[location] = (locationCounts[location] || 0) + 1;
+            }
+        });
+        
+        const sorted = Object.entries(locationCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+        
+        if (sorted.length === 0) {
+            container.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-secondary);">No location data yet</div>';
+            return;
+        }
+        
+        const maxCount = sorted[0][1];
+        container.innerHTML = sorted.map(([location, count]) => {
+            const percentage = Math.round((count / maxCount) * 100);
+            return `
+                <div style="margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span style="font-size: 0.875rem;">🌍 ${location}</span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">${count}</span>
+                    </div>
+                    <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #10b981, #059669); border-radius: 3px;"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    renderTrafficSources(visits) {
+        const container = document.getElementById('trafficSourcesContainer');
+        if (!container) return;
+        
+        // Count referrers
+        const sourceCounts = { 'Direct': 0 };
+        visits.forEach(v => {
+            if (v.utm_source) {
+                sourceCounts[v.utm_source] = (sourceCounts[v.utm_source] || 0) + 1;
+            } else if (v.referrer) {
+                try {
+                    const url = new URL(v.referrer);
+                    const domain = url.hostname.replace('www.', '');
+                    sourceCounts[domain] = (sourceCounts[domain] || 0) + 1;
+                } catch {
+                    sourceCounts['Other'] = (sourceCounts['Other'] || 0) + 1;
+                }
+            } else {
+                sourceCounts['Direct']++;
+            }
+        });
+        
+        const sorted = Object.entries(sourceCounts)
+            .filter(([_, count]) => count > 0)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+        
+        if (sorted.length === 0) {
+            container.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-secondary);">No data yet</div>';
+            return;
+        }
+        
+        const maxCount = sorted[0][1];
+        container.innerHTML = sorted.map(([source, count]) => {
+            const percentage = Math.round((count / maxCount) * 100);
+            const icon = source === 'Direct' ? '🔗' : 
+                        source.includes('google') ? '🔍' : 
+                        source.includes('facebook') ? '📘' : 
+                        source.includes('instagram') ? '📷' : 
+                        source.includes('twitter') || source.includes('x.com') ? '🐦' : '🌐';
+            return `
+                <div style="margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span style="font-size: 0.875rem;">${icon} ${source}</span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">${count}</span>
+                    </div>
+                    <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #f59e0b, #d97706); border-radius: 3px;"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    renderDevices(visits) {
+        const container = document.getElementById('devicesContainer');
+        if (!container) return;
+        
+        // Count devices and browsers
+        const deviceCounts = {};
+        const browserCounts = {};
+        
+        visits.forEach(v => {
+            if (v.device_type) {
+                deviceCounts[v.device_type] = (deviceCounts[v.device_type] || 0) + 1;
+            }
+            if (v.browser) {
+                browserCounts[v.browser] = (browserCounts[v.browser] || 0) + 1;
+            }
+        });
+        
+        const deviceIcon = { desktop: '💻', mobile: '📱', tablet: '📟' };
+        
+        let html = '<div style="margin-bottom: 1rem;"><strong style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Devices</strong></div>';
+        
+        const sortedDevices = Object.entries(deviceCounts).sort((a, b) => b[1] - a[1]);
+        const totalDevices = sortedDevices.reduce((sum, [_, count]) => sum + count, 0);
+        
+        html += sortedDevices.map(([device, count]) => {
+            const percentage = Math.round((count / totalDevices) * 100);
+            return `
+                <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 1.25rem; margin-right: 0.5rem;">${deviceIcon[device] || '📟'}</span>
+                    <span style="flex: 1; font-size: 0.875rem; text-transform: capitalize;">${device}</span>
+                    <span style="font-size: 0.875rem; color: var(--text-secondary);">${percentage}%</span>
+                </div>
+            `;
+        }).join('');
+        
+        html += '<div style="margin: 1rem 0;"><strong style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Browsers</strong></div>';
+        
+        const sortedBrowsers = Object.entries(browserCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const totalBrowsers = sortedBrowsers.reduce((sum, [_, count]) => sum + count, 0);
+        
+        html += sortedBrowsers.map(([browser, count]) => {
+            const percentage = Math.round((count / totalBrowsers) * 100);
+            return `
+                <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="flex: 1; font-size: 0.875rem;">${browser}</span>
+                    <span style="font-size: 0.875rem; color: var(--text-secondary);">${percentage}%</span>
+                </div>
+            `;
+        }).join('');
+        
+        container.innerHTML = html || '<div style="padding: 1rem; text-align: center; color: var(--text-secondary);">No data yet</div>';
+    }
+    
+    renderVisitorsTable(visits) {
+        const tbody = document.getElementById('visitorsTableBody');
+        if (!tbody) return;
+        
+        const start = (this.visitorPage - 1) * this.visitorsPerPage;
+        const end = start + this.visitorsPerPage;
+        const pageVisits = visits.slice(start, end);
+        
+        if (pageVisits.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">No visitors recorded yet</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = pageVisits.map(visit => {
+            const time = new Date(visit.visited_at).toLocaleString();
+            const location = visit.city && visit.country 
+                ? `${visit.city}, ${visit.country}`
+                : visit.country || 'Unknown';
+            const duration = visit.time_on_page ? this.formatDuration(visit.time_on_page) : '-';
+            const referrer = visit.referrer 
+                ? (visit.referrer.length > 30 ? visit.referrer.substring(0, 30) + '...' : visit.referrer)
+                : 'Direct';
+            const page = visit.page_url?.length > 25 
+                ? visit.page_url.substring(0, 25) + '...' 
+                : visit.page_url || '/';
+                
+            return `
+                <tr>
+                    <td style="white-space: nowrap;">${time}</td>
+                    <td title="${visit.page_url || '/'}">${page}</td>
+                    <td>
+                        <span title="${visit.ip_address || 'Unknown IP'}">
+                            ${location}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="text-transform: capitalize;">${visit.device_type || 'Unknown'}</span>
+                    </td>
+                    <td>${visit.browser || 'Unknown'} ${visit.browser_version || ''}</td>
+                    <td title="${visit.referrer || 'Direct'}">${referrer}</td>
+                    <td>${duration}</td>
+                    <td>
+                        <button class="action-btn small" onclick="adminPanel.viewVisitorDetails('${visit.id}')" title="View Details">
+                            👁️
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        
+        // Render pagination
+        this.renderVisitorsPagination(visits.length);
+    }
+    
+    renderVisitorsPagination(totalVisits) {
+        const container = document.getElementById('visitorsPagination');
+        if (!container) return;
+        
+        const totalPages = Math.ceil(totalVisits / this.visitorsPerPage);
+        
+        if (totalPages <= 1) {
+            container.innerHTML = '';
+            return;
+        }
+        
+        let html = '';
+        
+        // Previous button
+        html += `<button class="pagination-btn" ${this.visitorPage === 1 ? 'disabled' : ''} 
+            onclick="adminPanel.goToVisitorPage(${this.visitorPage - 1})">← Prev</button>`;
+        
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= this.visitorPage - 2 && i <= this.visitorPage + 2)) {
+                html += `<button class="pagination-btn ${i === this.visitorPage ? 'active' : ''}" 
+                    onclick="adminPanel.goToVisitorPage(${i})">${i}</button>`;
+            } else if (i === this.visitorPage - 3 || i === this.visitorPage + 3) {
+                html += '<span style="padding: 0 0.5rem;">...</span>';
+            }
+        }
+        
+        // Next button
+        html += `<button class="pagination-btn" ${this.visitorPage === totalPages ? 'disabled' : ''} 
+            onclick="adminPanel.goToVisitorPage(${this.visitorPage + 1})">Next →</button>`;
+        
+        container.innerHTML = html;
+    }
+    
+    goToVisitorPage(page) {
+        this.visitorPage = page;
+        this.renderVisitorsTable(this.pageVisits);
+    }
+    
+    filterVisitors() {
+        const search = document.getElementById('visitorSearch')?.value?.toLowerCase() || '';
+        
+        if (!search) {
+            this.renderVisitorsTable(this.pageVisits);
+            return;
+        }
+        
+        const filtered = this.pageVisits.filter(v => 
+            v.page_url?.toLowerCase().includes(search) ||
+            v.country?.toLowerCase().includes(search) ||
+            v.city?.toLowerCase().includes(search) ||
+            v.browser?.toLowerCase().includes(search) ||
+            v.device_type?.toLowerCase().includes(search) ||
+            v.ip_address?.includes(search) ||
+            v.referrer?.toLowerCase().includes(search)
+        );
+        
+        this.visitorPage = 1;
+        this.renderVisitorsTable(filtered);
+    }
+    
+    async viewVisitorDetails(visitId) {
+        const visit = this.pageVisits.find(v => v.id === visitId);
+        if (!visit) return;
+        
+        const modal = document.getElementById('visitorModal');
+        const content = document.getElementById('visitorModalContent');
+        
+        if (!modal || !content) return;
+        
+        // Get other visits from same session
+        const sessionVisits = this.pageVisits.filter(v => v.session_id === visit.session_id);
+        
+        content.innerHTML = `
+            <div class="visitor-details">
+                <div class="detail-section">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">📍 Location & Network</h4>
+                    <div class="detail-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">IP Address</label>
+                            <p style="font-weight: 500;">${visit.ip_address || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Location</label>
+                            <p style="font-weight: 500;">${[visit.city, visit.region, visit.country].filter(Boolean).join(', ') || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Postal Code</label>
+                            <p style="font-weight: 500;">${visit.postal_code || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Timezone</label>
+                            <p style="font-weight: 500;">${visit.timezone || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">ISP</label>
+                            <p style="font-weight: 500;">${visit.isp || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Coordinates</label>
+                            <p style="font-weight: 500;">${visit.latitude && visit.longitude ? `${visit.latitude}, ${visit.longitude}` : 'Unknown'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">💻 Device & Browser</h4>
+                    <div class="detail-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Device Type</label>
+                            <p style="font-weight: 500; text-transform: capitalize;">${visit.device_type || 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Browser</label>
+                            <p style="font-weight: 500;">${visit.browser || 'Unknown'} ${visit.browser_version || ''}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Operating System</label>
+                            <p style="font-weight: 500;">${visit.os || 'Unknown'} ${visit.os_version || ''}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Screen Size</label>
+                            <p style="font-weight: 500;">${visit.screen_width && visit.screen_height ? `${visit.screen_width}x${visit.screen_height}` : 'Unknown'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Viewport</label>
+                            <p style="font-weight: 500;">${visit.viewport_width && visit.viewport_height ? `${visit.viewport_width}x${visit.viewport_height}` : 'Unknown'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">📊 Engagement</h4>
+                    <div class="detail-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Time on Page</label>
+                            <p style="font-weight: 500;">${visit.time_on_page ? this.formatDuration(visit.time_on_page) : 'Still browsing'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Scroll Depth</label>
+                            <p style="font-weight: 500;">${visit.scroll_depth ? visit.scroll_depth + '%' : '0%'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Referrer</label>
+                            <p style="font-weight: 500; word-break: break-all;">${visit.referrer || 'Direct'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Visit Time</label>
+                            <p style="font-weight: 500;">${new Date(visit.visited_at).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                ${visit.utm_source || visit.utm_medium || visit.utm_campaign ? `
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">🎯 Campaign Data (UTM)</h4>
+                    <div class="detail-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Source</label>
+                            <p style="font-weight: 500;">${visit.utm_source || '-'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Medium</label>
+                            <p style="font-weight: 500;">${visit.utm_medium || '-'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Campaign</label>
+                            <p style="font-weight: 500;">${visit.utm_campaign || '-'}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.75rem; color: var(--text-secondary);">Term</label>
+                            <p style="font-weight: 500;">${visit.utm_term || '-'}</p>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${sessionVisits.length > 1 ? `
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">📄 Session Pages (${sessionVisits.length} pages)</h4>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        ${sessionVisits.map((v, i) => `
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                                <span>${i + 1}. ${v.page_url || '/'}</span>
+                                <span style="color: var(--text-secondary); font-size: 0.875rem;">${new Date(v.visited_at).toLocaleTimeString()}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary);">🔧 User Agent</h4>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); word-break: break-all; background: var(--bg-secondary); padding: 0.75rem; border-radius: 4px;">${visit.user_agent || 'Not captured'}</p>
+                </div>
+            </div>
+        `;
+        
+        modal.style.display = 'flex';
+    }
+    
+    closeVisitorModal() {
+        const modal = document.getElementById('visitorModal');
+        if (modal) modal.style.display = 'none';
+    }
+    
+    exportAnalytics() {
+        if (this.pageVisits.length === 0) {
+            alert('No data to export');
+            return;
+        }
+        
+        const headers = ['Time', 'Page', 'IP', 'Country', 'City', 'Device', 'Browser', 'OS', 'Referrer', 'Duration (s)', 'Scroll %'];
+        const rows = this.pageVisits.map(v => [
+            new Date(v.visited_at).toISOString(),
+            v.page_url || '/',
+            v.ip_address || '',
+            v.country || '',
+            v.city || '',
+            v.device_type || '',
+            `${v.browser || ''} ${v.browser_version || ''}`.trim(),
+            `${v.os || ''} ${v.os_version || ''}`.trim(),
+            v.referrer || 'Direct',
+            v.time_on_page || 0,
+            v.scroll_depth || 0
+        ]);
+        
+        const csvContent = [headers, ...rows]
+            .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `analytics_export_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
     }
 }
 
