@@ -29,6 +29,7 @@ class ProfileManager {
             await this.loadProfile();
             await this.loadOrders();
             await this.loadRequests();
+            await this.loadInvoices();
             
             console.log('About to load documents...');
             await this.loadDocuments();
@@ -500,6 +501,91 @@ class ProfileManager {
                 <div class="empty-state">
                     <div class="empty-state-icon">⚠️</div>
                     <p>Error loading orders. Please try again later.</p>
+                </div>
+            `;
+        }
+    }
+
+    async loadInvoices() {
+        const container = document.getElementById('invoicesContainer');
+        const invoiceCountEl = document.getElementById('invoiceCount');
+        
+        try {
+            // Get all paid service requests with Stripe data
+            const { data: paidRequests, error } = await supabase
+                .from('service_requests')
+                .select('*')
+                .eq('user_id', this.currentUser.id)
+                .eq('status', 'paid')
+                .not('stripe_customer_id', 'is', null)
+                .order('paid_at', { ascending: false });
+
+            if (error) throw error;
+
+            if (invoiceCountEl) {
+                invoiceCountEl.textContent = `${paidRequests.length} Invoice${paidRequests.length !== 1 ? 's' : ''}`;
+            }
+
+            if (paidRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="no-documents">
+                        <div class="no-documents-icon">💳</div>
+                        <p>No invoices yet</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Your payment history will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = paidRequests.map(request => `
+                <div class="invoice-item" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 1rem; background: rgba(255,255,255,0.02);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">${request.service_name}</h3>
+                            <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">
+                                Paid on ${new Date(request.paid_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">
+                                $${parseFloat(request.one_time_cost).toFixed(2)}
+                            </div>
+                            <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.25rem;">
+                                + $${parseFloat(request.monthly_cost).toFixed(2)}/month
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 0.25rem;">Customer ID</div>
+                            <div style="font-family: monospace; font-size: 0.9rem;">${request.stripe_customer_id}</div>
+                        </div>
+                        ${request.stripe_subscription_id ? `
+                            <div style="flex: 1;">
+                                <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 0.25rem;">Subscription ID</div>
+                                <div style="font-family: monospace; font-size: 0.9rem;">${request.stripe_subscription_id}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
+                           target="_blank" 
+                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.1); color: #818cf8; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: all 0.2s;"
+                           onmouseover="this.style.background='rgba(99, 102, 241, 0.2)'"
+                           onmouseout="this.style.background='rgba(99, 102, 241, 0.1)'">
+                            <span>View in Stripe</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (error) {
+            console.error('Error loading invoices:', error);
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <p>Error loading invoices. Please try again later.</p>
                 </div>
             `;
         }
