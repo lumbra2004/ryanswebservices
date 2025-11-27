@@ -481,6 +481,44 @@
     border-color: var(--primary);
 }
 
+/* Notification Badge on User Button */
+.user-button {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+    border: 2px solid var(--bg-body, #0a0a0f);
+    z-index: 10;
+}
+
+/* Dropdown Notification Badge */
+.dropdown-notification-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: auto;
+    min-width: 18px;
+    text-align: center;
+}
+
 .user-avatar {
     width: 32px;
     height: 32px;

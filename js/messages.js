@@ -406,6 +406,7 @@ class MessagesSystem {
     }
 
     updateUnreadBadge() {
+        // Update floating button badge
         const badge = document.getElementById('messageUnreadBadge');
         if (badge) {
             if (this.unreadCount > 0) {
@@ -413,6 +414,28 @@ class MessagesSystem {
                 badge.style.display = 'flex';
             } else {
                 badge.style.display = 'none';
+            }
+        }
+        
+        // Update profile button badge
+        const profileBadge = document.getElementById('profileUnreadBadge');
+        if (profileBadge) {
+            if (this.unreadCount > 0) {
+                profileBadge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+                profileBadge.style.display = 'flex';
+            } else {
+                profileBadge.style.display = 'none';
+            }
+        }
+        
+        // Update messages menu item badge
+        const menuBadge = document.getElementById('messagesMenuBadge');
+        if (menuBadge) {
+            if (this.unreadCount > 0) {
+                menuBadge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+                menuBadge.style.display = 'inline-flex';
+            } else {
+                menuBadge.style.display = 'none';
             }
         }
     }
