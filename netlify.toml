@@ -7,8 +7,8 @@
 
 # Redirect API calls to Netlify Functions
 [[redirects]]
-  from = "/files/:encodedUrl"
-  to = "/.netlify/functions/file-proxy?url=:encodedUrl"
+  from = "/files/*"
+  to = "/.netlify/functions/file-proxy"
   status = 200
 [[redirects]]
   from = "/api/stripe/create-combined-payment"

@@ -1,6 +1,10 @@
 exports.handler = async function(event) {
   try {
-    const encodedUrl = event.queryStringParameters.url;
+    // Get the encoded URL from the path (after /files/)
+    const path = event.path || event.rawUrl || '';
+    const match = path.match(/\/files\/(.+)/);
+    let encodedUrl = match ? match[1] : (event.queryStringParameters?.url || '');
+    
     if (!encodedUrl) {
       return {
         statusCode: 400,
