@@ -23,13 +23,11 @@ exports.handler = async (event, context) => {
     try {
         const { customerId, priceId, metadata } = JSON.parse(event.body);
 
+        // Create subscription (payment method is already attached from the payment)
         const subscription = await stripe.subscriptions.create({
             customer: customerId,
             items: [{ price: priceId }],
             metadata,
-            payment_behavior: 'default_incomplete',
-            payment_settings: { save_default_payment_method: 'on_subscription' },
-            expand: ['latest_invoice.payment_intent'],
         });
 
         return {
@@ -37,7 +35,7 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({
                 subscriptionId: subscription.id,
-                clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+                status: subscription.status,
             })
         };
     } catch (error) {
