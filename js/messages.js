@@ -282,33 +282,13 @@ class MessagesSystem {
             convId = this.conversations[0].id;
         }
 
-        // Send the message
-        const message = await this.sendMessage(content, convId);
+        // Send the message - realtime subscription will handle displaying it
+        await this.sendMessage(content, convId);
         
         // Re-enable send button
         if (sendBtn) {
             sendBtn.disabled = false;
             sendBtn.style.opacity = '1';
-        }
-        
-        if (message) {
-            // Track this ID so realtime doesn't duplicate it
-            this.recentlySentIds.add(message.id);
-            
-            // Clear from tracking after 5 seconds
-            setTimeout(() => {
-                this.recentlySentIds.delete(message.id);
-            }, 5000);
-            
-            // Add message to UI
-            this.messages.push({ ...message, status: 'sent' });
-            this.renderWidgetMessages();
-            
-            // Scroll to bottom
-            const messagesContainer = document.getElementById('widgetMessages');
-            if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
         }
     }
 
@@ -329,11 +309,6 @@ class MessagesSystem {
                 table: 'messages'
             }, (payload) => {
                 const newMessage = payload.new;
-                
-                // Skip if we just sent this message (already added via sendWidgetMessage)
-                if (this.recentlySentIds.has(newMessage.id)) {
-                    return;
-                }
                 
                 // Check if message is for current user's conversation
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
