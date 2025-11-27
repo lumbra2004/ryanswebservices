@@ -10,6 +10,7 @@ class MessagesSystem {
         this.realtimeSubscription = null;
         this.recentlySentIds = new Set(); // Track IDs of messages we just sent
         this.eventListenersSet = false; // Prevent duplicate listeners
+        this.realtimeSetup = false; // Prevent duplicate subscriptions
         this.init();
     }
 
@@ -302,15 +303,19 @@ class MessagesSystem {
 
     setupRealtimeSubscription() {
         if (!this.currentUser) return;
+        
+        // Only set up once
+        if (this.realtimeSetup) return;
+        this.realtimeSetup = true;
 
         // Unsubscribe from existing subscription
         if (this.realtimeSubscription) {
             this.realtimeSubscription.unsubscribe();
         }
 
-        // Subscribe to new messages
+        // Subscribe to new messages with unique channel name
         this.realtimeSubscription = supabase
-            .channel('messages')
+            .channel('messages-' + this.currentUser.id)
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
@@ -322,9 +327,9 @@ class MessagesSystem {
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
                 
                 if (isForCurrentConversation) {
-                    // Add if not already present
-                    const exists = this.messages.some(m => m.id === newMessage.id);
-                    if (!exists) {
+                    // Add if not already present (check by ID)
+                    const existingIndex = this.messages.findIndex(m => m.id === newMessage.id);
+                    if (existingIndex === -1) {
                         this.messages.push({ ...newMessage, status: 'sent' });
                         this.renderWidgetMessages();
                         
