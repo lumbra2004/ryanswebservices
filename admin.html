@@ -118,6 +118,7 @@
             flex: 1;
             margin-left: var(--sidebar-width);
             min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
         }
 
         .admin-topbar {
@@ -857,7 +858,7 @@
     </div>
 
     <!-- Admin Dashboard Layout -->
-    <div id="adminDashboard" style="display: none;">
+    <div id="adminDashboard" class="admin-layout" style="display: none;">
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         
         <!-- Sidebar -->
@@ -915,7 +916,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="admin-main admin-layout">
+        <main class="admin-main">
             <!-- Top Bar -->
             <div class="admin-topbar">
                 <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
