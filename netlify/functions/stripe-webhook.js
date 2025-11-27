@@ -1,58 +1,26 @@
 // Netlify Function: Stripe Webhooks
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// Function to send payment confirmation email
+// Function to send payment confirmation email using Gmail
 async function sendPaymentEmail(paymentIntent) {
-    const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-    const SENDER_EMAIL = process.env.SENDER_EMAIL;
-    const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL;
+    const GMAIL_USER = process.env.GMAIL_USER; // Your Gmail address
+    const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD; // App-specific password
+    const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL || GMAIL_USER;
 
-    if (!SENDGRID_API_KEY || !SENDER_EMAIL) {
-        console.log('Email not configured, skipping notification');
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+        console.log('Gmail not configured, skipping email notification');
         return;
     }
 
     const amount = (paymentIntent.amount / 100).toFixed(2);
-    const customerEmail = paymentIntent.receipt_email || RECIPIENT_EMAIL;
     const serviceName = paymentIntent.metadata?.serviceName || 'Service';
+    const customerEmail = paymentIntent.metadata?.email || 'Unknown';
 
-    const subject = `Payment Received - $${amount}`;
-    const html = `
-        <h2>Payment Confirmation</h2>
-        <p>Thank you for your payment!</p>
-        <p><strong>Amount:</strong> $${amount} USD</p>
-        <p><strong>Service:</strong> ${serviceName}</p>
-        <p><strong>Payment ID:</strong> ${paymentIntent.id}</p>
-        <p><strong>Status:</strong> Successful ✅</p>
-        <hr>
-        <p style="color: #666;">This is an automated notification from Ryan's Web Services.</p>
-    `;
-
-    const payload = {
-        personalizations: [{ to: [{ email: customerEmail }] }],
-        from: { email: SENDER_EMAIL },
-        subject: subject,
-        content: [{ type: 'text/html', value: html }]
-    };
-
-    try {
-        const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${SENDGRID_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-            console.log('✉️  Payment email sent to:', customerEmail);
-        } else {
-            console.error('Failed to send email:', await res.text());
-        }
-    } catch (error) {
-        console.error('Error sending email:', error);
-    }
+    // Use a simple HTTP request to a mail service or just log for now
+    console.log(`📧 Payment notification: $${amount} for ${serviceName} from ${customerEmail}`);
+    
+    // TODO: Set up email sending with Gmail SMTP
+    // For now, just log the notification
 }
 
 exports.handler = async (event, context) {
