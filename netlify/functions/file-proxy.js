@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 exports.handler = async function(event) {
   try {
     const encodedUrl = event.queryStringParameters.url;
@@ -24,7 +22,8 @@ exports.handler = async function(event) {
         headers[key] = value;
       }
     }
-    const buffer = await response.buffer();
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
     return {
       statusCode: 200,
       headers,
