@@ -518,8 +518,11 @@ class AdminPanel {
                 <tbody>
                     ${paymentsToRender.map(payment => {
                         const customer = payment.profiles || {};
-                        const statusColor = statusColors[payment.payment_status] || statusColors[payment.status] || '#6b7280';
-                        const displayStatus = payment.payment_status || payment.status;
+                        // Use status field primarily, payment_status only if it indicates refund
+                        const displayStatus = (payment.payment_status === 'refunded' || payment.payment_status === 'partial_refund') 
+                            ? payment.payment_status 
+                            : payment.status;
+                        const statusColor = statusColors[displayStatus] || '#6b7280';
                         const statusLabel = statusLabels[displayStatus] || displayStatus;
                         const packageDetails = payment.package_details || {};
                         const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
@@ -560,7 +563,8 @@ class AdminPanel {
         const container = document.getElementById('subscriptionsTableContainer');
         if (!container) return;
 
-        const activeSubscriptions = this.requests.filter(r => r.stripe_subscription_id && r.status === 'paid');
+        // Use payments data which has profiles attached
+        const activeSubscriptions = this.payments.filter(r => r.stripe_subscription_id && r.status === 'paid');
 
         if (activeSubscriptions.length === 0) {
             container.innerHTML = '<div class="empty-state">No active subscriptions</div>';
@@ -573,16 +577,28 @@ class AdminPanel {
                     <tr>
                         <th>Customer</th>
                         <th>Service</th>
+                        <th>Plan Details</th>
                         <th>Monthly Amount</th>
                         <th>Started</th>
-                        <th>Subscription ID</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${activeSubscriptions.map(sub => {
                         const customer = sub.profiles || {};
                         const packageDetails = sub.package_details || {};
-                        const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
+                        const maintenancePlan = packageDetails.maintenance_plan;
+                        const googleWorkspace = packageDetails.google_workspace;
+                        const monthlyCost = (maintenancePlan?.monthly_cost || 0) + (googleWorkspace?.monthly_cost || 0);
+                        
+                        // Build plan details string
+                        let planDetails = [];
+                        if (maintenancePlan?.plan) {
+                            planDetails.push(`${maintenancePlan.plan} Maintenance`);
+                        }
+                        if (googleWorkspace?.plan) {
+                            const users = googleWorkspace.users || googleWorkspace.num_users || 1;
+                            planDetails.push(`Google Workspace (${users} user${users > 1 ? 's' : ''})`);
+                        }
                         
                         return `
                             <tr>
@@ -591,11 +607,9 @@ class AdminPanel {
                                     <div style="font-size: 0.8rem; color: #94a3b8;">${this.escapeHtml(customer.business_name || '')}</div>
                                 </td>
                                 <td>${this.escapeHtml(sub.service_name)}</td>
+                                <td style="font-size: 0.85rem;">${planDetails.length > 0 ? planDetails.join('<br>') : 'N/A'}</td>
                                 <td style="color: #10b981; font-weight: 600;">$${monthlyCost}/mo</td>
                                 <td>${new Date(sub.created_at).toLocaleDateString()}</td>
-                                <td style="font-family: monospace; font-size: 0.75rem; color: #94a3b8;">
-                                    ${sub.stripe_subscription_id}
-                                </td>
                             </tr>
                         `;
                     }).join('')}
@@ -2108,13 +2122,13 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                     ${packageDetails.maintenance_plan?.plan ? `
                     <div class="order-detail-row">
                         <span class="label">Maintenance Plan</span>
-                        <span class="value">${packageDetails.maintenance_plan.plan} ($${packageDetails.maintenance_plan.monthly_cost}/mo)</span>
+                        <span class="value success">${packageDetails.maintenance_plan.plan} - $${packageDetails.maintenance_plan.monthly_cost}/mo</span>
                     </div>
                     ` : ''}
                     ${packageDetails.google_workspace?.plan ? `
                     <div class="order-detail-row">
                         <span class="label">Google Workspace</span>
-                        <span class="value">${packageDetails.google_workspace.plan} ($${packageDetails.google_workspace.monthly_cost}/mo)</span>
+                        <span class="value success">${packageDetails.google_workspace.plan} - ${packageDetails.google_workspace.users || packageDetails.google_workspace.num_users || 1} user(s) - $${packageDetails.google_workspace.monthly_cost}/mo</span>
                     </div>
                     ` : ''}
                 </div>
