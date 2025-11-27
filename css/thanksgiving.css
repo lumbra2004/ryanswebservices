@@ -1013,14 +1013,103 @@ footer a:hover {
    ══════════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
+    /* Mobile Thanksgiving Badge - Show smaller version */
     .thanksgiving-badge {
-        display: none;
+        display: inline-flex;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.75rem;
+        gap: 0.35rem;
+    }
+    
+    .thanksgiving-badge .tg-leaf {
+        font-size: 0.85rem;
     }
     
     .hero::after {
         font-size: 2.5rem;
         right: 5%;
         top: 8%;
+    }
+    
+    /* Mobile Hero Thanksgiving Enhancement */
+    .hero {
+        position: relative;
+    }
+    
+    .hero::before {
+        height: 4px !important;
+        background: linear-gradient(90deg, 
+            var(--tg-burgundy) 0%,
+            var(--tg-copper) 25%,
+            var(--tg-gold) 50%,
+            var(--tg-copper) 75%,
+            var(--tg-burgundy) 100%
+        ) !important;
+    }
+    
+    /* Mobile Nav Links Gold Accent */
+    .nav-links.active {
+        background: linear-gradient(180deg, 
+            rgba(26, 21, 18, 0.98) 0%, 
+            rgba(18, 14, 11, 0.98) 100%) !important;
+        border-left: 3px solid var(--tg-gold) !important;
+        box-shadow: -4px 0 30px rgba(212, 175, 55, 0.15), 
+                    -4px 0 24px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .nav-links.active::before {
+        content: '🍂 Happy Thanksgiving! 🍂';
+        display: block;
+        text-align: center;
+        padding: 1rem;
+        color: var(--tg-gold);
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+        margin-bottom: 0.5rem;
+    }
+    
+    .nav-links.active a {
+        border-bottom-color: rgba(212, 175, 55, 0.15) !important;
+    }
+    
+    .nav-links.active a:hover,
+    .nav-links.active a.active {
+        background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%) !important;
+        color: var(--tg-gold) !important;
+    }
+    
+    /* Mobile Menu Toggle Gold Animation */
+    .mobile-menu-toggle.active span {
+        background: var(--tg-gold) !important;
+    }
+    
+    /* Mobile CTA Enhancement */
+    .hero-cta {
+        background: linear-gradient(135deg, var(--tg-burgundy) 0%, var(--tg-burgundy-deep) 100%) !important;
+        border: 2px solid var(--tg-gold) !important;
+        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3) !important;
+    }
+    
+    /* Mobile Brand Name Gold */
+    .brand-name {
+        color: var(--tg-gold) !important;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.4) !important;
+    }
+    
+    /* Mobile Section Titles */
+    .section-title {
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '🍁';
+        display: inline-block;
+        margin-left: 0.5rem;
+        font-size: 0.8em;
+        opacity: 0.6;
+        animation: leafSway 2s ease-in-out infinite;
     }
     
     .tg-promo-content {
@@ -1053,5 +1142,55 @@ footer a:hover {
     
     @keyframes tgToastOut {
         to { transform: translateX(0) translateY(120px); opacity: 0; }
+    }
+    
+    /* Mobile Service Cards Thanksgiving Touch */
+    .service-card {
+        border: 1px solid rgba(212, 175, 55, 0.15) !important;
+    }
+    
+    .service-card:hover {
+        border-color: rgba(212, 175, 55, 0.3) !important;
+        box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15) !important;
+    }
+    
+    /* Mobile Footer Gold Accent */
+    footer {
+        border-top: 2px solid transparent !important;
+        border-image: linear-gradient(90deg, transparent, var(--tg-gold), transparent) 1 !important;
+    }
+    
+    /* Mobile Trust Badges Enhancement */
+    .trust-badge {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(114, 47, 55, 0.05) 100%) !important;
+        border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    }
+    
+    .trust-badge-icon {
+        color: var(--tg-gold) !important;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .nav-links.active::before {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+    }
+    
+    .thanksgiving-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .hero::after {
+        font-size: 2rem;
+        top: 5%;
+        right: 3%;
+        opacity: 0.08;
+    }
+    
+    .section-title::after {
+        font-size: 0.7em;
     }
 }
