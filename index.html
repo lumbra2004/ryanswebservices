@@ -112,66 +112,152 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <style>
-        /* Thanksgiving Theme */
+        /* Premium Thanksgiving Theme */
+        :root {
+            --thanksgiving-gold: #D4A853;
+            --thanksgiving-copper: #B87333;
+            --thanksgiving-burgundy: #722F37;
+            --thanksgiving-cream: #FFF8E7;
+            --thanksgiving-dark: #2D1810;
+        }
+        
         .thanksgiving-banner {
-            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--thanksgiving-dark) 0%, var(--thanksgiving-burgundy) 50%, var(--thanksgiving-dark) 100%);
+            color: var(--thanksgiving-cream);
             text-align: center;
-            padding: 0.75rem 1rem;
-            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
             position: relative;
             overflow: hidden;
-            animation: shimmer 3s ease-in-out infinite;
+            border-bottom: 2px solid var(--thanksgiving-gold);
+            box-shadow: 0 4px 20px rgba(212, 168, 83, 0.15);
         }
+        
         .thanksgiving-banner::before {
-            content: '🦃';
+            content: '';
             position: absolute;
-            left: 10%;
-            animation: bounce 2s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(212, 168, 83, 0.1) 50%, transparent 100%);
+            animation: shine 3s ease-in-out infinite;
         }
-        .thanksgiving-banner::after {
-            content: '🍂';
-            position: absolute;
-            right: 10%;
-            animation: fall 3s ease-in-out infinite;
+        
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
         }
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        @keyframes fall {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(3px) rotate(10deg); }
-        }
-        .thanksgiving-text {
-            display: inline-flex;
+        
+        .thanksgiving-content {
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
-        /* Fall leaf decorations */
-        .leaf {
-            position: fixed;
+        
+        .thanksgiving-icon {
             font-size: 1.5rem;
-            opacity: 0.7;
-            pointer-events: none;
-            z-index: 9999;
-            animation: leafFall linear infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-        @keyframes leafFall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        
+        .thanksgiving-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .thanksgiving-text .highlight {
+            color: var(--thanksgiving-gold);
+            font-weight: 700;
+        }
+        
+        .thanksgiving-accent {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--thanksgiving-gold), transparent);
+        }
+        
+        /* Elegant floating elements */
+        .autumn-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            font-size: 1.2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        @keyframes floatDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) rotate(0deg) scale(0.8);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(360deg) scale(0.6);
+            }
+        }
+        
+        /* Golden accent on hero section */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--thanksgiving-gold), var(--thanksgiving-copper), var(--thanksgiving-gold), transparent);
+            z-index: 10;
+        }
+        
+        /* Subtle golden glow on CTA */
+        .hero-cta {
+            box-shadow: 0 0 30px rgba(212, 168, 83, 0.2);
+        }
+        
+        /* Festive corner accents */
+        .corner-accent {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0.15;
+        }
+        
+        .corner-accent.top-left {
+            top: 80px;
+            left: 0;
+            background: radial-gradient(circle at top left, var(--thanksgiving-gold) 0%, transparent 70%);
+        }
+        
+        .corner-accent.top-right {
+            top: 80px;
+            right: 0;
+            background: radial-gradient(circle at top right, var(--thanksgiving-copper) 0%, transparent 70%);
         }
     </style>
 </head>
 <body>
     <header>
-        <!-- Thanksgiving Banner -->
+        <!-- Premium Thanksgiving Banner -->
         <div class="thanksgiving-banner">
-            <span class="thanksgiving-text">🍁 Happy Thanksgiving! 🍁 Wishing you and your loved ones a blessed holiday! 🦃</span>
+            <div class="thanksgiving-content">
+                <div class="thanksgiving-accent"></div>
+                <span class="thanksgiving-icon">✦</span>
+                <span class="thanksgiving-text"><span class="highlight">Happy Thanksgiving</span> — Wishing you warmth, gratitude & joy this season</span>
+                <span class="thanksgiving-icon">✦</span>
+                <div class="thanksgiving-accent"></div>
+            </div>
         </div>
         <nav class="container-nav">
             <div class="logo">Ryan's Webservice</div>
@@ -540,22 +626,28 @@
     <script src="js/main.js"></script>
     <script src="js/analytics.js"></script>
     <script>
-        // Falling leaves effect for Thanksgiving
-        function createLeaf() {
-            const leaves = ['🍂', '🍁', '🧡', '🍃'];
-            const leaf = document.createElement('div');
-            leaf.className = 'leaf';
-            leaf.textContent = leaves[Math.floor(Math.random() * leaves.length)];
-            leaf.style.left = Math.random() * 100 + 'vw';
-            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            leaf.style.fontSize = (Math.random() * 1 + 1) + 'rem';
-            document.body.appendChild(leaf);
-            setTimeout(() => leaf.remove(), 10000);
+        // Elegant autumn floating elements
+        function createAutumnElement() {
+            const elements = ['🍂', '✦', '🍁'];
+            const el = document.createElement('div');
+            el.className = 'autumn-element';
+            el.textContent = elements[Math.floor(Math.random() * elements.length)];
+            el.style.left = (Math.random() * 90 + 5) + 'vw';
+            el.style.animationName = 'floatDown';
+            el.style.animationDuration = (Math.random() * 8 + 12) + 's';
+            el.style.animationTimingFunction = 'linear';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 20000);
         }
-        // Create leaves periodically
-        setInterval(createLeaf, 800);
-        // Create initial batch
-        for(let i = 0; i < 5; i++) setTimeout(createLeaf, i * 200);
+        // Subtle, less frequent elements
+        setInterval(createAutumnElement, 3000);
+        // Add corner accents
+        const cornerLeft = document.createElement('div');
+        cornerLeft.className = 'corner-accent top-left';
+        document.body.appendChild(cornerLeft);
+        const cornerRight = document.createElement('div');
+        cornerRight.className = 'corner-accent top-right';
+        document.body.appendChild(cornerRight);
     </script>
 </body>
 </html>
