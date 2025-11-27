@@ -1334,68 +1334,23 @@ class ProfileManager {
             localStorage.setItem('pending_customer_id', this.currentCustomerId);
             localStorage.setItem('pending_price_id', this.currentPriceId);
 
-            // Confirm payment with Stripe (this will redirect)
+            // Confirm payment with Stripe (this will redirect to Stripe's payment page)
+            // The rest of the flow is handled by handleStripeReturn() after redirect
             await this.stripeHandler.confirmPayment();
-
-            // After successful payment, create subscription
-            const response = await fetch('/api/stripe/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    customerId: this.currentCustomerId,
-                    priceId: this.currentPriceId,
-                    metadata: {
-                        requestId: this.currentRequestToPay,
-                        userId: this.currentUser.id,
-                    },
-                }),
-            });
-
-            const subscriptionData = await response.json();
-
-            if (!response.ok) {
-                throw new Error(subscriptionData.error || 'Subscription creation failed');
-            }
-
-            // Update request status to 'paid'
-            const { error } = await supabase
-                .from('service_requests')
-                .update({ 
-                    status: 'paid',
-                    paid_at: new Date().toISOString(),
-                    stripe_customer_id: this.currentCustomerId,
-                    stripe_subscription_id: subscriptionData.subscriptionId
-                })
-                .eq('id', this.currentRequestToPay)
-                .eq('user_id', this.currentUser.id);
-
-            if (error) throw error;
-
-            // Close modal
-            this.closePaymentModal();
-
-            // Show success notification
-            this.showNotification('✅ Payment successful! Your service is now active.', 'success');
-
-            // Reload requests to update status
-            await this.loadRequests();
 
         } catch (error) {
             console.error('Error processing payment:', error);
             
-            // Check if error is from Stripe redirect (payment was successful)
+            // Re-enable button on error
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = originalText;
+            
+            // Check if error is from Stripe validation
             if (error.type === 'validation_error') {
                 this.showNotification('Please complete all payment fields', 'error');
             } else {
-                this.showNotification('Payment processing. Redirecting...', 'success');
-                // Stripe is handling the redirect
-                return;
+                this.showNotification('Error: ' + (error.message || 'Payment failed'), 'error');
             }
-            
-            confirmBtn.disabled = false;
-            confirmBtn.innerHTML = originalText;
         }
     }
 
