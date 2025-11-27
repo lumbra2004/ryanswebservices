@@ -4,17 +4,19 @@
 (function() {
     'use strict';
     
-    const SUPABASE_URL = 'https://ujludleswiuqlvosbpyg.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMTY0ODgsImV4cCI6MjA2MDU5MjQ4OH0.A0NCJYJnKMwT_GRyXrZplb1q_shvMHnNeVNsh9hcPrQ';
-    
-    // Don't track admin pages or if DNT is enabled
-    if (window.location.pathname.includes('admin') || navigator.doNotTrack === '1') {
-        return;
-    }
-    
-    let visitId = null;
-    let startTime = Date.now();
-    let maxScrollDepth = 0;
+    // Wrap everything in try-catch to prevent any errors from breaking the page
+    try {
+        const SUPABASE_URL = 'https://ujludleswiuqlvosbpyg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMTY0ODgsImV4cCI6MjA2MDU5MjQ4OH0.A0NCJYJnKMwT_GRyXrZplb1q_shvMHnNeVNsh9hcPrQ';
+        
+        // Don't track admin pages or if DNT is enabled
+        if (window.location.pathname.includes('admin') || navigator.doNotTrack === '1') {
+            return;
+        }
+        
+        let visitId = null;
+        let startTime = Date.now();
+        let maxScrollDepth = 0;
     
     // Generate or retrieve session ID
     function getSessionId() {
@@ -186,21 +188,12 @@
         if (!visitId) return;
         
         try {
-            // Using ip-api.com (free, no API key needed, 45 requests/minute)
-            const response = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,query');
+            // Using ipapi.co (HTTPS, 30k requests/month free)
+            const response = await fetch('https://ipapi.co/json/');
             
             if (response.ok) {
                 const data = await response.json();
-                if (data.status === 'success') {
-                    await updateVisitLocation(data);
-                }
-            }
-        } catch (error) {
-            // Fallback: try ipapi.co (50k requests/month free)
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                if (response.ok) {
-                    const data = await response.json();
+                if (!data.error) {
                     await updateVisitLocation({
                         query: data.ip,
                         country: data.country_name,
@@ -214,9 +207,10 @@
                         isp: data.org
                     });
                 }
-            } catch (e) {
-                console.debug('Geolocation fetch failed');
             }
+        } catch (error) {
+            // Silently fail - geolocation is optional
+            console.debug('Geolocation fetch failed:', error);
         }
     }
     
@@ -356,5 +350,10 @@
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
+    }
+    
+    } catch (e) {
+        // Silently fail - analytics should never break the page
+        console.debug('Analytics init error:', e);
     }
 })();
