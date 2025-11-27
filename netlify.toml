@@ -39,3 +39,8 @@
   from = "/api/stripe/get-subscription"
   to = "/.netlify/functions/stripe-get-subscription"
   status = 200
+
+[[redirects]]
+  from = "/api/stripe/refund"
+  to = "/.netlify/functions/stripe-refund"
+  status = 200

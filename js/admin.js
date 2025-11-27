@@ -14,7 +14,9 @@ class AdminPanel {
         this.contacts = [];
         this.files = [];
         this.payments = [];
+        this.promoCodes = [];
         this.currentSection = 'overview';
+        this.currentRefundOrder = null;
         
         this.init();
     }
@@ -108,6 +110,9 @@ class AdminPanel {
         document.getElementById('contactStatusFilter')?.addEventListener('change', (e) => this.filterContacts(document.getElementById('contactSearch').value, e.target.value));
         document.getElementById('paymentSearch')?.addEventListener('input', (e) => this.filterPayments(e.target.value));
         document.getElementById('paymentStatusFilter')?.addEventListener('change', (e) => this.filterPayments(document.getElementById('paymentSearch')?.value, e.target.value));
+        
+        // Create promo code button
+        document.getElementById('createPromoBtn')?.addEventListener('click', () => this.openPromoModal());
     }
 
     switchSection(sectionName) {
@@ -418,7 +423,8 @@ class AdminPanel {
                 this.loadRequests(),
                 this.loadContacts(),
                 this.loadFiles(),
-                this.loadPayments()
+                this.loadPayments(),
+                this.loadPromoCodes()
             ]);
 
             this.updateStats();
@@ -436,11 +442,10 @@ class AdminPanel {
 
     async loadPayments() {
         try {
-            // Get all paid service requests as payments
+            // Get all service requests for payment tracking
             const { data: paidRequests, error } = await supabase
                 .from('service_requests')
                 .select('*, profiles:user_id(email, full_name, business_name)')
-                .in('status', ['paid', 'ready_to_purchase', 'pending'])
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -458,20 +463,24 @@ class AdminPanel {
         const paymentsToRender = filteredPayments || this.payments;
 
         if (paymentsToRender.length === 0) {
-            container.innerHTML = '<div class="empty-state">No payments found</div>';
+            container.innerHTML = '<div class="empty-state">No orders found</div>';
             return;
         }
 
         const statusColors = {
             'paid': '#10b981',
             'ready_to_purchase': '#fbbf24',
-            'pending': '#6b7280'
+            'pending': '#6b7280',
+            'refunded': '#ef4444',
+            'partial_refund': '#f97316'
         };
 
         const statusLabels = {
             'paid': '✅ Paid',
-            'ready_to_purchase': '⏳ Pending Payment',
-            'pending': '📋 Quote Pending'
+            'ready_to_purchase': '⏳ Awaiting Payment',
+            'pending': '📋 Quote Pending',
+            'refunded': '💸 Refunded',
+            'partial_refund': '💸 Partial Refund'
         };
 
         const html = `
@@ -484,16 +493,18 @@ class AdminPanel {
                         <th>One-Time</th>
                         <th>Monthly</th>
                         <th>Status</th>
-                        <th>Stripe ID</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${paymentsToRender.map(payment => {
                         const customer = payment.profiles || {};
-                        const statusColor = statusColors[payment.status] || '#6b7280';
-                        const statusLabel = statusLabels[payment.status] || payment.status;
+                        const statusColor = statusColors[payment.payment_status] || statusColors[payment.status] || '#6b7280';
+                        const displayStatus = payment.payment_status || payment.status;
+                        const statusLabel = statusLabels[displayStatus] || displayStatus;
                         const packageDetails = payment.package_details || {};
                         const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
+                        const canRefund = payment.status === 'paid' && (payment.stripe_payment_intent_id || payment.stripe_subscription_id);
                         
                         return `
                             <tr>
@@ -510,8 +521,11 @@ class AdminPanel {
                                         ${statusLabel}
                                     </span>
                                 </td>
-                                <td style="font-family: monospace; font-size: 0.75rem; color: #94a3b8;">
-                                    ${payment.stripe_subscription_id ? payment.stripe_subscription_id.substring(0, 20) + '...' : '-'}
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="table-btn view" onclick="adminPanel.viewOrderDetails('${payment.id}')">View</button>
+                                        ${canRefund ? `<button class="table-btn refund" onclick="adminPanel.openRefundModal('${payment.id}')">Refund</button>` : ''}
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -1868,6 +1882,505 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         } catch (error) {
             console.error('Error uploading file:', error);
             alert('Error uploading file: ' + error.message);
+        }
+    }
+
+    // ==================== ORDER DETAILS ====================
+    
+    async viewOrderDetails(requestId) {
+        const modal = document.getElementById('orderDetailsModal');
+        const content = document.getElementById('orderDetailsContent');
+        const refundBtn = document.getElementById('modalRefundBtn');
+        
+        if (!modal || !content) return;
+        
+        modal.style.display = 'flex';
+        content.innerHTML = '<div class="loading">Loading order details...</div>';
+        
+        try {
+            // Fetch the full order data
+            const { data: order, error } = await supabase
+                .from('service_requests')
+                .select('*, profiles:user_id(*), contract_file:contract_file_id(*), promo_code:promo_code_id(*)')
+                .eq('id', requestId)
+                .single();
+            
+            if (error) throw error;
+            
+            const customer = order.profiles || {};
+            const packageDetails = order.package_details || {};
+            const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
+            
+            // Show refund button if applicable
+            const canRefund = order.status === 'paid' && (order.stripe_payment_intent_id || order.stripe_subscription_id);
+            if (refundBtn) {
+                refundBtn.style.display = canRefund ? 'block' : 'none';
+                refundBtn.onclick = () => this.openRefundModal(requestId);
+            }
+            
+            // Store current order for refund
+            this.currentRefundOrder = order;
+            
+            content.innerHTML = `
+                <div class="order-detail-section">
+                    <h4>👤 Customer Information</h4>
+                    <div class="order-detail-row">
+                        <span class="label">Name</span>
+                        <span class="value">${this.escapeHtml(customer.full_name || 'N/A')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Email</span>
+                        <span class="value">${this.escapeHtml(customer.email || 'N/A')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Business</span>
+                        <span class="value">${this.escapeHtml(customer.business_name || 'N/A')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Phone</span>
+                        <span class="value">${this.escapeHtml(customer.phone || 'N/A')}</span>
+                    </div>
+                </div>
+                
+                <div class="order-detail-section">
+                    <h4>📦 Order Details</h4>
+                    <div class="order-detail-row">
+                        <span class="label">Service</span>
+                        <span class="value">${this.escapeHtml(order.service_name)}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Order Date</span>
+                        <span class="value">${new Date(order.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Status</span>
+                        <span class="value ${order.status === 'paid' ? 'success' : order.status === 'refunded' ? 'error' : 'warning'}">${order.status.toUpperCase()}</span>
+                    </div>
+                    ${order.paid_at ? `
+                    <div class="order-detail-row">
+                        <span class="label">Paid On</span>
+                        <span class="value">${new Date(order.paid_at).toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div class="order-detail-section">
+                    <h4>💰 Payment Breakdown</h4>
+                    ${order.original_amount && order.discount_amount ? `
+                    <div class="order-detail-row">
+                        <span class="label">Original Amount</span>
+                        <span class="value">$${parseFloat(order.original_amount).toLocaleString()}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Discount Applied</span>
+                        <span class="value success">-$${parseFloat(order.discount_amount).toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                    <div class="order-detail-row">
+                        <span class="label">One-Time Total</span>
+                        <span class="value" style="font-weight: 600;">$${parseFloat(order.total_amount || 0).toLocaleString()}</span>
+                    </div>
+                    ${monthlyCost > 0 ? `
+                    <div class="order-detail-row">
+                        <span class="label">Monthly Recurring</span>
+                        <span class="value" style="color: #8b5cf6;">$${monthlyCost}/mo</span>
+                    </div>
+                    ` : ''}
+                    ${order.promo_code ? `
+                    <div class="order-detail-row">
+                        <span class="label">Promo Code Used</span>
+                        <span class="value success">🎟️ ${order.promo_code.code}</span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                ${order.payment_status === 'refunded' || order.payment_status === 'partial_refund' ? `
+                <div class="order-detail-section">
+                    <h4>💸 Refund Information</h4>
+                    <div class="order-detail-row">
+                        <span class="label">Refund Amount</span>
+                        <span class="value error">$${parseFloat(order.refund_amount || 0).toLocaleString()}</span>
+                    </div>
+                    ${order.refund_reason ? `
+                    <div class="order-detail-row">
+                        <span class="label">Reason</span>
+                        <span class="value">${order.refund_reason}</span>
+                    </div>
+                    ` : ''}
+                    ${order.refunded_at ? `
+                    <div class="order-detail-row">
+                        <span class="label">Refunded On</span>
+                        <span class="value">${new Date(order.refunded_at).toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                </div>
+                ` : ''}
+                
+                <div class="order-detail-section">
+                    <h4>🔗 Stripe Information</h4>
+                    <div class="order-detail-row">
+                        <span class="label">Payment Intent</span>
+                        <span class="value" style="font-family: monospace; font-size: 0.85rem;">${order.stripe_payment_intent_id || 'N/A'}</span>
+                    </div>
+                    ${order.stripe_subscription_id ? `
+                    <div class="order-detail-row">
+                        <span class="label">Subscription ID</span>
+                        <span class="value" style="font-family: monospace; font-size: 0.85rem;">${order.stripe_subscription_id}</span>
+                    </div>
+                    ` : ''}
+                    ${order.stripe_charge_id ? `
+                    <div class="order-detail-row">
+                        <span class="label">Charge ID</span>
+                        <span class="value" style="font-family: monospace; font-size: 0.85rem;">${order.stripe_charge_id}</span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                ${packageDetails && Object.keys(packageDetails).length > 0 ? `
+                <div class="order-detail-section">
+                    <h4>📋 Package Details</h4>
+                    ${packageDetails.pages ? `
+                    <div class="order-detail-row">
+                        <span class="label">Pages</span>
+                        <span class="value">${packageDetails.pages}</span>
+                    </div>
+                    ` : ''}
+                    ${packageDetails.design_complexity ? `
+                    <div class="order-detail-row">
+                        <span class="label">Design Complexity</span>
+                        <span class="value">${packageDetails.design_complexity}</span>
+                    </div>
+                    ` : ''}
+                    ${packageDetails.cms_included ? `
+                    <div class="order-detail-row">
+                        <span class="label">CMS Included</span>
+                        <span class="value success">Yes</span>
+                    </div>
+                    ` : ''}
+                    ${packageDetails.ecommerce_included ? `
+                    <div class="order-detail-row">
+                        <span class="label">E-commerce</span>
+                        <span class="value success">Yes (${packageDetails.num_products} products)</span>
+                    </div>
+                    ` : ''}
+                    ${packageDetails.maintenance_plan?.plan ? `
+                    <div class="order-detail-row">
+                        <span class="label">Maintenance Plan</span>
+                        <span class="value">${packageDetails.maintenance_plan.plan} ($${packageDetails.maintenance_plan.monthly_cost}/mo)</span>
+                    </div>
+                    ` : ''}
+                    ${packageDetails.google_workspace?.plan ? `
+                    <div class="order-detail-row">
+                        <span class="label">Google Workspace</span>
+                        <span class="value">${packageDetails.google_workspace.plan} ($${packageDetails.google_workspace.monthly_cost}/mo)</span>
+                    </div>
+                    ` : ''}
+                </div>
+                ` : ''}
+                
+                ${order.contract_file ? `
+                <div class="order-detail-section">
+                    <h4>📄 Contract</h4>
+                    <div class="order-detail-row">
+                        <span class="label">File Name</span>
+                        <span class="value">${this.escapeHtml(order.contract_file.file_name)}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">Status</span>
+                        <span class="value ${order.contract_file.status === 'signed' ? 'success' : 'warning'}">${order.contract_file.status}</span>
+                    </div>
+                    <button class="action-btn" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="window.open('${order.contract_file.file_url}', '_blank')">View Contract</button>
+                </div>
+                ` : ''}
+            `;
+        } catch (error) {
+            console.error('Error loading order details:', error);
+            content.innerHTML = `<div class="error-message" style="display: block;">Error loading order details: ${error.message}</div>`;
+        }
+    }
+    
+    closeOrderModal() {
+        const modal = document.getElementById('orderDetailsModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // ==================== REFUND FUNCTIONALITY ====================
+    
+    openRefundModal(requestId) {
+        const order = this.payments.find(p => p.id === requestId) || this.currentRefundOrder;
+        if (!order) {
+            alert('Order not found');
+            return;
+        }
+        
+        this.currentRefundOrder = order;
+        
+        const modal = document.getElementById('refundModal');
+        const customer = order.profiles || {};
+        
+        document.getElementById('refundCustomer').textContent = customer.full_name || customer.email || 'Unknown';
+        document.getElementById('refundService').textContent = order.service_name;
+        document.getElementById('refundOriginalAmount').textContent = `$${parseFloat(order.total_amount || 0).toLocaleString()}`;
+        
+        // Reset form
+        document.getElementById('refundType').value = 'full';
+        document.getElementById('refundAmount').value = '';
+        document.getElementById('partialAmountGroup').style.display = 'none';
+        document.getElementById('refundReason').value = 'requested_by_customer';
+        
+        modal.style.display = 'flex';
+        
+        // Close order modal if open
+        this.closeOrderModal();
+    }
+    
+    closeRefundModal() {
+        const modal = document.getElementById('refundModal');
+        if (modal) modal.style.display = 'none';
+    }
+    
+    toggleRefundAmount() {
+        const type = document.getElementById('refundType').value;
+        const amountGroup = document.getElementById('partialAmountGroup');
+        amountGroup.style.display = type === 'partial' ? 'block' : 'none';
+    }
+    
+    async processRefund() {
+        if (!this.currentRefundOrder) {
+            alert('No order selected for refund');
+            return;
+        }
+        
+        const refundType = document.getElementById('refundType').value;
+        const refundReason = document.getElementById('refundReason').value;
+        let refundAmount = null;
+        
+        if (refundType === 'partial') {
+            refundAmount = parseFloat(document.getElementById('refundAmount').value);
+            if (!refundAmount || refundAmount <= 0) {
+                alert('Please enter a valid refund amount');
+                return;
+            }
+            if (refundAmount > this.currentRefundOrder.total_amount) {
+                alert('Refund amount cannot exceed the original payment amount');
+                return;
+            }
+        }
+        
+        if (!confirm(`Are you sure you want to issue a ${refundType} refund for this order?`)) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/stripe/refund', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    paymentIntentId: this.currentRefundOrder.stripe_payment_intent_id,
+                    chargeId: this.currentRefundOrder.stripe_charge_id,
+                    amount: refundAmount,
+                    reason: refundReason
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to process refund');
+            }
+            
+            // Update the order in the database
+            const refundedAmount = refundAmount || this.currentRefundOrder.total_amount;
+            const newStatus = refundType === 'full' ? 'refunded' : 'partial_refund';
+            
+            const { error: updateError } = await supabase
+                .from('service_requests')
+                .update({
+                    payment_status: newStatus,
+                    refund_amount: refundedAmount,
+                    refund_reason: refundReason,
+                    refunded_at: new Date().toISOString()
+                })
+                .eq('id', this.currentRefundOrder.id);
+            
+            if (updateError) {
+                console.error('Error updating order status:', updateError);
+            }
+            
+            alert(`Refund of $${refundedAmount.toLocaleString()} processed successfully!`);
+            
+            this.closeRefundModal();
+            await this.loadPayments();
+            this.renderPayments();
+            this.updateStats();
+        } catch (error) {
+            console.error('Error processing refund:', error);
+            alert('Error processing refund: ' + error.message);
+        }
+    }
+
+    // ==================== PROMO CODES ====================
+    
+    async loadPromoCodes() {
+        try {
+            const { data, error } = await supabase
+                .from('promo_codes')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            this.promoCodes = data || [];
+            this.renderPromoCodes();
+        } catch (error) {
+            console.error('Error loading promo codes:', error);
+            this.promoCodes = [];
+        }
+    }
+    
+    renderPromoCodes() {
+        const container = document.getElementById('promoCodesContainer');
+        if (!container) return;
+        
+        if (!this.promoCodes || this.promoCodes.length === 0) {
+            container.innerHTML = '<div class="empty-state">No promo codes created yet</div>';
+            return;
+        }
+        
+        const html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Discount</th>
+                        <th>Usage</th>
+                        <th>Valid Until</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.promoCodes.map(code => {
+                        const now = new Date();
+                        const validUntil = code.valid_until ? new Date(code.valid_until) : null;
+                        const isExpired = validUntil && validUntil < now;
+                        const isMaxedOut = code.max_uses && code.times_used >= code.max_uses;
+                        
+                        let statusClass = 'active';
+                        let statusText = 'Active';
+                        if (!code.is_active) {
+                            statusClass = 'inactive';
+                            statusText = 'Inactive';
+                        } else if (isExpired) {
+                            statusClass = 'expired';
+                            statusText = 'Expired';
+                        } else if (isMaxedOut) {
+                            statusClass = 'inactive';
+                            statusText = 'Maxed Out';
+                        }
+                        
+                        const discountDisplay = code.discount_type === 'percentage' 
+                            ? `${code.discount_value}% off`
+                            : `$${code.discount_value} off`;
+                        
+                        return `
+                            <tr>
+                                <td><code style="background: rgba(139, 92, 246, 0.1); padding: 0.25rem 0.5rem; border-radius: 4px; color: #a78bfa;">${code.code}</code></td>
+                                <td>${discountDisplay}</td>
+                                <td>${code.times_used || 0}${code.max_uses ? `/${code.max_uses}` : ''}</td>
+                                <td>${validUntil ? validUntil.toLocaleDateString() : 'No expiry'}</td>
+                                <td><span class="promo-badge ${statusClass}">${statusText}</span></td>
+                                <td>
+                                    <button class="table-btn toggle" onclick="adminPanel.togglePromoCode('${code.id}', ${!code.is_active})">
+                                        ${code.is_active ? 'Disable' : 'Enable'}
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+        
+        container.innerHTML = html;
+    }
+    
+    openPromoModal() {
+        const modal = document.getElementById('promoCodeModal');
+        if (modal) {
+            // Reset form
+            document.getElementById('promoCodeForm').reset();
+            modal.style.display = 'flex';
+        }
+    }
+    
+    closePromoModal() {
+        const modal = document.getElementById('promoCodeModal');
+        if (modal) modal.style.display = 'none';
+    }
+    
+    async createPromoCode() {
+        const code = document.getElementById('promoCode').value.toUpperCase().trim();
+        const description = document.getElementById('promoDescription').value.trim();
+        const discountType = document.getElementById('promoDiscountType').value;
+        const discountValue = parseFloat(document.getElementById('promoDiscountValue').value);
+        const maxUses = document.getElementById('promoMaxUses').value ? parseInt(document.getElementById('promoMaxUses').value) : null;
+        const minPurchase = parseFloat(document.getElementById('promoMinPurchase').value) || 0;
+        const validFrom = document.getElementById('promoValidFrom').value || null;
+        const validUntil = document.getElementById('promoValidUntil').value || null;
+        
+        if (!code || !discountValue) {
+            alert('Please fill in the required fields');
+            return;
+        }
+        
+        try {
+            const { data, error } = await supabase
+                .from('promo_codes')
+                .insert({
+                    code,
+                    description,
+                    discount_type: discountType,
+                    discount_value: discountValue,
+                    max_uses: maxUses,
+                    min_purchase: minPurchase,
+                    valid_from: validFrom,
+                    valid_until: validUntil,
+                    is_active: true,
+                    created_by: this.currentUser?.id
+                })
+                .select();
+            
+            if (error) {
+                if (error.message.includes('unique') || error.message.includes('duplicate')) {
+                    alert('A promo code with this name already exists');
+                } else {
+                    throw error;
+                }
+                return;
+            }
+            
+            alert('Promo code created successfully!');
+            this.closePromoModal();
+            await this.loadPromoCodes();
+        } catch (error) {
+            console.error('Error creating promo code:', error);
+            alert('Error creating promo code: ' + error.message);
+        }
+    }
+    
+    async togglePromoCode(codeId, newStatus) {
+        try {
+            const { error } = await supabase
+                .from('promo_codes')
+                .update({ is_active: newStatus })
+                .eq('id', codeId);
+            
+            if (error) throw error;
+            
+            await this.loadPromoCodes();
+        } catch (error) {
+            console.error('Error toggling promo code:', error);
+            alert('Error updating promo code: ' + error.message);
         }
     }
 }

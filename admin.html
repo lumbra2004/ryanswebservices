@@ -843,6 +843,219 @@
             margin-bottom: 1rem;
             display: none;
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Order Details Styles */
+        .order-detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .order-detail-section h4 {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .order-detail-row .label {
+            color: #94a3b8;
+        }
+
+        .order-detail-row .value {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .order-detail-row .value.success {
+            color: #10b981;
+        }
+
+        .order-detail-row .value.warning {
+            color: #fbbf24;
+        }
+
+        .order-detail-row .value.error {
+            color: #ef4444;
+        }
+
+        /* Promo Code Table Styles */
+        .promo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .promo-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .promo-badge.inactive {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .promo-badge.expired {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Action buttons in tables */
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .table-btn.view {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .table-btn.view:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .table-btn.refund {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .table-btn.refund:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .table-btn.toggle {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .table-btn.toggle:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Form styles for modals */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -1054,7 +1267,7 @@
                 <section class="admin-section" id="section-payments">
                     <div class="section-header">
                         <h2>💳 Payments & Invoices</h2>
-                        <p>Track all payments and subscriptions</p>
+                        <p>Track all payments, subscriptions, and promo codes</p>
                     </div>
                     
                     <!-- Payment Summary -->
@@ -1077,22 +1290,36 @@
                         </div>
                     </div>
                     
+                    <!-- Promo Codes Section -->
+                    <div class="data-table" style="margin-bottom: 2rem;">
+                        <div class="table-header">
+                            <h2>🎟️ Promo Codes</h2>
+                            <button class="action-btn" id="createPromoBtn" style="background: linear-gradient(135deg, #10b981, #059669);">+ Create Promo Code</button>
+                        </div>
+                        <div class="table-content">
+                            <div id="promoCodesContainer">
+                                <div class="loading">Loading promo codes...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="data-table">
                         <div class="table-header">
-                            <h2>💰 Payment History</h2>
+                            <h2>💰 All Orders & Invoices</h2>
                         </div>
                         <div class="table-content">
                             <div class="filter-controls">
-                                <input type="text" id="paymentSearch" placeholder="🔍 Search payments...">
+                                <input type="text" id="paymentSearch" placeholder="🔍 Search by customer, service, business...">
                                 <select id="paymentStatusFilter">
-                                    <option value="all">All Payments</option>
+                                    <option value="all">All Orders</option>
                                     <option value="paid">Paid</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="failed">Failed</option>
+                                    <option value="ready_to_purchase">Awaiting Payment</option>
+                                    <option value="pending">Quote Pending</option>
+                                    <option value="refunded">Refunded</option>
                                 </select>
                             </div>
                             <div id="paymentsTableContainer">
-                                <div class="loading">Loading payments...</div>
+                                <div class="loading">Loading orders...</div>
                             </div>
                         </div>
                     </div>
@@ -1230,6 +1457,122 @@
                     <button type="button" id="closeUploadModal" class="action-btn" style="flex: 1; background: #6b7280; padding: 0.75rem;">Cancel</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>📦 Order Details</h3>
+                <button class="modal-close" onclick="adminDashboard.closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="orderDetailsContent">
+                <div class="loading">Loading order details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminDashboard.closeOrderModal()">Close</button>
+                <button class="action-btn refund-btn" id="modalRefundBtn" style="display: none; background: #ef4444;">Issue Refund</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promo Code Creation Modal -->
+    <div id="promoCodeModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>🎟️ Create Promo Code</h3>
+                <button class="modal-close" onclick="adminDashboard.closePromoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="promoCodeForm">
+                    <div class="form-group">
+                        <label>Promo Code</label>
+                        <input type="text" id="promoCode" placeholder="e.g., SAVE20" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="promoDescription" placeholder="e.g., 20% off for new customers">
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Discount Type</label>
+                            <select id="promoDiscountType" required>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount ($)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Discount Value</label>
+                            <input type="number" id="promoDiscountValue" placeholder="e.g., 20" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Max Uses (optional)</label>
+                            <input type="number" id="promoMaxUses" placeholder="Leave empty for unlimited" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Min Purchase ($)</label>
+                            <input type="number" id="promoMinPurchase" placeholder="0" min="0" step="0.01" value="0">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valid From</label>
+                            <input type="date" id="promoValidFrom">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valid Until</label>
+                            <input type="date" id="promoValidUntil">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminDashboard.closePromoModal()">Cancel</button>
+                <button class="action-btn" onclick="adminDashboard.createPromoCode()" style="background: linear-gradient(135deg, #10b981, #059669);">Create Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refund Modal -->
+    <div id="refundModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>💸 Issue Refund</h3>
+                <button class="modal-close" onclick="adminDashboard.closeRefundModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="refundDetails">
+                    <p><strong>Customer:</strong> <span id="refundCustomer"></span></p>
+                    <p><strong>Service:</strong> <span id="refundService"></span></p>
+                    <p><strong>Original Amount:</strong> <span id="refundOriginalAmount"></span></p>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Refund Type</label>
+                    <select id="refundType" onchange="adminDashboard.toggleRefundAmount()">
+                        <option value="full">Full Refund</option>
+                        <option value="partial">Partial Refund</option>
+                    </select>
+                </div>
+                <div class="form-group" id="partialAmountGroup" style="display: none;">
+                    <label>Refund Amount ($)</label>
+                    <input type="number" id="refundAmount" placeholder="Enter amount" min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <select id="refundReason">
+                        <option value="requested_by_customer">Requested by customer</option>
+                        <option value="duplicate">Duplicate charge</option>
+                        <option value="fraudulent">Fraudulent charge</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminDashboard.closeRefundModal()">Cancel</button>
+                <button class="action-btn" onclick="adminDashboard.processRefund()" style="background: #ef4444;">Process Refund</button>
+            </div>
         </div>
     </div>
 
