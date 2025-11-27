@@ -3648,10 +3648,14 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         if (!confirm('Are you sure you want to cancel this quote? This cannot be undone.')) return;
         
         try {
-            const { error } = await supabase
+            console.log('Cancelling quote:', quoteId);
+            const { data, error } = await supabase
                 .from('custom_quotes')
-                .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-                .eq('id', quoteId);
+                .update({ status: 'cancelled' })
+                .eq('id', quoteId)
+                .select();
+            
+            console.log('Result:', data, error);
             
             if (error) throw error;
             
@@ -3659,7 +3663,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
             await this.loadCustomQuotes();
         } catch (error) {
             console.error('Error cancelling quote:', error);
-            this.showNotification('Failed to cancel quote', 'error');
+            this.showNotification('Failed to cancel quote: ' + error.message, 'error');
         }
     }
 }
