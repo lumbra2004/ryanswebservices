@@ -127,6 +127,12 @@ class AdminPanel {
         });
         
         this.currentSection = sectionName;
+        
+        // Re-render data when switching to certain sections
+        if (sectionName === 'payments') {
+            this.renderPayments();
+            this.renderSubscriptions();
+        }
     }
 
     handleGlobalSearch(query) {
@@ -468,7 +474,11 @@ class AdminPanel {
             }
             
             this.payments = paidRequests || [];
-            console.log('Loaded payments:', this.payments.length);
+            console.log('Loaded payments:', this.payments.length, this.payments);
+            // Debug: log package details of first payment
+            if (this.payments.length > 0) {
+                console.log('First payment package_details:', this.payments[0].package_details);
+            }
         } catch (error) {
             console.error('Error loading payments:', error);
             this.payments = [];
@@ -477,6 +487,7 @@ class AdminPanel {
 
     renderPayments(filteredPayments = null) {
         const container = document.getElementById('paymentsTableContainer');
+        console.log('renderPayments called, container:', container, 'payments:', this.payments?.length);
         if (!container) return;
 
         const paymentsToRender = filteredPayments || this.payments;
@@ -561,10 +572,12 @@ class AdminPanel {
 
     renderSubscriptions() {
         const container = document.getElementById('subscriptionsTableContainer');
+        console.log('renderSubscriptions called, container:', container, 'payments:', this.payments?.length);
         if (!container) return;
 
         // Use payments data which has profiles attached
         const activeSubscriptions = this.payments.filter(r => r.stripe_subscription_id && r.status === 'paid');
+        console.log('Active subscriptions found:', activeSubscriptions.length, activeSubscriptions);
 
         if (activeSubscriptions.length === 0) {
             container.innerHTML = '<div class="empty-state">No active subscriptions</div>';
@@ -592,12 +605,12 @@ class AdminPanel {
                         
                         // Build plan details string
                         let planDetails = [];
-                        if (maintenancePlan?.plan) {
-                            planDetails.push(`${maintenancePlan.plan} Maintenance`);
+                        if (maintenancePlan?.name || maintenancePlan?.type) {
+                            planDetails.push(`${maintenancePlan.name || maintenancePlan.type} Maintenance`);
                         }
-                        if (googleWorkspace?.plan) {
-                            const users = googleWorkspace.users || googleWorkspace.num_users || 1;
-                            planDetails.push(`Google Workspace (${users} user${users > 1 ? 's' : ''})`);
+                        if (googleWorkspace?.name || googleWorkspace?.plan) {
+                            const users = googleWorkspace.additional_users || googleWorkspace.users || 1;
+                            planDetails.push(`Google Workspace: ${googleWorkspace.name || googleWorkspace.plan} (${users} user${users > 1 ? 's' : ''})`);
                         }
                         
                         return `
@@ -2119,16 +2132,16 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                         <span class="value success">Yes (${packageDetails.num_products} products)</span>
                     </div>
                     ` : ''}
-                    ${packageDetails.maintenance_plan?.plan ? `
+                    ${packageDetails.maintenance_plan ? `
                     <div class="order-detail-row">
                         <span class="label">Maintenance Plan</span>
-                        <span class="value success">${packageDetails.maintenance_plan.plan} - $${packageDetails.maintenance_plan.monthly_cost}/mo</span>
+                        <span class="value success">${packageDetails.maintenance_plan.name || packageDetails.maintenance_plan.type || 'Selected'} - $${packageDetails.maintenance_plan.monthly_cost || 0}/mo</span>
                     </div>
                     ` : ''}
-                    ${packageDetails.google_workspace?.plan ? `
+                    ${packageDetails.google_workspace ? `
                     <div class="order-detail-row">
                         <span class="label">Google Workspace</span>
-                        <span class="value success">${packageDetails.google_workspace.plan} - ${packageDetails.google_workspace.users || packageDetails.google_workspace.num_users || 1} user(s) - $${packageDetails.google_workspace.monthly_cost}/mo</span>
+                        <span class="value success">${packageDetails.google_workspace.name || packageDetails.google_workspace.plan || 'Selected'} - ${packageDetails.google_workspace.additional_users || packageDetails.google_workspace.users || 1} user(s) - $${packageDetails.google_workspace.monthly_cost || 0}/mo</span>
                     </div>
                     ` : ''}
                 </div>
