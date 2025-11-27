@@ -1125,6 +1125,10 @@
                         <span>Contact Forms</span>
                         <span class="badge" id="navContactsBadge" style="display: none;">0</span>
                     </div>
+                    <div class="nav-item" data-section="blog">
+                        <span class="icon">📝</span>
+                        <span>Blog & Updates</span>
+                    </div>
                 </div>
                 
                 <div class="nav-section">
@@ -1388,6 +1392,26 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Blog Section -->
+                <section class="admin-section" id="section-blog">
+                    <div class="section-header">
+                        <h2>📝 Blog & Updates</h2>
+                        <p>Create and manage blog posts and updates</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Posts</h2>
+                            <button class="action-btn" id="createPostBtn" style="background: linear-gradient(135deg, #10b981, #059669);">+ Create Post</button>
+                        </div>
+                        <div class="table-content">
+                            <div id="blogPostsContainer">
+                                <div class="loading">Loading blog posts...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -1572,6 +1596,64 @@
             <div class="modal-footer">
                 <button class="action-btn secondary" onclick="adminPanel.closeRefundModal()">Cancel</button>
                 <button class="action-btn" onclick="adminPanel.processRefund()" style="background: #ef4444;">Process Refund</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Post Modal -->
+    <div id="blogPostModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 id="blogModalTitle">📝 Create Blog Post</h3>
+                <button class="modal-close" onclick="adminPanel.closeBlogModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="blogPostForm">
+                    <input type="hidden" id="blogPostId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="blogTitle" placeholder="Enter post title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (URL-friendly name)</label>
+                        <input type="text" id="blogSlug" placeholder="auto-generated-from-title">
+                        <small style="color: #94a3b8;">Leave empty to auto-generate from title</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="blogCategory">
+                            <option value="">Select category</option>
+                            <option value="News">News</option>
+                            <option value="Tips">Tips & Tricks</option>
+                            <option value="Updates">Updates</option>
+                            <option value="Tutorial">Tutorial</option>
+                            <option value="Case Study">Case Study</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Excerpt (Short description)</label>
+                        <textarea id="blogExcerpt" rows="2" placeholder="Brief summary shown in post list..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Image URL</label>
+                        <input type="url" id="blogFeaturedImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Content * (HTML supported)</label>
+                        <textarea id="blogContent" rows="15" placeholder="Write your post content here. HTML is supported for formatting." required style="font-family: monospace;"></textarea>
+                        <small style="color: #94a3b8;">Supported tags: &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;a&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;img&gt;, &lt;code&gt;, &lt;pre&gt;</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="blogPublished" style="width: auto;">
+                            Publish immediately
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeBlogModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.saveBlogPost()" style="background: linear-gradient(135deg, #10b981, #059669);">Save Post</button>
             </div>
         </div>
     </div>

@@ -15,8 +15,10 @@ class AdminPanel {
         this.files = [];
         this.payments = [];
         this.promoCodes = [];
+        this.blogPosts = [];
         this.currentSection = 'overview';
         this.currentRefundOrder = null;
+        this.currentEditingPost = null;
         
         this.init();
     }
@@ -113,6 +115,9 @@ class AdminPanel {
         
         // Create promo code button
         document.getElementById('createPromoBtn')?.addEventListener('click', () => this.openPromoModal());
+        
+        // Create blog post button
+        document.getElementById('createPostBtn')?.addEventListener('click', () => this.openBlogModal());
     }
 
     switchSection(sectionName) {
@@ -430,7 +435,8 @@ class AdminPanel {
                 this.loadContacts(),
                 this.loadFiles(),
                 this.loadPayments(),
-                this.loadPromoCodes()
+                this.loadPromoCodes(),
+                this.loadBlogPosts()
             ]);
 
             this.updateStats();
@@ -2460,6 +2466,255 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         } catch (error) {
             console.error('Error toggling promo code:', error);
             alert('Error updating promo code: ' + error.message);
+        }
+    }
+
+    // ==================== BLOG POSTS ====================
+    
+    async loadBlogPosts() {
+        try {
+            const { data, error } = await supabase
+                .from('blog_posts')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                // Table might not exist yet
+                if (error.message?.includes('does not exist') || error.code === '42P01') {
+                    console.log('Blog posts table not set up yet');
+                    this.blogPosts = [];
+                    this.renderBlogPosts();
+                    return;
+                }
+                throw error;
+            }
+            this.blogPosts = data || [];
+            this.renderBlogPosts();
+        } catch (error) {
+            console.error('Error loading blog posts:', error);
+            this.blogPosts = [];
+            this.renderBlogPosts();
+        }
+    }
+    
+    renderBlogPosts() {
+        const container = document.getElementById('blogPostsContainer');
+        if (!container) return;
+        
+        if (!this.blogPosts || this.blogPosts.length === 0) {
+            container.innerHTML = '<div class="empty-state">No blog posts yet. Click "+ Create Post" to write your first post!</div>';
+            return;
+        }
+        
+        const html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.blogPosts.map(post => {
+                        const statusColor = post.published ? '#10b981' : '#6b7280';
+                        const statusText = post.published ? 'Published' : 'Draft';
+                        
+                        return `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 500;">${this.escapeHtml(post.title)}</div>
+                                    <div style="font-size: 0.8rem; color: #94a3b8;">/blog.html?post=${this.escapeHtml(post.slug)}</div>
+                                </td>
+                                <td>${post.category ? `<span class="promo-badge active">${this.escapeHtml(post.category)}</span>` : '-'}</td>
+                                <td>
+                                    <span style="display: inline-block; padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; background: ${statusColor}22; color: ${statusColor}; border: 1px solid ${statusColor}44;">
+                                        ${statusText}
+                                    </span>
+                                </td>
+                                <td>${new Date(post.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="table-btn view" onclick="adminPanel.editBlogPost('${post.id}')">Edit</button>
+                                        <button class="table-btn toggle" onclick="adminPanel.togglePostPublish('${post.id}', ${!post.published})">
+                                            ${post.published ? 'Unpublish' : 'Publish'}
+                                        </button>
+                                        <button class="table-btn refund" onclick="adminPanel.deleteBlogPost('${post.id}')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+        
+        container.innerHTML = html;
+    }
+    
+    openBlogModal(post = null) {
+        const modal = document.getElementById('blogPostModal');
+        const title = document.getElementById('blogModalTitle');
+        
+        if (!modal) return;
+        
+        // Reset form
+        document.getElementById('blogPostForm').reset();
+        document.getElementById('blogPostId').value = '';
+        this.currentEditingPost = null;
+        
+        if (post) {
+            // Editing existing post
+            title.textContent = '✏️ Edit Blog Post';
+            document.getElementById('blogPostId').value = post.id;
+            document.getElementById('blogTitle').value = post.title || '';
+            document.getElementById('blogSlug').value = post.slug || '';
+            document.getElementById('blogCategory').value = post.category || '';
+            document.getElementById('blogExcerpt').value = post.excerpt || '';
+            document.getElementById('blogFeaturedImage').value = post.featured_image || '';
+            document.getElementById('blogContent').value = post.content || '';
+            document.getElementById('blogPublished').checked = post.published || false;
+            this.currentEditingPost = post;
+        } else {
+            title.textContent = '📝 Create Blog Post';
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    closeBlogModal() {
+        const modal = document.getElementById('blogPostModal');
+        if (modal) modal.style.display = 'none';
+        this.currentEditingPost = null;
+    }
+    
+    async editBlogPost(postId) {
+        const post = this.blogPosts.find(p => p.id === postId);
+        if (post) {
+            this.openBlogModal(post);
+        }
+    }
+    
+    generateSlug(title) {
+        return title
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+    }
+    
+    async saveBlogPost() {
+        const postId = document.getElementById('blogPostId').value;
+        const title = document.getElementById('blogTitle').value.trim();
+        let slug = document.getElementById('blogSlug').value.trim();
+        const category = document.getElementById('blogCategory').value;
+        const excerpt = document.getElementById('blogExcerpt').value.trim();
+        const featuredImage = document.getElementById('blogFeaturedImage').value.trim();
+        const content = document.getElementById('blogContent').value.trim();
+        const published = document.getElementById('blogPublished').checked;
+        
+        if (!title || !content) {
+            alert('Please fill in the required fields (Title and Content)');
+            return;
+        }
+        
+        // Generate slug if empty
+        if (!slug) {
+            slug = this.generateSlug(title);
+        }
+        
+        const postData = {
+            title,
+            slug,
+            category: category || null,
+            excerpt: excerpt || null,
+            featured_image: featuredImage || null,
+            content,
+            published,
+            published_at: published ? new Date().toISOString() : null,
+            author_id: this.currentUser?.id
+        };
+        
+        try {
+            if (postId) {
+                // Update existing post
+                const { error } = await supabase
+                    .from('blog_posts')
+                    .update(postData)
+                    .eq('id', postId);
+                
+                if (error) throw error;
+                alert('Post updated successfully!');
+            } else {
+                // Create new post
+                const { error } = await supabase
+                    .from('blog_posts')
+                    .insert(postData);
+                
+                if (error) {
+                    if (error.message.includes('unique') || error.message.includes('duplicate')) {
+                        alert('A post with this slug already exists. Please choose a different title or slug.');
+                    } else {
+                        throw error;
+                    }
+                    return;
+                }
+                alert('Post created successfully!');
+            }
+            
+            this.closeBlogModal();
+            await this.loadBlogPosts();
+        } catch (error) {
+            console.error('Error saving blog post:', error);
+            alert('Error saving post: ' + error.message);
+        }
+    }
+    
+    async togglePostPublish(postId, newStatus) {
+        try {
+            const updateData = {
+                published: newStatus
+            };
+            
+            if (newStatus) {
+                updateData.published_at = new Date().toISOString();
+            }
+            
+            const { error } = await supabase
+                .from('blog_posts')
+                .update(updateData)
+                .eq('id', postId);
+            
+            if (error) throw error;
+            
+            await this.loadBlogPosts();
+        } catch (error) {
+            console.error('Error toggling post publish status:', error);
+            alert('Error updating post: ' + error.message);
+        }
+    }
+    
+    async deleteBlogPost(postId) {
+        if (!confirm('Are you sure you want to delete this post? This cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const { error } = await supabase
+                .from('blog_posts')
+                .delete()
+                .eq('id', postId);
+            
+            if (error) throw error;
+            
+            await this.loadBlogPosts();
+            alert('Post deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting blog post:', error);
+            alert('Error deleting post: ' + error.message);
         }
     }
 }
