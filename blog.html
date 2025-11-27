@@ -482,45 +482,7 @@
             transform: scale(1.1);
         }
 
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .nav-links.active {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: rgba(10, 10, 15, 0.98);
-                padding: 1rem;
-                border-bottom: 1px solid var(--border-color);
-            }
-
-            .social-links {
-                border-left: none;
-                padding-left: 0;
-                margin-left: 0;
-                padding-top: 1rem;
-                border-top: 1px solid var(--border-color);
-            }
-
             .page-header h1 {
                 font-size: 2rem;
             }

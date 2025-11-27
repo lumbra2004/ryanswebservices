@@ -1058,7 +1058,7 @@ footer a:hover {
     }
     
     .nav-links.active::before {
-        content: '🍂 Happy Thanksgiving! 🍂';
+        content: '✦ Happy Thanksgiving! ✦';
         display: block;
         text-align: center;
         padding: 1rem;
@@ -1101,15 +1101,6 @@ footer a:hover {
     /* Mobile Section Titles */
     .section-title {
         position: relative;
-    }
-    
-    .section-title::after {
-        content: '🍁';
-        display: inline-block;
-        margin-left: 0.5rem;
-        font-size: 0.8em;
-        opacity: 0.6;
-        animation: leafSway 2s ease-in-out infinite;
     }
     
     .tg-promo-content {
@@ -1190,7 +1181,5 @@ footer a:hover {
         opacity: 0.08;
     }
     
-    .section-title::after {
-        font-size: 0.7em;
-    }
+
 }
