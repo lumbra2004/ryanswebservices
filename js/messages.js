@@ -9,6 +9,7 @@ class MessagesSystem {
         this.isWidgetOpen = false;
         this.realtimeSubscription = null;
         this.recentlySentIds = new Set(); // Track IDs of messages we just sent
+        this.eventListenersSet = false; // Prevent duplicate listeners
         this.init();
     }
 
@@ -60,6 +61,10 @@ class MessagesSystem {
     }
 
     setupEventListeners() {
+        // Only set up listeners once
+        if (this.eventListenersSet) return;
+        this.eventListenersSet = true;
+        
         // Message button toggle
         const messageBtn = document.getElementById('messageButton');
         if (messageBtn) {
@@ -266,6 +271,9 @@ class MessagesSystem {
         const input = document.getElementById('widgetMessageInput');
         const sendBtn = document.getElementById('widgetSendBtn');
         if (!input || !input.value.trim()) return;
+        
+        // Prevent double-sending
+        if (sendBtn && sendBtn.disabled) return;
 
         const content = input.value.trim();
         input.value = '';
