@@ -111,8 +111,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
+    <style>
+        /* Thanksgiving Theme */
+        .thanksgiving-banner {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+            color: white;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        .thanksgiving-banner::before {
+            content: '🦃';
+            position: absolute;
+            left: 10%;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        .thanksgiving-banner::after {
+            content: '🍂';
+            position: absolute;
+            right: 10%;
+            animation: fall 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes fall {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(3px) rotate(10deg); }
+        }
+        .thanksgiving-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        /* Fall leaf decorations */
+        .leaf {
+            position: fixed;
+            font-size: 1.5rem;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 9999;
+            animation: leafFall linear infinite;
+        }
+        @keyframes leafFall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+    <!-- Thanksgiving Banner -->
+    <div class="thanksgiving-banner">
+        <span class="thanksgiving-text">🍁 Happy Thanksgiving! 🍁 Wishing you and your loved ones a blessed holiday! 🦃</span>
+    </div>
     <header>
         <nav class="container-nav">
             <div class="logo">Ryan's Webservice</div>
@@ -480,5 +539,23 @@
     <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
     <script src="js/analytics.js"></script>
+    <script>
+        // Falling leaves effect for Thanksgiving
+        function createLeaf() {
+            const leaves = ['🍂', '🍁', '🧡', '🍃'];
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.textContent = leaves[Math.floor(Math.random() * leaves.length)];
+            leaf.style.left = Math.random() * 100 + 'vw';
+            leaf.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            leaf.style.fontSize = (Math.random() * 1 + 1) + 'rem';
+            document.body.appendChild(leaf);
+            setTimeout(() => leaf.remove(), 10000);
+        }
+        // Create leaves periodically
+        setInterval(createLeaf, 800);
+        // Create initial batch
+        for(let i = 0; i < 5; i++) setTimeout(createLeaf, i * 200);
+    </script>
 </body>
 </html>
