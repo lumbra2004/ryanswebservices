@@ -1465,13 +1465,13 @@
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
                 <h3>📦 Order Details</h3>
-                <button class="modal-close" onclick="adminDashboard.closeOrderModal()">&times;</button>
+                <button class="modal-close" onclick="adminPanel.closeOrderModal()">&times;</button>
             </div>
             <div class="modal-body" id="orderDetailsContent">
                 <div class="loading">Loading order details...</div>
             </div>
             <div class="modal-footer">
-                <button class="action-btn secondary" onclick="adminDashboard.closeOrderModal()">Close</button>
+                <button class="action-btn secondary" onclick="adminPanel.closeOrderModal()">Close</button>
                 <button class="action-btn refund-btn" id="modalRefundBtn" style="display: none; background: #ef4444;">Issue Refund</button>
             </div>
         </div>
@@ -1482,7 +1482,7 @@
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h3>🎟️ Create Promo Code</h3>
-                <button class="modal-close" onclick="adminDashboard.closePromoModal()">&times;</button>
+                <button class="modal-close" onclick="adminPanel.closePromoModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="promoCodeForm">
@@ -1530,8 +1530,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="action-btn secondary" onclick="adminDashboard.closePromoModal()">Cancel</button>
-                <button class="action-btn" onclick="adminDashboard.createPromoCode()" style="background: linear-gradient(135deg, #10b981, #059669);">Create Code</button>
+                <button class="action-btn secondary" onclick="adminPanel.closePromoModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.createPromoCode()" style="background: linear-gradient(135deg, #10b981, #059669);">Create Code</button>
             </div>
         </div>
     </div>
@@ -1541,7 +1541,7 @@
         <div class="modal-content" style="max-width: 450px;">
             <div class="modal-header">
                 <h3>💸 Issue Refund</h3>
-                <button class="modal-close" onclick="adminDashboard.closeRefundModal()">&times;</button>
+                <button class="modal-close" onclick="adminPanel.closeRefundModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="refundDetails">
@@ -1551,7 +1551,7 @@
                 </div>
                 <div class="form-group" style="margin-top: 1rem;">
                     <label>Refund Type</label>
-                    <select id="refundType" onchange="adminDashboard.toggleRefundAmount()">
+                    <select id="refundType" onchange="adminPanel.toggleRefundAmount()">
                         <option value="full">Full Refund</option>
                         <option value="partial">Partial Refund</option>
                     </select>
@@ -1570,8 +1570,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="action-btn secondary" onclick="adminDashboard.closeRefundModal()">Cancel</button>
-                <button class="action-btn" onclick="adminDashboard.processRefund()" style="background: #ef4444;">Process Refund</button>
+                <button class="action-btn secondary" onclick="adminPanel.closeRefundModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.processRefund()" style="background: #ef4444;">Process Refund</button>
             </div>
         </div>
     </div>

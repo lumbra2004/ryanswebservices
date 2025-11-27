@@ -445,11 +445,30 @@ class AdminPanel {
             // Get all service requests for payment tracking
             const { data: paidRequests, error } = await supabase
                 .from('service_requests')
-                .select('*, profiles:user_id(email, full_name, business_name)')
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
+            
+            // Fetch user profiles separately
+            if (paidRequests && paidRequests.length > 0) {
+                const userIds = [...new Set(paidRequests.map(r => r.user_id).filter(Boolean))];
+                if (userIds.length > 0) {
+                    const { data: profiles } = await supabase
+                        .from('profiles')
+                        .select('id, email, full_name, business_name')
+                        .in('id', userIds);
+
+                    // Merge profiles into payments
+                    paidRequests.forEach(payment => {
+                        const profile = profiles?.find(p => p.id === payment.user_id);
+                        payment.profiles = profile || null;
+                    });
+                }
+            }
+            
             this.payments = paidRequests || [];
+            console.log('Loaded payments:', this.payments.length);
         } catch (error) {
             console.error('Error loading payments:', error);
             this.payments = [];
@@ -2228,12 +2247,22 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                 .select('*')
                 .order('created_at', { ascending: false });
             
-            if (error) throw error;
+            if (error) {
+                // Table might not exist yet
+                if (error.message?.includes('does not exist') || error.code === '42P01') {
+                    console.log('Promo codes table not set up yet');
+                    this.promoCodes = [];
+                    this.renderPromoCodes();
+                    return;
+                }
+                throw error;
+            }
             this.promoCodes = data || [];
             this.renderPromoCodes();
         } catch (error) {
             console.error('Error loading promo codes:', error);
             this.promoCodes = [];
+            this.renderPromoCodes();
         }
     }
     
@@ -2242,7 +2271,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         if (!container) return;
         
         if (!this.promoCodes || this.promoCodes.length === 0) {
-            container.innerHTML = '<div class="empty-state">No promo codes created yet</div>';
+            container.innerHTML = '<div class="empty-state">No promo codes created yet. Run the setup_promo_codes.sql in Supabase to enable this feature.</div>';
             return;
         }
         
