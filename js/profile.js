@@ -558,60 +558,87 @@ class ProfileManager {
                 });
                 
                 return `
-                <div class="invoice-item" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 1rem; background: rgba(255,255,255,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                        <div>
-                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">${request.service_name}</h3>
-                            <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">
-                                Paid on ${new Date(request.paid_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                            </p>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">
-                                $${parseFloat(oneTimeCost).toFixed(2)}
+                <div class="invoice-item" style="padding: 0; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header with gradient -->
+                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(99, 102, 241, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">💼</div>
+                                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${request.service_name}</h3>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 52px;">
+                                    <span style="font-size: 0.85rem; opacity: 0.7;">✓</span>
+                                    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">
+                                        ${new Date(request.paid_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    </p>
+                                </div>
                             </div>
-                            ${monthlyCost > 0 ? `
-                                <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.25rem;">
-                                    + $${parseFloat(monthlyCost).toFixed(2)}/month
+                            <div style="text-align: right; background: rgba(16, 185, 129, 0.1); padding: 0.75rem 1.25rem; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-bottom: 0.25rem;">Amount Paid</div>
+                                <div style="font-size: 1.75rem; font-weight: 700; color: #10b981; line-height: 1;">
+                                    $${parseFloat(oneTimeCost).toFixed(2)}
+                                </div>
+                                ${monthlyCost > 0 ? `
+                                    <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <span style="color: #818cf8; font-weight: 600;">+ $${parseFloat(monthlyCost).toFixed(2)}</span>
+                                        <span style="opacity: 0.7;">/month</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div style="padding: 1.5rem;">
+                        <!-- Renewal Info Section -->
+                        ${request.stripe_subscription_id ? `
+                            <div id="renewal-info-${request.id}" style="margin-bottom: 1.25rem; padding: 1rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.7;">
+                                    <div style="width: 20px; height: 20px; border: 2px solid rgba(99, 102, 241, 0.3); border-top-color: #818cf8; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                    <span style="font-size: 0.9rem;">Loading renewal information...</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <!-- IDs Section -->
+                        <div style="display: grid; grid-template-columns: ${request.stripe_subscription_id ? '1fr 1fr' : '1fr'}; gap: 1rem; margin-bottom: 1.25rem;">
+                            <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 0.5rem;">👤 Customer ID</div>
+                                <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #818cf8; word-break: break-all;">${request.stripe_customer_id}</div>
+                            </div>
+                            ${request.stripe_subscription_id ? `
+                                <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 0.5rem;">🔄 Subscription ID</div>
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #a78bfa; word-break: break-all;">${request.stripe_subscription_id}</div>
                                 </div>
                             ` : ''}
                         </div>
-                    </div>
-                    <div style="display: flex; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <div style="flex: 1;">
-                            <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 0.25rem;">Customer ID</div>
-                            <div style="font-family: monospace; font-size: 0.9rem;">${request.stripe_customer_id}</div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
+                               target="_blank" 
+                               style="flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);"
+                               onmouseover="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(99, 102, 241, 0.2)'"
+                               onmouseout="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(99, 102, 241, 0.1)'">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                                </svg>
+                                <span>View in Stripe</span>
+                            </a>
+                            ${request.stripe_subscription_id ? `
+                                <button onclick="profileManager.showCancelModal('${request.id}', '${request.stripe_subscription_id}')"
+                                        class="cancel-subscription-btn"
+                                        data-request-id="${request.id}"
+                                        data-subscription-id="${request.stripe_subscription_id}"
+                                        style="flex: 1; min-width: 140px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);"
+                                        onmouseover="this.style.background='linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.2)'"
+                                        onmouseout="this.style.background='linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(239, 68, 68, 0.1)'">
+                                    Cancel Subscription
+                                </button>
+                            ` : ''}
                         </div>
-                        ${request.stripe_subscription_id ? `
-                            <div style="flex: 1;">
-                                <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 0.25rem;">Subscription ID</div>
-                                <div style="font-family: monospace; font-size: 0.9rem;">${request.stripe_subscription_id}</div>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                        <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
-                           target="_blank" 
-                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.1); color: #818cf8; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: all 0.2s;"
-                           onmouseover="this.style.background='rgba(99, 102, 241, 0.2)'"
-                           onmouseout="this.style.background='rgba(99, 102, 241, 0.1)'">
-                            <span>View in Stripe</span>
-                            <span>→</span>
-                        </a>
-                        ${request.stripe_subscription_id ? `
-                            <button onclick="profileManager.showCancelModal('${request.id}', '${request.stripe_subscription_id}')"
-                                    class="cancel-subscription-btn"
-                                    data-request-id="${request.id}"
-                                    data-subscription-id="${request.stripe_subscription_id}"
-                                    style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;"
-                                    onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'"
-                                    onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
-                                Cancel Subscription
-                            </button>
-                            <div id="renewal-info-${request.id}" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(99, 102, 241, 0.05); border-radius: 6px; font-size: 0.85rem;">
-                                <div style="opacity: 0.7;">Loading renewal information...</div>
-                            </div>
-                        ` : ''}
                     </div>
                 </div>
             `}).join('');
@@ -663,14 +690,17 @@ class ProfileManager {
             const renewalInfoEl = document.getElementById(`renewal-info-${requestId}`);
             if (renewalInfoEl) {
                 renewalInfoEl.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: 500; margin-bottom: 0.25rem;">🔄 Next Renewal</div>
-                            <div style="opacity: 0.8;">${renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">🔄</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #a78bfa;">Next Renewal</div>
+                            </div>
+                            <div style="margin-left: 40px; font-size: 0.95rem; opacity: 0.9;">${renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #818cf8;">${daysUntilRenewal}</div>
-                            <div style="opacity: 0.7;">days remaining</div>
+                        <div style="text-align: center; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); padding: 0.75rem 1.25rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3); min-width: 100px;">
+                            <div style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;">${daysUntilRenewal}</div>
+                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 0.25rem;">days left</div>
                         </div>
                     </div>
                 `;
