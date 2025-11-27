@@ -54,7 +54,8 @@
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
             margin-bottom: 1.5rem;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -72,12 +73,12 @@
         .hero-badge {
             display: inline-block;
             padding: 0.5rem 1.25rem;
-            background: rgba(var(--primary-rgb), 0.15);
-            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
             border-radius: var(--radius-full);
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--secondary);
+            color: #D4AF37;
             margin-bottom: 2rem;
         }
 
@@ -104,13 +105,13 @@
 
         .pricing-card:hover {
             transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: var(--shadow-xl);
+            border-color: #D4AF37;
+            box-shadow: 0 16px 48px rgba(212, 175, 55, 0.2);
         }
 
         .pricing-card.featured {
-            border: 2px solid var(--primary);
-            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08), rgba(var(--secondary-rgb), 0.05));
+            border: 2px solid #D4AF37;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(184, 115, 51, 0.05));
             transform: scale(1.03);
         }
 
@@ -122,7 +123,7 @@
             position: absolute;
             top: -12px;
             right: 30px;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #BF953F, #D4AF37);
             color: white;
             padding: 0.4rem 1.2rem;
             border-radius: var(--radius-full);
@@ -148,7 +149,8 @@
         .price {
             font-size: 3.5rem;
             font-weight: 900;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -176,8 +178,8 @@
             display: none;
             width: 100%;
             padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.12), rgba(0, 212, 255, 0.08));
-            border: 1px solid rgba(0, 102, 255, 0.3);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(184, 115, 51, 0.08));
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 12px;
             color: var(--text-primary);
             font-weight: 600;
@@ -197,7 +199,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.2), rgba(0, 212, 255, 0.15));
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(184, 115, 51, 0.15));
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -219,8 +221,8 @@
         }
 
         .toggle-details.expanded {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 102, 255, 0.08));
-            border-color: rgba(0, 212, 255, 0.4);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(184, 115, 51, 0.08));
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .toggle-details.expanded .arrow {
@@ -264,7 +266,7 @@
         }
 
         .tooltip:hover {
-            border-bottom-color: var(--primary);
+            border-bottom-color: #D4AF37;
         }
 
         .tooltip-text {
@@ -272,7 +274,7 @@
             opacity: 0;
             background: linear-gradient(135deg, rgba(26, 31, 46, 0.98), rgba(21, 25, 34, 0.98));
             backdrop-filter: blur(10px);
-            border: 1px solid var(--primary);
+            border: 1px solid #D4AF37;
             color: var(--text-primary);
             text-align: left;
             border-radius: 12px;
@@ -283,7 +285,7 @@
             left: 50%;
             transform: translateX(-50%) translateY(10px);
             width: 300px;
-            box-shadow: 0 20px 60px rgba(0, 102, 255, 0.4), 0 0 0 1px rgba(0, 102, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.1);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             font-size: 0.9rem;
             line-height: 1.6;
@@ -298,7 +300,7 @@
             margin-left: -8px;
             border-width: 8px;
             border-style: solid;
-            border-color: var(--primary) transparent transparent transparent;
+            border-color: #D4AF37 transparent transparent transparent;
         }
 
         .tooltip-text::after {
@@ -327,7 +329,7 @@
         .cta-button {
             width: 100%;
             padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #D4AF37, #A67C00);
             color: white;
             border: none;
             border-radius: 12px;
@@ -344,11 +346,18 @@
 
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
 
         .featured .cta-button {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            background: linear-gradient(135deg, #B87333, #D4AF37);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         /* Maintenance Section */
@@ -395,9 +404,9 @@
         }
 
         .maintenance-card:hover {
-            border-color: var(--primary);
+            border-color: #D4AF37;
             transform: translateY(-4px);
-            box-shadow: 0 10px 40px rgba(0, 102, 255, 0.15);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
         }
 
         .maintenance-card h3 {
@@ -410,7 +419,7 @@
         .maintenance-price {
             font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #D4AF37, #B87333);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -470,7 +479,7 @@
         }
 
         .faq-item:hover {
-            border-color: var(--primary);
+            border-color: #D4AF37;
         }
 
         .faq-item h3 {
@@ -543,8 +552,8 @@
 
             .nav-links a:hover,
             .nav-links a.active {
-                background: rgba(0, 102, 255, 0.1);
-                color: var(--primary);
+                background: rgba(212, 175, 55, 0.1);
+                color: #D4AF37;
             }
 
             /* Mobile menu overlay */
@@ -698,7 +707,7 @@
             }
 
             .nav-links .user-button:active {
-                background: rgba(0, 102, 255, 0.15);
+                background: rgba(212, 175, 55, 0.15);
             }
 
             .nav-links .user-avatar {
@@ -796,14 +805,14 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #D4AF37, #A67C00);
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             color: white;
@@ -811,7 +820,7 @@
 
         .settings-button:hover {
             transform: translateY(-3px) scale(1.05) rotate(90deg);
-            box-shadow: 0 6px 24px rgba(0, 102, 255, 0.5);
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
         }
 
         .settings-button.active {
@@ -894,7 +903,7 @@
         }
 
         .toggle-switch.active {
-            background: var(--primary);
+            background: #D4AF37;
         }
 
         .toggle-switch.active::after {
@@ -903,7 +912,7 @@
 
         /* Login Button & User Menu */
         .login-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #D4AF37, #A67C00);
             color: white;
             padding: 0.5rem 1.5rem;
             border-radius: 10px;
@@ -916,7 +925,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .user-menu {
@@ -940,14 +949,14 @@
 
         .user-button:hover {
             background: var(--card-hover);
-            border-color: var(--primary);
+            border-color: #D4AF37;
         }
 
         .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #D4AF37, #B87333);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1081,20 +1090,20 @@
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            background: linear-gradient(180deg, #D4AF37, #B87333);
             border-radius: 10px;
             border: 2px solid var(--card-bg);
         }
 
         .modal-content::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #0066ff, #00d4ff);
-            box-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+            background: linear-gradient(180deg, #D4AF37, #F4D03F);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
         /* Firefox scrollbar */
         .modal-content {
             scrollbar-width: thin;
-            scrollbar-color: var(--primary) rgba(255, 255, 255, 0.05);
+            scrollbar-color: #D4AF37 rgba(255, 255, 255, 0.05);
         }
 
         .close-modal {
@@ -1115,12 +1124,12 @@
         }
 
         .close-modal:hover {
-            color: var(--primary);
+            color: #D4AF37;
             background: rgba(255, 255, 255, 0.05);
         }
 
         .modal-content h2 {
-            color: var(--primary);
+            color: #D4AF37;
             margin-bottom: 2rem;
             font-size: 1.75rem;
             padding-right: 2rem;
@@ -1161,8 +1170,8 @@
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
             background: rgba(255, 255, 255, 0.05);
         }
 
@@ -1212,21 +1221,21 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, #D4AF37, #B87333);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
 
         .plan-option:hover {
-            border-color: rgba(0, 102, 255, 0.5);
-            background: rgba(0, 102, 255, 0.05);
+            border-color: rgba(212, 175, 55, 0.5);
+            background: rgba(212, 175, 55, 0.05);
             transform: translateY(-2px);
         }
 
         .plan-option.selected {
-            border-color: var(--primary);
-            background: rgba(0, 102, 255, 0.15);
-            box-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         .plan-option.selected::before {
@@ -1242,7 +1251,7 @@
         }
 
         .plan-option.selected .plan-name {
-            color: var(--primary);
+            color: #D4AF37;
         }
 
         .plan-option .plan-price {
@@ -1343,7 +1352,7 @@
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #D4AF37;
         }
 
         .form-group input[readonly] {
@@ -1382,7 +1391,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             background: var(--card-bg);
-            border: 1px solid rgba(0, 102, 255, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 20px;
             padding: 2.5rem;
             max-width: 500px;
@@ -1404,7 +1413,7 @@
             width: 60px;
             height: 60px;
             margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #D4AF37, #B87333);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1420,7 +1429,7 @@
         }
 
         .confirmation-modal h3 {
-            color: var(--primary);
+            color: #D4AF37;
             text-align: center;
             margin-bottom: 1rem;
             font-size: 1.5rem;
@@ -1434,8 +1443,8 @@
         }
 
         .confirmation-details {
-            background: rgba(0, 102, 255, 0.05);
-            border: 1px solid rgba(0, 102, 255, 0.2);
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -1452,7 +1461,7 @@
             border-bottom: none;
             padding-top: 1rem;
             margin-top: 0.5rem;
-            border-top: 1px solid rgba(0, 102, 255, 0.3);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         .confirmation-details .detail-label {
@@ -1488,13 +1497,13 @@
         }
 
         .confirmation-btn.primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #D4AF37, #B87333);
             color: white;
         }
 
         .confirmation-btn.primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
         }
 
         .confirmation-btn.secondary {
@@ -1533,7 +1542,7 @@
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     <header>
-        <nav class="container">
+        <nav class="container-nav">
             <div class="logo">Ryan's Webservice</div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                 <span></span>
@@ -1542,7 +1551,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
                 <li>
@@ -1804,7 +1813,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
             </div>
-            <p>&copy; 2025 Ryan's Web Services. All rights reserved. | <a href="blog.html" style="color: #0066FF; text-decoration: none;">Blog</a></p>
+            <p>&copy; 2025 Ryan's Web Services. All rights reserved. | <a href="blog.html" style="color: #D4AF37; text-decoration: none;">Blog</a></p>
         </div>
     </footer>
 
@@ -2098,19 +2107,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <small style="color: var(--text-secondary); font-size: 0.85rem; display: block; margin-top: 0.5rem;">Extra users beyond the 1 included</small>
                     </div>
                 </div>
-                <div id="totalCostDisplay" style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0; display: none;">
+                <div id="totalCostDisplay" style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 16px; padding: 1.5rem; margin: 1.5rem 0; display: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                         <span style="color: var(--text-secondary); font-size: 0.95rem;">Base Website Package:</span>
-                        <span id="basePackageDisplay" style="font-weight: 700; color: var(--primary); font-size: 1.1rem;">$0</span>
+                        <span id="basePackageDisplay" style="font-weight: 700; color: #D4AF37; font-size: 1.1rem;">$0</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                         <span style="color: var(--text-secondary); font-size: 0.95rem;">Maintenance Plan:</span>
-                        <span id="maintenanceDisplay" style="font-weight: 700; color: var(--primary); font-size: 1.1rem;">$0/month</span>
+                        <span id="maintenanceDisplay" style="font-weight: 700; color: #D4AF37; font-size: 1.1rem;">$0/month</span>
                     </div>
                     <div id="workspaceDisplay" style="display: none; margin-bottom: 0.75rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="color: var(--text-secondary); font-size: 0.95rem;">Google Workspace:</span>
-                            <span id="workspaceCost" style="font-weight: 700; color: var(--primary); font-size: 1.1rem;">$0/month</span>
+                            <span id="workspaceCost" style="font-weight: 700; color: #D4AF37; font-size: 1.1rem;">$0/month</span>
                         </div>
                     </div>
                     <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1rem; margin-top: 1rem;">
