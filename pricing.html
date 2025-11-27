@@ -360,20 +360,28 @@
             margin-left: auto !important;
             margin-right: auto !important;
             padding: 0 2rem;
+            box-sizing: border-box;
         }
 
-        /* Maintenance Section */
+        /* Maintenance Section - Override main.css section styles */
         .maintenance-section {
-            margin: 5rem 0;
+            margin: 5rem 0 !important;
             text-align: center;
-            width: 100%;
+            width: 100% !important;
+            max-width: none !important;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .maintenance-section .container {
             width: 100%;
             max-width: 1200px;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            margin: 0 auto !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .maintenance-section h2 {
@@ -402,9 +410,9 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             max-width: 1000px;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            margin: 0 auto !important;
             width: 100%;
+            text-align: left;
         }
 
         .maintenance-card {
@@ -464,12 +472,19 @@
 
         /* FAQ Section */
         .faq-section {
-            margin: 5rem 0;
+            margin: 5rem 0 !important;
+            max-width: none !important;
+            width: 100% !important;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .faq-section .container {
             max-width: 900px;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            padding: 0 2rem;
             width: 100%;
+            margin: 0 auto !important;
         }
 
         .faq-section h2 {
