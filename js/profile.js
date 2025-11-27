@@ -215,130 +215,150 @@ class ProfileManager {
             'cancelled': '❌ Cancelled'
         };
 
-        let html = `
-            <table class="documents-table services-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;"></th>
-                        <th>Service</th>
-                        <th>One-Time</th>
-                        <th>Monthly</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Contract</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
+        let html = '<div style="display: grid; gap: 1.5rem;">';
 
         requests.forEach((request, index) => {
             const statusColor = statusColors[request.status] || '#6b7280';
             const statusLabel = statusLabels[request.status] || request.status;
-            const date = new Date(request.created_at).toLocaleDateString();
+            const date = new Date(request.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             
             // Calculate monthly cost
             const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost || 0;
             const workspaceCost = request.package_details?.google_workspace?.monthly_cost || 0;
             const monthlyTotal = maintenanceCost + workspaceCost;
 
+            const statusIcon = {
+                'pending': '⏳',
+                'in_progress': '🔧',
+                'active': '✨',
+                'ready_to_purchase': '💳',
+                'paid': '✅',
+                'cancelled': '❌'
+            }[request.status] || '📋';
+
             html += `
-                <tr class="service-row" data-request-id="${request.id}">
-                    <td>
-                        <button class="expand-btn" data-index="${index}" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0.25rem; color: var(--text-secondary); transition: transform 0.2s;">▶</button>
-                    </td>
-                    <td>
-                        <strong>${request.service_name}</strong>
-                    </td>
-                    <td style="font-weight: 600;">$${parseFloat(request.total_amount).toFixed(2)}</td>
-                    <td style="font-weight: 600; color: var(--secondary);">$${monthlyTotal.toFixed(2)}/mo</td>
-                    <td>
-                        <span style="background: ${statusColor}22; color: ${statusColor}; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; white-space: nowrap;">${statusLabel}</span>
-                        ${request.status === 'ready_to_purchase' ? 
-                            `<button class="btn-pay-now" data-request-id="${request.id}" data-service-name="${request.service_name}" data-onetime="${request.total_amount}" data-monthly="${monthlyTotal}" style="margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #22c55e); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">💳 Pay Now</button>` : 
-                            ''
-                        }
-                    </td>
-                    <td>${date}</td>
-                    <td>
-                        ${request.contract_file_id ? 
-                            `<button class="btn-view-contract" data-file-id="${request.contract_file_id}" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">View</button>` : 
-                            '<span style="opacity: 0.5;">No Contract Yet</span>'
-                        }
-                    </td>
-                </tr>
-                <tr class="service-details" id="details-${index}" style="display: none;">
-                    <td></td>
-                    <td colspan="6" style="padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-left: 3px solid var(--primary);">
-                        <div style="display: grid; gap: 1rem;">
-                            <div>
-                                <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">📦 Package Details</h4>
-                                <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
-                                    <div><strong>Package:</strong> ${request.package_details?.package || 'N/A'}</div>
-                                    ${request.package_details?.details ? `<div><strong>Details:</strong> ${request.package_details.details}</div>` : ''}
+                <div style="border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Card Header -->
+                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(99, 102, 241, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">${statusIcon}</div>
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1.2rem; font-weight: 600;">${request.service_name}</h3>
+                                        <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.25rem;">${date}</div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            ${request.package_details?.maintenance_plan ? `
-                                <div>
-                                    <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">🔧 Maintenance Plan</h4>
-                                    <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
-                                        <div><strong>Plan:</strong> ${request.package_details.maintenance_plan.name || request.package_details.maintenance_plan.type}</div>
-                                        <div><strong>Monthly Cost:</strong> $${maintenanceCost.toFixed(2)}/month</div>
-                                        <div style="opacity: 0.7;"><em>Includes 1 Google Workspace user</em></div>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${request.package_details?.google_workspace ? `
-                                <div>
-                                    <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">📧 Google Workspace</h4>
-                                    <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
-                                        <div><strong>Plan:</strong> ${request.package_details.google_workspace.name || request.package_details.google_workspace.plan}</div>
-                                        <div><strong>Additional Users:</strong> ${request.package_details.google_workspace.additional_users || 0}</div>
-                                        <div><strong>Unit Price:</strong> $${(request.package_details.google_workspace.unit_price || 0).toFixed(2)}/user/month</div>
-                                        <div><strong>Monthly Cost:</strong> $${workspaceCost.toFixed(2)}/month</div>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1rem; margin-top: 0.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 0.9rem; opacity: 0.7;">Total Monthly Recurring</div>
-                                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--secondary);">$${monthlyTotal.toFixed(2)}/month</div>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <div style="font-size: 0.9rem; opacity: 0.7;">One-Time Setup</div>
-                                        <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary);">$${parseFloat(request.total_amount).toFixed(2)}</div>
-                                    </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 0.25rem;">Status</div>
+                                    <span style="display: inline-block; background: ${statusColor}22; color: ${statusColor}; padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; border: 1px solid ${statusColor}44;">${statusLabel}</span>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                    
+                    <!-- Card Body -->
+                    <div style="padding: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                                <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 0.5rem;">💵 One-Time Cost</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">$${parseFloat(request.total_amount).toFixed(2)}</div>
+                            </div>
+                            ${monthlyTotal > 0 ? `
+                                <div style="background: rgba(139, 92, 246, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.1);">
+                                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 0.5rem;">🔄 Monthly Cost</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #a78bfa;">$${monthlyTotal.toFixed(2)}<span style="font-size: 1rem; opacity: 0.7;">/mo</span></div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Expandable Details -->
+                        <div id="details-${index}" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(99, 102, 241, 0.2);">
+                            ${request.package_details ? `
+                                <div style="display: grid; gap: 1.25rem;">
+                                    ${request.package_details.package || request.package_details.details ? `
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📦</div>
+                                                <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Package Details</h4>
+                                            </div>
+                                            <div style="padding-left: 32px; opacity: 0.9;">
+                                                ${request.package_details.package ? `<div style="margin-bottom: 0.5rem;"><strong>Package:</strong> ${request.package_details.package}</div>` : ''}
+                                                ${request.package_details.details ? `<div><strong>Details:</strong> ${request.package_details.details}</div>` : ''}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${maintenanceCost > 0 ? `
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">🔧</div>
+                                                <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Maintenance Plan</h4>
+                                            </div>
+                                            <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
+                                                <div><strong>Plan:</strong> ${request.package_details.maintenance_plan?.name || request.package_details.maintenance_plan?.type || 'N/A'}</div>
+                                                <div><strong>Monthly Cost:</strong> $${maintenanceCost.toFixed(2)}/month</div>
+                                                <div style="font-size: 0.85rem; opacity: 0.7;"><em>Includes 1 Google Workspace user</em></div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${workspaceCost > 0 ? `
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📧</div>
+                                                <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Google Workspace</h4>
+                                            </div>
+                                            <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
+                                                <div><strong>Plan:</strong> ${request.package_details.google_workspace?.name || request.package_details.google_workspace?.plan || 'N/A'}</div>
+                                                <div><strong>Additional Users:</strong> ${request.package_details.google_workspace?.additional_users || 0}</div>
+                                                <div><strong>Unit Price:</strong> $${(request.package_details.google_workspace?.unit_price || 0).toFixed(2)}/user/month</div>
+                                                <div><strong>Monthly Cost:</strong> $${workspaceCost.toFixed(2)}/month</div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : '<div style="opacity: 0.6; text-align: center; padding: 2rem;">No additional details available</div>'}
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                            <button class="expand-btn" data-index="${index}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;"onmouseover="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'; this.style.transform='translateY(0)'">
+                                <span class="expand-text">📋 Show Details</span>
+                            </button>
+                            ${request.contract_file_id ? `
+                                <button class="btn-view-contract" data-file-id="${request.contract_file_id}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)'; this.style.transform='translateY(0)'">📄 View Contract</button>
+                            ` : ''}
+                            ${request.status === 'ready_to_purchase' ? `
+                                <button class="btn-pay-now" data-request-id="${request.id}" data-service-name="${request.service_name}" data-onetime="${request.total_amount}" data-monthly="${monthlyTotal}" style="flex: 1; min-width: 140px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, #10b981 0%, #22c55e 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)'">💳 Pay Now</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
             `;
         });
 
-        html += `
-                </tbody>
-            </table>
-        `;
+        html += '</div>';
 
         container.innerHTML = html;
 
         // Add event listeners for expand buttons
         container.querySelectorAll('.expand-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                const detailsRow = document.getElementById(`details-${index}`);
-                const isExpanded = detailsRow.style.display !== 'none';
+                const button = e.currentTarget;
+                const index = button.dataset.index;
+                const detailsDiv = document.getElementById(`details-${index}`);
+                const textSpan = button.querySelector('.expand-text');
+                const isExpanded = detailsDiv.style.display !== 'none';
                 
                 if (isExpanded) {
-                    detailsRow.style.display = 'none';
-                    e.target.style.transform = 'rotate(0deg)';
+                    detailsDiv.style.display = 'none';
+                    if (textSpan) textSpan.textContent = '📋 Show Details';
                 } else {
-                    detailsRow.style.display = 'table-row';
-                    e.target.style.transform = 'rotate(90deg)';
+                    detailsDiv.style.display = 'block';
+                    if (textSpan) textSpan.textContent = '📋 Hide Details';
                 }
             });
         });
