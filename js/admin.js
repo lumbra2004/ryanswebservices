@@ -17,6 +17,8 @@ class AdminPanel {
         this.promoCodes = [];
         this.blogPosts = [];
         this.pageVisits = [];
+        this.customQuotes = [];
+        this.currentEditingQuote = null;
         this.visitorPage = 1;
         this.visitorsPerPage = 50;
         this.currentSection = 'overview';
@@ -115,12 +117,17 @@ class AdminPanel {
         document.getElementById('contactStatusFilter')?.addEventListener('change', (e) => this.filterContacts(document.getElementById('contactSearch').value, e.target.value));
         document.getElementById('paymentSearch')?.addEventListener('input', (e) => this.filterPayments(e.target.value));
         document.getElementById('paymentStatusFilter')?.addEventListener('change', (e) => this.filterPayments(document.getElementById('paymentSearch')?.value, e.target.value));
+        document.getElementById('quoteSearch')?.addEventListener('input', (e) => this.filterQuotes(e.target.value));
+        document.getElementById('quoteStatusFilter')?.addEventListener('change', (e) => this.filterQuotes(document.getElementById('quoteSearch')?.value, e.target.value));
         
         // Create promo code button
         document.getElementById('createPromoBtn')?.addEventListener('click', () => this.openPromoModal());
         
         // Create blog post button
         document.getElementById('createPostBtn')?.addEventListener('click', () => this.openBlogModal());
+        
+        // Create quote button
+        document.getElementById('createQuoteBtn')?.addEventListener('click', () => this.openQuoteModal());
     }
 
     switchSection(sectionName) {
@@ -142,6 +149,8 @@ class AdminPanel {
             this.renderSubscriptions();
         } else if (sectionName === 'analytics') {
             this.loadAnalytics();
+        } else if (sectionName === 'quotes') {
+            this.loadCustomQuotes();
         }
     }
 
@@ -3304,6 +3313,396 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         link.href = URL.createObjectURL(blob);
         link.download = `analytics_export_${new Date().toISOString().split('T')[0]}.csv`;
         link.click();
+    }
+
+    // ==================== Custom Quotes ====================
+    
+    async loadCustomQuotes() {
+        try {
+            const { data, error } = await supabase
+                .from('custom_quotes')
+                .select(`
+                    *,
+                    creator:created_by(email, full_name),
+                    assignee:assigned_to(email, full_name),
+                    redemptions:quote_redemptions(
+                        id,
+                        redeemed_at,
+                        user:user_id(email, full_name)
+                    )
+                `)
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            
+            this.customQuotes = data || [];
+            this.renderCustomQuotes();
+            this.updateQuoteStats();
+        } catch (error) {
+            console.error('Error loading quotes:', error);
+            this.showNotification('Failed to load quotes', 'error');
+        }
+    }
+    
+    renderCustomQuotes(quotesToRender = null) {
+        const container = document.getElementById('quotesTableContainer');
+        if (!container) return;
+        
+        const quotes = quotesToRender || this.customQuotes;
+        
+        if (quotes.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <span class="icon">🎟️</span>
+                    <h3>No Custom Quotes</h3>
+                    <p>Create your first custom quote to offer personalized pricing</p>
+                    <button class="btn btn-primary" onclick="adminPanel.openQuoteModal()">Create Quote</button>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = `
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Pricing</th>
+                        <th>Assigned To</th>
+                        <th>Status</th>
+                        <th>Expires</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${quotes.map(quote => this.renderQuoteRow(quote)).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+    
+    renderQuoteRow(quote) {
+        const statusColors = {
+            pending: 'secondary',
+            viewed: 'info',
+            redeemed: 'success',
+            expired: 'warning',
+            cancelled: 'danger'
+        };
+        
+        const pricing = [];
+        if (quote.upfront_cost) pricing.push(`Upfront: $${parseFloat(quote.upfront_cost).toLocaleString()}`);
+        if (quote.monthly_fee) pricing.push(`Monthly: $${parseFloat(quote.monthly_fee).toLocaleString()}`);
+        
+        const validUntil = quote.valid_until ? new Date(quote.valid_until) : null;
+        const isExpired = validUntil && validUntil < new Date();
+        const displayStatus = isExpired && quote.status !== 'redeemed' && quote.status !== 'cancelled' ? 'expired' : quote.status;
+        
+        const clientInfo = quote.client_name || quote.client_email || '<span class="text-muted">Unassigned</span>';
+        
+        return `
+            <tr>
+                <td>
+                    <div class="quote-code-cell">
+                        <code class="quote-code">${quote.code}</code>
+                        <button class="btn-icon btn-sm" onclick="adminPanel.copyQuoteCode('${quote.code}')" title="Copy Code">
+                            📋
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="quote-description">
+                        ${quote.service_description || '<span class="text-muted">No description</span>'}
+                        ${quote.internal_notes ? '<span class="badge badge-info" title="Has internal notes">📝</span>' : ''}
+                    </div>
+                </td>
+                <td>
+                    <div class="quote-pricing">
+                        ${pricing.length > 0 ? pricing.join('<br>') : '<span class="text-muted">No pricing set</span>'}
+                    </div>
+                </td>
+                <td>${clientInfo}</td>
+                <td>
+                    <span class="badge badge-${statusColors[displayStatus] || 'secondary'}">
+                        ${displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
+                    </span>
+                </td>
+                <td>
+                    ${validUntil 
+                        ? `<span class="${isExpired ? 'text-danger' : ''}">${validUntil.toLocaleDateString()}</span>` 
+                        : '<span class="text-muted">Never</span>'}
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-sm btn-secondary" onclick="adminPanel.openQuoteModal('${quote.id}')" title="Edit">
+                            ✏️
+                        </button>
+                        ${quote.status === 'pending' || quote.status === 'viewed' ? `
+                            <button class="btn btn-sm btn-warning" onclick="adminPanel.deactivateQuote('${quote.id}')" title="Cancel">
+                                ⏸️
+                            </button>
+                        ` : ''}
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+    
+    updateQuoteStats() {
+        const activeQuotes = this.customQuotes.filter(q => q.status === 'pending' || q.status === 'viewed').length;
+        const totalValue = this.customQuotes.reduce((sum, q) => {
+            return sum + (parseFloat(q.upfront_cost) || 0);
+        }, 0);
+        const redeemedQuotes = this.customQuotes.filter(q => q.status === 'redeemed').length;
+        const expiredQuotes = this.customQuotes.filter(q => {
+            if (q.status === 'expired' || q.status === 'cancelled') return true;
+            if (q.valid_until && new Date(q.valid_until) < new Date() && q.status !== 'redeemed') return true;
+            return false;
+        }).length;
+        
+        document.getElementById('activeQuotesCount')?.textContent && 
+            (document.getElementById('activeQuotesCount').textContent = activeQuotes);
+        document.getElementById('totalQuoteValue')?.textContent && 
+            (document.getElementById('totalQuoteValue').textContent = '$' + totalValue.toLocaleString());
+        document.getElementById('redeemedQuotesCount')?.textContent && 
+            (document.getElementById('redeemedQuotesCount').textContent = redeemedQuotes);
+        document.getElementById('expiredQuotesCount')?.textContent && 
+            (document.getElementById('expiredQuotesCount').textContent = expiredQuotes);
+    }
+    
+    filterQuotes(query = '', status = '') {
+        let filtered = this.customQuotes;
+        
+        if (query) {
+            const q = query.toLowerCase();
+            filtered = filtered.filter(quote => 
+                quote.code?.toLowerCase().includes(q) ||
+                quote.service_description?.toLowerCase().includes(q) ||
+                quote.client_email?.toLowerCase().includes(q) ||
+                quote.client_name?.toLowerCase().includes(q)
+            );
+        }
+        
+        if (status) {
+            if (status === 'expired') {
+                filtered = filtered.filter(q => 
+                    q.status === 'expired' || q.status === 'cancelled' ||
+                    (q.valid_until && new Date(q.valid_until) < new Date() && q.status !== 'redeemed')
+                );
+            } else {
+                filtered = filtered.filter(q => q.status === status);
+            }
+        }
+        
+        this.renderCustomQuotes(filtered);
+    }
+    
+    async openQuoteModal(quoteId = null) {
+        const modal = document.getElementById('quoteModal');
+        const title = document.getElementById('quoteModalTitle');
+        const generatedCodeDisplay = document.getElementById('generatedCodeDisplay');
+        const form = document.getElementById('quoteForm');
+        
+        if (!modal) return;
+        
+        // Reset form
+        form?.reset();
+        
+        if (quoteId) {
+            // Edit mode
+            const quote = this.customQuotes.find(q => q.id === quoteId);
+            if (!quote) {
+                this.showNotification('Quote not found', 'error');
+                return;
+            }
+            
+            this.currentEditingQuote = quote;
+            title.textContent = 'Edit Custom Quote';
+            
+            // Show the code
+            if (generatedCodeDisplay) {
+                generatedCodeDisplay.style.display = 'block';
+                document.getElementById('generatedCode').textContent = quote.code;
+            }
+            
+            // Fill form fields
+            document.getElementById('quoteClientName').value = quote.client_name || '';
+            document.getElementById('quoteClientEmail').value = quote.client_email || '';
+            document.getElementById('quoteClientPhone').value = quote.client_phone || '';
+            document.getElementById('quoteUpfrontCost').value = quote.upfront_cost || '';
+            document.getElementById('quoteMonthlyFee').value = quote.monthly_fee || '';
+            document.getElementById('quoteServiceType').value = quote.service_type || 'website';
+            document.getElementById('quoteTimeline').value = quote.estimated_timeline || '';
+            document.getElementById('quoteServiceDescription').value = quote.service_description || '';
+            document.getElementById('quoteDeliverables').value = quote.deliverables || '';
+            document.getElementById('quoteClientNotes').value = quote.client_notes || '';
+            document.getElementById('quoteInternalNotes').value = quote.internal_notes || '';
+            document.getElementById('quoteContractUrl').value = quote.contract_url || '';
+            document.getElementById('quoteValidUntil').value = quote.valid_until ? quote.valid_until.split('T')[0] : '';
+            document.getElementById('quoteRequiresContract').checked = quote.requires_contract !== false;
+        } else {
+            // Create mode
+            this.currentEditingQuote = null;
+            title.textContent = 'Create Custom Quote';
+            if (generatedCodeDisplay) {
+                generatedCodeDisplay.style.display = 'none';
+            }
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    closeQuoteModal() {
+        const modal = document.getElementById('quoteModal');
+        if (modal) {
+            modal.style.display = 'none';
+            this.currentEditingQuote = null;
+        }
+    }
+    
+    async saveQuote() {
+        const clientName = document.getElementById('quoteClientName')?.value?.trim() || null;
+        const clientEmail = document.getElementById('quoteClientEmail')?.value?.trim() || null;
+        const clientPhone = document.getElementById('quoteClientPhone')?.value?.trim() || null;
+        const upfrontCost = parseFloat(document.getElementById('quoteUpfrontCost')?.value) || 0;
+        const monthlyFee = parseFloat(document.getElementById('quoteMonthlyFee')?.value) || 0;
+        const serviceType = document.getElementById('quoteServiceType')?.value || 'website';
+        const estimatedTimeline = document.getElementById('quoteTimeline')?.value?.trim() || null;
+        const serviceDescription = document.getElementById('quoteServiceDescription')?.value?.trim() || null;
+        const deliverables = document.getElementById('quoteDeliverables')?.value?.trim() || null;
+        const clientNotes = document.getElementById('quoteClientNotes')?.value?.trim() || null;
+        const internalNotes = document.getElementById('quoteInternalNotes')?.value?.trim() || null;
+        const contractUrl = document.getElementById('quoteContractUrl')?.value?.trim() || null;
+        const validUntil = document.getElementById('quoteValidUntil')?.value || null;
+        const requiresContract = document.getElementById('quoteRequiresContract')?.checked ?? true;
+        
+        if (upfrontCost <= 0) {
+            this.showNotification('Please set an upfront cost', 'error');
+            return;
+        }
+        
+        try {
+            if (this.currentEditingQuote) {
+                // Update existing quote
+                const { error } = await supabase
+                    .from('custom_quotes')
+                    .update({
+                        client_name: clientName,
+                        client_email: clientEmail,
+                        client_phone: clientPhone,
+                        upfront_cost: upfrontCost,
+                        monthly_fee: monthlyFee,
+                        service_type: serviceType,
+                        estimated_timeline: estimatedTimeline,
+                        service_description: serviceDescription,
+                        deliverables,
+                        client_notes: clientNotes,
+                        internal_notes: internalNotes,
+                        contract_url: contractUrl,
+                        valid_until: validUntil,
+                        requires_contract: requiresContract,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', this.currentEditingQuote.id);
+                
+                if (error) throw error;
+                
+                this.showNotification('Quote updated successfully', 'success');
+            } else {
+                // Create new quote
+                const code = this.generateQuoteCode();
+                
+                const { data: user } = await supabase.auth.getUser();
+                
+                const { error } = await supabase
+                    .from('custom_quotes')
+                    .insert({
+                        code,
+                        client_name: clientName,
+                        client_email: clientEmail,
+                        client_phone: clientPhone,
+                        upfront_cost: upfrontCost,
+                        monthly_fee: monthlyFee,
+                        service_type: serviceType,
+                        estimated_timeline: estimatedTimeline,
+                        service_description: serviceDescription,
+                        deliverables,
+                        client_notes: clientNotes,
+                        internal_notes: internalNotes,
+                        contract_url: contractUrl,
+                        valid_until: validUntil,
+                        requires_contract: requiresContract,
+                        created_by: user?.user?.id || null,
+                        status: 'pending'
+                    });
+                
+                if (error) throw error;
+                
+                // Show the generated code
+                const generatedCodeDisplay = document.getElementById('generatedCodeDisplay');
+                const generatedCode = document.getElementById('generatedCode');
+                if (generatedCodeDisplay && generatedCode) {
+                    generatedCodeDisplay.style.display = 'block';
+                    generatedCode.textContent = code;
+                }
+                
+                this.showNotification(`Quote created! Code: ${code}`, 'success');
+            }
+            
+            await this.loadCustomQuotes();
+            
+            // Only close modal on edit, keep open on create to show code
+            if (this.currentEditingQuote) {
+                this.closeQuoteModal();
+            }
+        } catch (error) {
+            console.error('Error saving quote:', error);
+            this.showNotification('Failed to save quote: ' + error.message, 'error');
+        }
+    }
+    
+    generateQuoteCode() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let code = 'RWS-';
+        for (let i = 0; i < 8; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code;
+    }
+    
+    copyQuoteCode(code) {
+        navigator.clipboard.writeText(code).then(() => {
+            this.showNotification('Code copied to clipboard!', 'success');
+        }).catch(() => {
+            // Fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            this.showNotification('Code copied to clipboard!', 'success');
+        });
+    }
+    
+    async deactivateQuote(quoteId) {
+        if (!confirm('Are you sure you want to cancel this quote? This cannot be undone.')) return;
+        
+        try {
+            const { error } = await supabase
+                .from('custom_quotes')
+                .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+                .eq('id', quoteId);
+            
+            if (error) throw error;
+            
+            this.showNotification('Quote cancelled', 'success');
+            await this.loadCustomQuotes();
+        } catch (error) {
+            console.error('Error cancelling quote:', error);
+            this.showNotification('Failed to cancel quote', 'error');
+        }
     }
 }
 

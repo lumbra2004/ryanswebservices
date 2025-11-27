@@ -965,6 +965,26 @@ class ProfileManager {
         // Setup payment modal listeners
         this.setupPaymentListeners();
         
+        // Quote code redemption
+        const redeemQuoteBtn = document.getElementById('redeemQuoteBtn');
+        if (redeemQuoteBtn) {
+            redeemQuoteBtn.addEventListener('click', () => this.redeemQuoteCode());
+        }
+        
+        const quoteCodeInput = document.getElementById('quoteCodeInput');
+        if (quoteCodeInput) {
+            quoteCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.redeemQuoteCode();
+                }
+            });
+            // Auto-uppercase
+            quoteCodeInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+        
         console.log('Event listeners setup complete');
     }
 
@@ -1718,6 +1738,238 @@ class ProfileManager {
             "'": '&#039;'
         };
         return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ==================== Quote Code Redemption ====================
+    
+    async redeemQuoteCode() {
+        const input = document.getElementById('quoteCodeInput');
+        const resultDiv = document.getElementById('quoteRedemptionResult');
+        const btn = document.getElementById('redeemQuoteBtn');
+        
+        if (!input || !resultDiv) return;
+        
+        const code = input.value.trim().toUpperCase();
+        
+        if (!code) {
+            this.showQuoteResult('error', 'Please enter a quote code');
+            return;
+        }
+        
+        // Validate format
+        if (!/^RWS-[A-Z0-9]{8}$/.test(code)) {
+            this.showQuoteResult('error', 'Invalid code format. Codes look like: RWS-XXXXXXXX');
+            return;
+        }
+        
+        const originalBtnText = btn.innerHTML;
+        btn.innerHTML = '⏳ Checking...';
+        btn.disabled = true;
+        
+        try {
+            // Look up the quote
+            const { data: quote, error } = await supabase
+                .from('custom_quotes')
+                .select('*')
+                .eq('code', code)
+                .single();
+            
+            if (error || !quote) {
+                this.showQuoteResult('error', 'Quote code not found. Please check and try again.');
+                return;
+            }
+            
+            // Check if quote is valid
+            if (quote.status === 'cancelled') {
+                this.showQuoteResult('error', 'This quote has been cancelled.');
+                return;
+            }
+            
+            if (quote.status === 'redeemed') {
+                this.showQuoteResult('error', 'This quote has already been redeemed.');
+                return;
+            }
+            
+            if (quote.valid_until && new Date(quote.valid_until) < new Date()) {
+                this.showQuoteResult('error', 'This quote has expired.');
+                return;
+            }
+            
+            if (quote.status !== 'pending' && quote.status !== 'viewed') {
+                this.showQuoteResult('error', 'This quote is not available.');
+                return;
+            }
+            
+            // Show quote details for confirmation
+            this.showQuoteDetails(quote);
+            
+        } catch (error) {
+            console.error('Error looking up quote:', error);
+            this.showQuoteResult('error', 'Error looking up quote. Please try again.');
+        } finally {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        }
+    }
+    
+    showQuoteResult(type, message) {
+        const resultDiv = document.getElementById('quoteRedemptionResult');
+        if (!resultDiv) return;
+        
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+            <div style="padding: 1rem; border-radius: 10px; background: ${type === 'error' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(34, 197, 94, 0.15)'}; border: 1px solid ${type === 'error' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}; color: ${type === 'error' ? '#ef4444' : '#22c55e'};">
+                ${type === 'error' ? '❌' : '✅'} ${message}
+            </div>
+        `;
+    }
+    
+    showQuoteDetails(quote) {
+        const resultDiv = document.getElementById('quoteRedemptionResult');
+        if (!resultDiv) return;
+        
+        const pricing = [];
+        if (quote.upfront_cost) pricing.push(`<div style="display: flex; justify-content: space-between;"><span>Upfront Cost:</span><strong>$${parseFloat(quote.upfront_cost).toLocaleString()}</strong></div>`);
+        if (quote.monthly_fee) pricing.push(`<div style="display: flex; justify-content: space-between;"><span>Monthly Maintenance:</span><strong>$${parseFloat(quote.monthly_fee).toLocaleString()}/mo</strong></div>`);
+        
+        const serviceTypeLabels = {
+            'website': 'Website Design',
+            'maintenance': 'Maintenance Plan',
+            'google_workspace': 'Google Workspace',
+            'custom': 'Custom Project'
+        };
+        
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                    <span style="font-size: 1.5rem;">✅</span>
+                    <h3 style="margin: 0; color: #22c55e;">Quote Found!</h3>
+                </div>
+                
+                ${quote.service_type ? `<div style="margin-bottom: 0.75rem;"><span style="background: rgba(99, 102, 241, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">${serviceTypeLabels[quote.service_type] || quote.service_type}</span></div>` : ''}
+                
+                ${quote.service_description ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;">${this.escapeHtml(quote.service_description)}</p>` : ''}
+                
+                ${quote.deliverables ? `
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">📦 What's Included</h4>
+                        <p style="margin: 0; color: var(--text-secondary); white-space: pre-line;">${this.escapeHtml(quote.deliverables)}</p>
+                    </div>
+                ` : ''}
+                
+                ${quote.estimated_timeline ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong>Timeline:</strong> ${this.escapeHtml(quote.estimated_timeline)}</p>` : ''}
+                
+                <div style="background: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                    <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Pricing</h4>
+                    ${pricing.length > 0 ? pricing.join('') : '<span style="color: var(--text-secondary);">Contact for pricing details</span>'}
+                </div>
+                
+                ${quote.client_notes ? `
+                    <div style="background: rgba(99, 102, 241, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">📝 Notes from Ryan</h4>
+                        <p style="margin: 0; color: var(--text-secondary);">${this.escapeHtml(quote.client_notes)}</p>
+                    </div>
+                ` : ''}
+                
+                ${quote.requires_contract ? `
+                    <div style="background: rgba(251, 191, 36, 0.1); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #fbbf24;">
+                        <span>📋</span> A contract will need to be signed before work begins
+                    </div>
+                ` : ''}
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.25rem;">
+                    <button onclick="profileManager.confirmQuoteRedemption('${quote.id}')" class="btn btn-primary" style="flex: 1; padding: 0.875rem;">
+                        ✨ Accept & Start Project
+                    </button>
+                    <button onclick="document.getElementById('quoteRedemptionResult').style.display='none'" class="btn btn-secondary" style="padding: 0.875rem;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    async confirmQuoteRedemption(quoteId) {
+        const resultDiv = document.getElementById('quoteRedemptionResult');
+        
+        try {
+            // Get the quote details again
+            const { data: quote, error: fetchError } = await supabase
+                .from('custom_quotes')
+                .select('*')
+                .eq('id', quoteId)
+                .single();
+            
+            if (fetchError || !quote) {
+                this.showQuoteResult('error', 'Quote not found');
+                return;
+            }
+            
+            // Create a service request from the quote
+            const serviceTypeLabels = {
+                'website': 'Website Design',
+                'maintenance': 'Maintenance Plan',
+                'google_workspace': 'Google Workspace',
+                'custom': 'Custom Project'
+            };
+            
+            const { data: serviceRequest, error: requestError } = await supabase
+                .from('service_requests')
+                .insert({
+                    user_id: this.currentUser.id,
+                    service_name: serviceTypeLabels[quote.service_type] || 'Custom Quote',
+                    service_type: quote.service_type || 'custom',
+                    package_details: {
+                        quote_code: quote.code,
+                        description: quote.service_description,
+                        deliverables: quote.deliverables,
+                        timeline: quote.estimated_timeline,
+                        client_notes: quote.client_notes,
+                        requires_contract: quote.requires_contract,
+                        contract_url: quote.contract_url
+                    },
+                    total_amount: quote.upfront_cost || 0,
+                    status: 'pending',
+                    admin_notes: `Redeemed from quote code: ${quote.code}`
+                })
+                .select()
+                .single();
+            
+            if (requestError) throw requestError;
+            
+            // Update quote status and link to service request
+            await supabase
+                .from('custom_quotes')
+                .update({ 
+                    status: 'redeemed',
+                    redeemed_by: this.currentUser.id,
+                    redeemed_at: new Date().toISOString(),
+                    service_request_id: serviceRequest?.id
+                })
+                .eq('id', quoteId);
+            
+            // Show success and refresh
+            resultDiv.innerHTML = `
+                <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🎉</span>
+                    <h3 style="color: #22c55e; margin: 0 0 0.5rem 0;">Quote Redeemed Successfully!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Your service request has been created. We'll be in touch shortly!</p>
+                    ${quote.requires_contract ? '<p style="color: #fbbf24; font-size: 0.9rem; margin-bottom: 1rem;">📋 A contract will be sent for your signature.</p>' : ''}
+                    <button onclick="profileManager.loadRequests(); document.getElementById('quoteRedemptionResult').style.display='none'; document.getElementById('quoteCodeInput').value='';" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+                        View My Services
+                    </button>
+                </div>
+            `;
+            
+            // Refresh the services list
+            await this.loadRequests();
+            await this.updateStats();
+            
+        } catch (error) {
+            console.error('Error redeeming quote:', error);
+            this.showQuoteResult('error', 'Error redeeming quote: ' + error.message);
+        }
     }
 }
 

@@ -1056,6 +1056,61 @@
             outline: none;
             border-color: var(--primary);
         }
+
+        /* Quote-specific styles */
+        .quote-code-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quote-code {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .quote-pricing {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .quote-description {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .redemption-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .redemption-item:last-child {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -1111,6 +1166,10 @@
                     <div class="nav-item" data-section="requests">
                         <span class="icon">📋</span>
                         <span>Service Requests</span>
+                    </div>
+                    <div class="nav-item" data-section="quotes">
+                        <span class="icon">🎫</span>
+                        <span>Custom Quotes</span>
                     </div>
                     <div class="nav-item" data-section="payments">
                         <span class="icon">💳</span>
@@ -1400,6 +1459,87 @@
                             </div>
                             <div id="requestsTableContainer">
                                 <div class="loading">Loading requests...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Custom Quotes Section -->
+                <section class="admin-section" id="section-quotes">
+                    <div class="section-header">
+                        <h2>🎫 Custom Quotes</h2>
+                        <p>Generate personalized quote codes for clients</p>
+                    </div>
+                    
+                    <!-- Quote Stats -->
+                    <div class="admin-grid" style="margin-bottom: 1.5rem;">
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon blue">📝</div>
+                            </div>
+                            <div class="stat-number" id="pendingQuotes">0</div>
+                            <div class="stat-label">Pending Quotes</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon green">✅</div>
+                            </div>
+                            <div class="stat-number" id="redeemedQuotes">0</div>
+                            <div class="stat-label">Redeemed</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon orange">👁️</div>
+                            </div>
+                            <div class="stat-number" id="viewedQuotes">0</div>
+                            <div class="stat-label">Viewed</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon purple">💰</div>
+                            </div>
+                            <div class="stat-number" id="quotesValue">$0</div>
+                            <div class="stat-label">Total Value</div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Quote Codes</h2>
+                            <button class="action-btn" id="createQuoteBtn" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                                ➕ Create Quote Code
+                            </button>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="quoteSearch" placeholder="🔍 Search by code, client, email...">
+                                <select id="quoteStatusFilter">
+                                    <option value="all">All Quotes</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="viewed">Viewed</option>
+                                    <option value="redeemed">Redeemed</option>
+                                    <option value="expired">Expired</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="admin-table" id="quotesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Client</th>
+                                            <th>Upfront</th>
+                                            <th>Monthly</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Expires</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quotesTableBody">
+                                        <tr><td colspan="8" class="loading">Loading quotes...</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -1808,6 +1948,141 @@
             </div>
             <div class="modal-footer">
                 <button class="action-btn secondary" onclick="adminPanel.closeVisitorModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Quote Modal -->
+    <div class="modal-overlay" id="quoteModal" style="display: none;">
+        <div class="modal" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="quoteModalTitle">🎫 Create Custom Quote</h3>
+                <button class="modal-close" onclick="adminPanel.closeQuoteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="quoteForm">
+                    <!-- Generated Code Display -->
+                    <div id="generatedCodeDisplay" style="display: none; background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 1.5rem; border-radius: 12px; text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.75rem; color: #a5b4fc; margin-bottom: 0.5rem;">QUOTE CODE</div>
+                        <div id="generatedCode" style="font-size: 1.75rem; font-weight: 700; font-family: monospace; color: #fff; letter-spacing: 2px;"></div>
+                        <button type="button" onclick="adminPanel.copyQuoteCode()" style="margin-top: 0.75rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; cursor: pointer;">
+                            📋 Copy Code
+                        </button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <!-- Client Info -->
+                        <div class="form-group">
+                            <label>Client Name (optional)</label>
+                            <input type="text" id="quoteClientName" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Client Email (optional)</label>
+                            <input type="email" id="quoteClientEmail" placeholder="john@example.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Client Phone (optional)</label>
+                        <input type="tel" id="quoteClientPhone" placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <!-- Pricing -->
+                        <div class="form-group">
+                            <label>Upfront Development Cost *</label>
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);">$</span>
+                                <input type="number" id="quoteUpfrontCost" placeholder="500" min="0" step="0.01" style="padding-left: 28px;" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Maintenance Fee</label>
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);">$</span>
+                                <input type="number" id="quoteMonthlyFee" placeholder="50" min="0" step="0.01" style="padding-left: 28px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Service Type</label>
+                            <select id="quoteServiceType">
+                                <option value="website">Website Design</option>
+                                <option value="maintenance">Maintenance Plan</option>
+                                <option value="google_workspace">Google Workspace</option>
+                                <option value="custom">Custom Project</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estimated Timeline</label>
+                            <input type="text" id="quoteTimeline" placeholder="2-3 weeks">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Service Description</label>
+                        <textarea id="quoteServiceDescription" rows="2" placeholder="Custom responsive website with 5 pages, contact form, SEO..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Deliverables (what's included)</label>
+                        <textarea id="quoteDeliverables" rows="2" placeholder="- Custom design&#10;- Mobile responsive&#10;- Contact form&#10;- Basic SEO"></textarea>
+                    </div>
+                    
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    
+                    <div class="form-group">
+                        <label>Notes for Client (they'll see this)</label>
+                        <textarea id="quoteClientNotes" rows="2" placeholder="Thank you for choosing Ryan's Web Services!"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Internal Notes (only you see this)</label>
+                        <textarea id="quoteInternalNotes" rows="2" placeholder="Called on 11/27, discussed project scope..."></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Contract URL (optional)</label>
+                            <input type="url" id="quoteContractUrl" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label>Valid Until (optional)</label>
+                            <input type="date" id="quoteValidUntil">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="display: flex; align-items: center; gap: 0.75rem;">
+                        <input type="checkbox" id="quoteRequiresContract" checked style="width: 18px; height: 18px;">
+                        <label for="quoteRequiresContract" style="margin: 0; cursor: pointer;">Requires signed contract before proceeding</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeQuoteModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.saveQuote()" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    💾 Save Quote
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quote View Modal -->
+    <div class="modal-overlay" id="quoteViewModal" style="display: none;">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>🎫 Quote Details</h3>
+                <button class="modal-close" onclick="adminPanel.closeQuoteViewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="quoteViewContent">
+                <div class="loading">Loading quote details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeQuoteViewModal()">Close</button>
             </div>
         </div>
     </div>
