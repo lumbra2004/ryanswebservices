@@ -912,6 +912,15 @@ class ProfileManager {
     }
 
     setupEventListeners() {
+        // Tab switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                this.switchTab(tabName);
+            });
+        });
+
         // Profile form submission
         const profileForm = document.getElementById('profileForm');
         if (profileForm) {
@@ -932,6 +941,79 @@ class ProfileManager {
 
         // Setup payment modal listeners
         this.setupPaymentListeners();
+    }
+
+    switchTab(tabName) {
+        // Update button styles
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            const isActive = btn.dataset.tab === tabName;
+            if (isActive) {
+                btn.style.background = 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)';
+                btn.style.color = 'white';
+                btn.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
+                btn.style.border = 'none';
+            } else {
+                btn.style.background = 'rgba(99, 102, 241, 0.1)';
+                btn.style.color = '#a78bfa';
+                btn.style.boxShadow = 'none';
+                btn.style.border = '1px solid rgba(99, 102, 241, 0.2)';
+            }
+        });
+
+        // Show/hide tab content
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            content.style.display = 'none';
+        });
+        
+        const activeTab = document.getElementById(`tab-${tabName}`);
+        if (activeTab) {
+            activeTab.style.display = 'block';
+        }
+    }
+
+    async updateStats() {
+        try {
+            // Count active services
+            const { data: services } = await supabase
+                .from('service_requests')
+                .select('id', { count: 'exact' })
+                .eq('user_id', this.currentUser.id)
+                .in('status', ['active', 'paid', 'in_progress']);
+
+            const statServices = document.getElementById('stat-services');
+            if (statServices) {
+                statServices.textContent = services?.length || 0;
+            }
+
+            // Count invoices
+            const { data: invoices } = await supabase
+                .from('service_requests')
+                .select('id', { count: 'exact' })
+                .eq('user_id', this.currentUser.id)
+                .eq('status', 'paid')
+                .not('stripe_customer_id', 'is', null);
+
+            const statInvoices = document.getElementById('stat-invoices');
+            if (statInvoices) {
+                statInvoices.textContent = invoices?.length || 0;
+            }
+
+            // Count pending documents
+            const { data: docs } = await supabase
+                .from('customer_files')
+                .select('id', { count: 'exact' })
+                .eq('user_id', this.currentUser.id)
+                .eq('status', 'pending_signature');
+
+            const statDocuments = document.getElementById('stat-documents');
+            if (statDocuments) {
+                statDocuments.textContent = docs?.length || 0;
+            }
+        } catch (error) {
+            console.error('Error updating stats:', error);
+        }
     }
 
     toggleEditMode() {
@@ -1172,6 +1254,7 @@ class ProfileManager {
 
     renderDocuments(documents) {
         const container = document.getElementById('documentsContainer');
+        const documentCountEl = document.getElementById('documentCount');
         
         if (!documents || documents.length === 0) {
             container.innerHTML = `
@@ -1180,49 +1263,71 @@ class ProfileManager {
                     <p>No documents at this time</p>
                 </div>
             `;
+            if (documentCountEl) documentCountEl.textContent = '0 Documents';
             return;
+        }
+
+        if (documentCountEl) {
+            documentCountEl.textContent = `${documents.length} Document${documents.length !== 1 ? 's' : ''}`;
         }
 
         // Separate unsigned and signed documents
         const unsigned = documents.filter(doc => doc.status === 'pending');
         const signed = documents.filter(doc => doc.status === 'signed');
 
-        let html = '';
+        let html = '<div style="display: grid; gap: 2rem;">';
 
         // Unsigned documents section
         if (unsigned.length > 0) {
             html += `
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.25rem;">📝 Documents to Sign (${unsigned.length})</h3>
-                    <table class="documents-table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>Description</th>
-                                <th>Uploaded</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${unsigned.map(doc => `
-                                <tr data-file-id="${doc.id}">
-                                    <td><strong>${this.escapeHtml(doc.file_name)}</strong></td>
-                                    <td>${doc.description ? this.escapeHtml(doc.description) : '-'}</td>
-                                    <td>${new Date(doc.created_at).toLocaleDateString()}</td>
-                                    <td>
-                                        <div class="doc-actions">
-                                            <button class="doc-btn view" onclick="profileManager.viewDocument('${doc.file_url}')">
-                                                👁️ View
-                                            </button>
-                                            <button class="doc-btn sign" onclick="profileManager.signDocument('${doc.id}')">
-                                                ✍️ Sign
-                                            </button>
+                <div>
+                    <h3 style="color: #fbbf24; margin-bottom: 1.25rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);">📝</div>
+                        Documents to Sign (${unsigned.length})
+                    </h3>
+                    <div style="display: grid; gap: 1.5rem;">
+                        ${unsigned.map(doc => `
+                            <div style="border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, rgba(251, 191, 36, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                <!-- Header -->
+                                <div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(251, 191, 36, 0.2);">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="flex: 1; min-width: 200px;">
+                                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);">📄</div>
+                                                <div>
+                                                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600;">${this.escapeHtml(doc.file_name)}</h4>
+                                                    <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.25rem;">Uploaded ${new Date(doc.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                                        <div style="text-align: right;">
+                                            <span style="display: inline-block; background: rgba(251, 191, 36, 0.2); color: #fbbf24; padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(251, 191, 36, 0.4);">⏳ Pending Signature</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Body -->
+                                <div style="padding: 1.5rem;">
+                                    ${doc.description ? `
+                                        <div style="background: rgba(251, 191, 36, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.1); margin-bottom: 1.5rem;">
+                                            <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Description</div>
+                                            <div style="opacity: 0.9;">${this.escapeHtml(doc.description)}</div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    <!-- Actions -->
+                                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                        <button onclick="profileManager.viewDocument('${doc.file_url}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)'; this.style.transform='translateY(0)'">
+                                            👁️ View Document
+                                        </button>
+                                        <button onclick="profileManager.signDocument('${doc.id}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(251, 191, 36, 0.3)'">
+                                            ✍️ Sign Document
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `;
         }
@@ -1231,38 +1336,55 @@ class ProfileManager {
         if (signed.length > 0) {
             html += `
                 <div>
-                    <h3 style="color: #10b981; margin-bottom: 1rem; font-size: 1.25rem;">✅ Signed Documents (${signed.length})</h3>
-                    <table class="documents-table">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>Description</th>
-                                <th>Uploaded</th>
-                                <th>Signed Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${signed.map(doc => `
-                                <tr style="opacity: 0.8;" data-file-id="${doc.id}">
-                                    <td><strong>${this.escapeHtml(doc.file_name)}</strong></td>
-                                    <td>${doc.description ? this.escapeHtml(doc.description) : '-'}</td>
-                                    <td>${new Date(doc.created_at).toLocaleDateString()}</td>
-                                    <td style="color: #10b981;">
-                                        ${doc.signed_at ? new Date(doc.signed_at).toLocaleDateString() : '-'}
-                                    </td>
-                                    <td>
-                                        <button class="doc-btn view" onclick="profileManager.viewDocument('${doc.file_url}')">
-                                            👁️ View
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <h3 style="color: #10b981; margin-bottom: 1.25rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">✅</div>
+                        Signed Documents (${signed.length})
+                    </h3>
+                    <div style="display: grid; gap: 1.5rem;">
+                        ${signed.map(doc => `
+                            <div style="border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(5, 150, 105, 0.03) 100%); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                <!-- Header -->
+                                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="flex: 1; min-width: 200px;">
+                                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">📄</div>
+                                                <div>
+                                                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600;">${this.escapeHtml(doc.file_name)}</h4>
+                                                    <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.25rem;">
+                                                        Signed ${doc.signed_at ? new Date(doc.signed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <span style="display: inline-block; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3);">✅ Signed</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Body -->
+                                <div style="padding: 1.5rem;">
+                                    ${doc.description ? `
+                                        <div style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.1); margin-bottom: 1.5rem;">
+                                            <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Description</div>
+                                            <div style="opacity: 0.9;">${this.escapeHtml(doc.description)}</div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    <!-- Action -->
+                                    <button onclick="profileManager.viewDocument('${doc.file_url}')" style="width: 100%; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)'; this.style.transform='translateY(0)'">
+                                        👁️ View Document
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `;
         }
+
+        html += '</div>';
 
         container.innerHTML = html;
     }

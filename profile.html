@@ -993,103 +993,141 @@
             </div>
         </div>
 
-        <div class="profile-grid">
-            <!-- Profile Information -->
-            <div class="profile-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h2 style="margin: 0;">Profile Information</h2>
-                    <button type="button" id="editProfileBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
-                        <span id="editBtnText">✏️ Edit</span>
-                    </button>
+        <!-- Tab Navigation -->
+        <div style="background: rgba(10, 15, 25, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 0.5rem; margin-bottom: 2rem; display: flex; gap: 0.5rem; overflow-x: auto; backdrop-filter: blur(10px);">
+            <button class="tab-btn active" data-tab="overview" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); white-space: nowrap;">
+                🏠 Overview
+            </button>
+            <button class="tab-btn" data-tab="services" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
+                📋 My Services
+            </button>
+            <button class="tab-btn" data-tab="invoices" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
+                💳 Invoices
+            </button>
+            <button class="tab-btn" data-tab="documents" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
+                📄 Documents
+            </button>
+            <button class="tab-btn" data-tab="settings" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
+                ⚙️ Settings
+            </button>
+        </div>
+
+        <!-- Tab Content: Overview -->
+        <div class="tab-content" id="tab-overview">
+            <div class="profile-grid">
+                <!-- Quick Stats Cards -->
+                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
+                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Active Services</div>
+                        <div style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="stat-services">0</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
+                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Total Invoices</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: #10b981;" id="stat-invoices">0</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
+                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Pending Documents</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: #60a5fa;" id="stat-documents">0</div>
+                    </div>
                 </div>
-                <form id="profileForm">
-                    <div class="profile-info-item">
-                        <label>Full Name</label>
-                        <input type="text" id="fullName" placeholder="Enter your name" disabled>
-                    </div>
-                    <div class="profile-info-item">
-                        <label>Email</label>
-                        <input type="email" id="email" disabled>
-                    </div>
-                    <div class="profile-info-item">
-                        <label>Phone</label>
-                        <input type="tel" id="phone" placeholder="Enter your phone" disabled>
-                    </div>
-                    <div class="profile-info-item">
-                        <label>Company</label>
-                        <input type="text" id="company" placeholder="Enter company name" disabled>
-                    </div>
-                    <div class="profile-actions" id="profileActions" style="display: none;">
-                        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                        <button type="button" class="btn btn-secondary" id="cancelEditBtn">✕ Cancel</button>
-                    </div>
-                </form>
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="profile-card">
-                <h2>Quick Actions</h2>
-                <div class="quick-links">
-                    <a href="pricing.html" class="quick-link">
-                        <div class="quick-link-icon">→</div>
-                        <div>New Order</div>
-                    </a>
-                    <a href="index.html#contact" class="quick-link">
-                        <div class="quick-link-icon">○</div>
-                        <div>Support</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="alert('Billing portal coming soon!'); return false;">
-                        <div class="quick-link-icon">▭</div>
-                        <div>Billing</div>
-                    </a>
-                    <a href="#" class="quick-link" onclick="alert('Settings coming soon!'); return false;">
-                        <div class="quick-link-icon">◊</div>
-                        <div>Settings</div>
-                    </a>
+                <!-- Quick Actions -->
+                <div class="profile-card" style="grid-column: 1 / -1;">
+                    <h2 style="margin-bottom: 1.5rem;">⚡ Quick Actions</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <a href="pricing.html" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(99, 102, 241, 0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">🛒</div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">New Service</div>
+                                <div style="font-size: 0.85rem; opacity: 0.7;">Request a service</div>
+                            </div>
+                        </a>
+                        <a href="index.html#contact" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(16, 185, 129, 0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">💬</div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Get Support</div>
+                                <div style="font-size: 0.85rem; opacity: 0.7;">Contact us</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Service Requests Section -->
-        <div class="profile-card full-width" style="margin-top: 2rem;">
-            <div class="section-header">
-                <h2>📋 My Services</h2>
-                <span class="badge" id="requestCount">0 Requests</span>
-            </div>
-            <div id="requestsContainer" style="margin-top: 1.5rem;">
-                <div class="loading">Loading requests...</div>
-            </div>
-        </div>
-
-        <!-- Documents to Sign Section -->
-        <div class="profile-card full-width" style="margin-top: 2rem;">
-            <h2>📄 Documents</h2>
-            <div id="documentsContainer" style="margin-top: 1.5rem;">
-                <div class="loading">Loading documents...</div>
+        <!-- Tab Content: Services -->
+        <div class="tab-content" id="tab-services" style="display: none;">
+            <div class="profile-card full-width">
+                <div class="section-header">
+                    <h2>📋 My Services</h2>
+                    <span class="badge" id="requestCount">0 Services</span>
+                </div>
+                <div id="requestsContainer" style="margin-top: 1.5rem;">
+                    <div class="loading">Loading services...</div>
+                </div>
             </div>
         </div>
 
-        <!-- Invoices & Payments Section -->
-        <div class="profile-card full-width" style="margin-top: 2rem;">
-            <div class="section-header">
-                <h2>💳 Invoices & Payments</h2>
-                <span class="badge" id="invoiceCount">0 Invoices</span>
-            </div>
-            <div id="invoicesContainer" style="margin-top: 1.5rem;">
-                <div class="loading">Loading invoices...</div>
+        <!-- Tab Content: Invoices -->
+        <div class="tab-content" id="tab-invoices" style="display: none;">
+            <div class="profile-card full-width">
+                <div class="section-header">
+                    <h2>💳 Invoices & Payments</h2>
+                    <span class="badge" id="invoiceCount">0 Invoices</span>
+                </div>
+                <div id="invoicesContainer" style="margin-top: 1.5rem;">
+                    <div class="loading">Loading invoices...</div>
+                </div>
             </div>
         </div>
 
-        <!-- Order History -->
-        <div class="profile-card full-width">
-            <div class="section-header">
-                <h2>Order History</h2>
-                <span class="badge" id="orderCount">0 Orders</span>
+        <!-- Tab Content: Documents -->
+        <div class="tab-content" id="tab-documents" style="display: none;">
+            <div class="profile-card full-width">
+                <div class="section-header">
+                    <h2>📄 Documents</h2>
+                    <span class="badge" id="documentCount">0 Documents</span>
+                </div>
+                <div id="documentsContainer" style="margin-top: 1.5rem;">
+                    <div class="loading">Loading documents...</div>
+                </div>
             </div>
-            <div id="ordersContainer">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading orders...</p>
+        </div>
+
+        <!-- Tab Content: Settings -->
+        <div class="tab-content" id="tab-settings" style="display: none;">
+            <div class="profile-grid">
+                <!-- Profile Information -->
+                <div class="profile-card" style="grid-column: 1 / -1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2 style="margin: 0;">👤 Profile Information</h2>
+                        <button type="button" id="editProfileBtn" class="btn btn-secondary" style="padding: 0.75rem 1.25rem; font-size: 0.9rem; border-radius: 10px;">
+                            <span id="editBtnText">✏️ Edit Profile</span>
+                        </button>
+                    </div>
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <div class="profile-info-item">
+                                <label>Full Name</label>
+                                <input type="text" id="fullName" placeholder="Enter your name" disabled>
+                            </div>
+                            <div class="profile-info-item">
+                                <label>Email</label>
+                                <input type="email" id="email" disabled>
+                            </div>
+                            <div class="profile-info-item">
+                                <label>Phone</label>
+                                <input type="tel" id="phone" placeholder="Enter your phone" disabled>
+                            </div>
+                            <div class="profile-info-item">
+                                <label>Company</label>
+                                <input type="text" id="company" placeholder="Enter company name" disabled>
+                            </div>
+                        </div>
+                        <div class="profile-actions" id="profileActions" style="display: none; margin-top: 2rem;">
+                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn">✕ Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
