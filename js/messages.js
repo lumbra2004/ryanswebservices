@@ -119,32 +119,6 @@ class MessagesSystem {
                 this.closeWidget();
             }
         });
-
-        // Fix iOS scrolling in chat widget messages area
-        const messagesArea = document.getElementById('widgetMessages');
-        if (messagesArea) {
-            // Prevent page scroll when touching the messages area
-            messagesArea.addEventListener('touchstart', (e) => {
-                this.touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-
-            messagesArea.addEventListener('touchmove', (e) => {
-                const scrollTop = messagesArea.scrollTop;
-                const scrollHeight = messagesArea.scrollHeight;
-                const clientHeight = messagesArea.clientHeight;
-                const touchY = e.touches[0].clientY;
-                const deltaY = this.touchStartY - touchY;
-
-                // At top and trying to scroll up
-                if (scrollTop <= 0 && deltaY < 0) {
-                    e.preventDefault();
-                }
-                // At bottom and trying to scroll down
-                else if (scrollTop + clientHeight >= scrollHeight && deltaY > 0) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        }
     }
 
     async loadConversations() {
@@ -405,6 +379,9 @@ class MessagesSystem {
             widget.classList.add('active');
             this.isWidgetOpen = true;
             
+            // Lock body scroll on mobile
+            document.body.style.overflow = 'hidden';
+            
             if (this.currentUser) {
                 // Load most recent conversation
                 if (this.conversations.length > 0) {
@@ -423,6 +400,9 @@ class MessagesSystem {
         if (widget) {
             widget.classList.remove('active');
             this.isWidgetOpen = false;
+            
+            // Unlock body scroll
+            document.body.style.overflow = '';
         }
     }
 
