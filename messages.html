@@ -457,9 +457,12 @@
                         })
                         .eq('id', conversationId);
 
-                    // Add to local messages and render
-                    this.messages.push(message);
-                    this.renderMessages();
+                    // Realtime subscription will handle displaying the message
+                    // Just scroll to bottom
+                    const container = document.getElementById('chatMessages');
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    }
                     
                     // Reload conversations list
                     await this.loadConversations();
