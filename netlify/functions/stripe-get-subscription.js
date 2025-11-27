@@ -47,21 +47,26 @@ exports.handler = async (event, context) => {
             id: subscription.id,
             status: subscription.status,
             current_period_end: subscription.current_period_end,
-            current_period_start: subscription.current_period_start
+            current_period_start: subscription.current_period_start,
+            fullSubscription: subscription
         });
+
+        const responseData = {
+            id: subscription.id,
+            status: subscription.status,
+            current_period_end: subscription.current_period_end,
+            current_period_start: subscription.current_period_start,
+            cancel_at_period_end: subscription.cancel_at_period_end,
+            cancel_at: subscription.cancel_at,
+            canceled_at: subscription.canceled_at
+        };
+
+        console.log('Sending response:', responseData);
 
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify({
-                id: subscription.id,
-                status: subscription.status,
-                current_period_end: subscription.current_period_end,
-                current_period_start: subscription.current_period_start,
-                cancel_at_period_end: subscription.cancel_at_period_end,
-                cancel_at: subscription.cancel_at,
-                canceled_at: subscription.canceled_at
-            })
+            body: JSON.stringify(responseData)
         };
     } catch (error) {
         console.error('Error getting subscription:', error);
