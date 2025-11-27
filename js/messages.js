@@ -263,10 +263,17 @@ class MessagesSystem {
 
     async sendWidgetMessage() {
         const input = document.getElementById('widgetMessageInput');
+        const sendBtn = document.getElementById('widgetSendBtn');
         if (!input || !input.value.trim()) return;
 
         const content = input.value.trim();
         input.value = '';
+        
+        // Disable send button while sending
+        if (sendBtn) {
+            sendBtn.disabled = true;
+            sendBtn.style.opacity = '0.5';
+        }
 
         // Get or create conversation
         let convId = this.currentConversation;
@@ -274,43 +281,27 @@ class MessagesSystem {
             convId = this.conversations[0].id;
         }
 
-        // Create optimistic message (show immediately with "sending" status)
-        const tempId = 'temp-' + Date.now();
-        const optimisticMessage = {
-            id: tempId,
-            content: content,
-            sender_id: this.currentUser.id,
-            created_at: new Date().toISOString(),
-            status: 'sending',
-            read: false
-        };
-        
-        // Add to UI immediately
-        this.messages.push(optimisticMessage);
-        this.renderWidgetMessages();
-        
-        // Scroll to bottom
-        const messagesContainer = document.getElementById('widgetMessages');
-        if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // Actually send the message
+        // Send the message
         const message = await this.sendMessage(content, convId);
         
+        // Re-enable send button
+        if (sendBtn) {
+            sendBtn.disabled = false;
+            sendBtn.style.opacity = '1';
+        }
+        
         if (message) {
-            // Replace optimistic message with real one
-            const index = this.messages.findIndex(m => m.id === tempId);
-            if (index !== -1) {
-                this.messages[index] = { ...message, status: 'sent' };
+            // Add message to UI (realtime might beat us, so check first)
+            const exists = this.messages.some(m => m.id === message.id);
+            if (!exists) {
+                this.messages.push({ ...message, status: 'sent' });
                 this.renderWidgetMessages();
             }
-        } else {
-            // Mark as failed if send failed
-            const index = this.messages.findIndex(m => m.id === tempId);
-            if (index !== -1) {
-                this.messages[index].status = 'failed';
-                this.renderWidgetMessages();
+            
+            // Scroll to bottom
+            const messagesContainer = document.getElementById('widgetMessages');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
     }
@@ -337,26 +328,21 @@ class MessagesSystem {
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
                 
                 if (isForCurrentConversation) {
-                    // Skip if this is our own message (we already show it via optimistic UI)
-                    if (newMessage.sender_id === this.currentUser.id) {
-                        // Just update the temp message to have the real ID if it exists
-                        const tempIndex = this.messages.findIndex(m => m.id && m.id.toString().startsWith('temp-'));
-                        if (tempIndex !== -1) {
-                            this.messages[tempIndex] = { ...newMessage, status: 'sent' };
-                            this.renderWidgetMessages();
-                        }
-                        return;
-                    }
-                    
-                    // For messages from others, add if not already present
+                    // Add if not already present
                     const exists = this.messages.some(m => m.id === newMessage.id);
                     if (!exists) {
-                        this.messages.push(newMessage);
+                        this.messages.push({ ...newMessage, status: 'sent' });
                         this.renderWidgetMessages();
+                        
+                        // Scroll to bottom
+                        const container = document.getElementById('widgetMessages');
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
                     }
                     
-                    // Auto-mark as read if widget is open
-                    if (this.isWidgetOpen) {
+                    // Auto-mark as read if widget is open and message is from someone else
+                    if (this.isWidgetOpen && newMessage.sender_id !== this.currentUser.id) {
                         this.markMessagesAsRead(this.currentConversation);
                     }
                 }
