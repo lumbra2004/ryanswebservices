@@ -48,14 +48,44 @@ exports.handler = async (event, context) => {
             status: subscription.status,
             current_period_end: subscription.current_period_end,
             current_period_start: subscription.current_period_start,
+            billing_cycle_anchor: subscription.billing_cycle_anchor,
             fullSubscription: subscription
         });
+
+        // Calculate current period end based on billing cycle anchor and interval
+        let currentPeriodEnd = subscription.current_period_end;
+        let currentPeriodStart = subscription.current_period_start;
+
+        // If not present, calculate from billing_cycle_anchor
+        if (!currentPeriodEnd && subscription.billing_cycle_anchor) {
+            const billingAnchor = subscription.billing_cycle_anchor;
+            currentPeriodStart = billingAnchor;
+            
+            // Calculate next billing date based on interval
+            const interval = subscription.plan?.interval || 'month';
+            const intervalCount = subscription.plan?.interval_count || 1;
+            
+            const anchorDate = new Date(billingAnchor * 1000);
+            const nextDate = new Date(anchorDate);
+            
+            if (interval === 'month') {
+                nextDate.setMonth(nextDate.getMonth() + intervalCount);
+            } else if (interval === 'year') {
+                nextDate.setFullYear(nextDate.getFullYear() + intervalCount);
+            } else if (interval === 'week') {
+                nextDate.setDate(nextDate.getDate() + (7 * intervalCount));
+            } else if (interval === 'day') {
+                nextDate.setDate(nextDate.getDate() + intervalCount);
+            }
+            
+            currentPeriodEnd = Math.floor(nextDate.getTime() / 1000);
+        }
 
         const responseData = {
             id: subscription.id,
             status: subscription.status,
-            current_period_end: subscription.current_period_end,
-            current_period_start: subscription.current_period_start,
+            current_period_end: currentPeriodEnd,
+            current_period_start: currentPeriodStart,
             cancel_at_period_end: subscription.cancel_at_period_end,
             cancel_at: subscription.cancel_at,
             canceled_at: subscription.canceled_at
