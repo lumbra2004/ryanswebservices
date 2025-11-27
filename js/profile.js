@@ -912,10 +912,15 @@ class ProfileManager {
     }
 
     setupEventListeners() {
+        console.log('Setting up event listeners...');
+        
         // Tab switching
         const tabBtns = document.querySelectorAll('.tab-btn');
+        console.log('Found tab buttons:', tabBtns.length);
         tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Tab clicked:', btn.dataset.tab);
                 const tabName = btn.dataset.tab;
                 this.switchTab(tabName);
             });
@@ -924,23 +929,40 @@ class ProfileManager {
         // Profile form submission
         const profileForm = document.getElementById('profileForm');
         if (profileForm) {
+            console.log('Profile form found');
             profileForm.addEventListener('submit', (e) => this.updateProfile(e));
+        } else {
+            console.warn('Profile form not found');
         }
 
         // Edit profile button
         const editBtn = document.getElementById('editProfileBtn');
         if (editBtn) {
-            editBtn.addEventListener('click', () => this.toggleEditMode());
+            console.log('Edit button found');
+            editBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleEditMode();
+            });
+        } else {
+            console.warn('Edit button not found');
         }
 
         // Cancel edit button
         const cancelBtn = document.getElementById('cancelEditBtn');
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.cancelEdit());
+            console.log('Cancel button found');
+            cancelBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.cancelEdit();
+            });
+        } else {
+            console.warn('Cancel button not found');
         }
 
         // Setup payment modal listeners
         this.setupPaymentListeners();
+        
+        console.log('Event listeners setup complete');
     }
 
     switchTab(tabName) {
