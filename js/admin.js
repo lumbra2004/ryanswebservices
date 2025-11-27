@@ -3336,41 +3336,22 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
     }
     
     renderCustomQuotes(quotesToRender = null) {
-        const container = document.getElementById('quotesTableContainer');
-        if (!container) return;
+        const tbody = document.getElementById('quotesTableBody');
+        if (!tbody) return;
         
         const quotes = quotesToRender || this.customQuotes;
         
         if (quotes.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span class="icon">🎟️</span>
-                    <h3>No Custom Quotes</h3>
-                    <p>Create your first custom quote to offer personalized pricing</p>
-                    <button class="btn btn-primary" onclick="adminPanel.openQuoteModal()">Create Quote</button>
-                </div>
+            tbody.innerHTML = `
+                <tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎫</div>
+                    <div>No quotes yet. Create your first quote code!</div>
+                </td></tr>
             `;
             return;
         }
         
-        container.innerHTML = `
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Pricing</th>
-                        <th>Assigned To</th>
-                        <th>Status</th>
-                        <th>Expires</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${quotes.map(quote => this.renderQuoteRow(quote)).join('')}
-                </tbody>
-            </table>
-        `;
+        tbody.innerHTML = quotes.map(quote => this.renderQuoteRow(quote)).join('');
     }
     
     renderQuoteRow(quote) {
@@ -3382,56 +3363,45 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
             cancelled: 'danger'
         };
         
-        const pricing = [];
-        if (quote.upfront_cost) pricing.push(`Upfront: $${parseFloat(quote.upfront_cost).toLocaleString()}`);
-        if (quote.monthly_fee) pricing.push(`Monthly: $${parseFloat(quote.monthly_fee).toLocaleString()}`);
-        
         const validUntil = quote.valid_until ? new Date(quote.valid_until) : null;
         const isExpired = validUntil && validUntil < new Date();
         const displayStatus = isExpired && quote.status !== 'redeemed' && quote.status !== 'cancelled' ? 'expired' : quote.status;
         
-        const clientInfo = quote.client_name || quote.client_email || '<span class="text-muted">Unassigned</span>';
+        const clientInfo = quote.client_name || quote.client_email || '<span style="color: var(--text-secondary);">—</span>';
+        const createdAt = quote.created_at ? new Date(quote.created_at).toLocaleDateString() : '—';
         
         return `
             <tr>
                 <td>
-                    <div class="quote-code-cell">
-                        <code class="quote-code">${quote.code}</code>
-                        <button class="btn-icon btn-sm" onclick="adminPanel.copyQuoteCode('${quote.code}')" title="Copy Code">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">${quote.code}</code>
+                        <button style="background: none; border: none; cursor: pointer; padding: 0.25rem;" onclick="adminPanel.copyQuoteCode('${quote.code}')" title="Copy Code">
                             📋
                         </button>
                     </div>
                 </td>
-                <td>
-                    <div class="quote-description">
-                        ${quote.service_description || '<span class="text-muted">No description</span>'}
-                        ${quote.internal_notes ? '<span class="badge badge-info" title="Has internal notes">📝</span>' : ''}
-                    </div>
-                </td>
-                <td>
-                    <div class="quote-pricing">
-                        ${pricing.length > 0 ? pricing.join('<br>') : '<span class="text-muted">No pricing set</span>'}
-                    </div>
-                </td>
                 <td>${clientInfo}</td>
+                <td>$${parseFloat(quote.upfront_cost || 0).toLocaleString()}</td>
+                <td>$${parseFloat(quote.monthly_fee || 0).toLocaleString()}/mo</td>
                 <td>
                     <span class="badge badge-${statusColors[displayStatus] || 'secondary'}">
                         ${displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
                     </span>
                 </td>
+                <td>${createdAt}</td>
                 <td>
                     ${validUntil 
-                        ? `<span class="${isExpired ? 'text-danger' : ''}">${validUntil.toLocaleDateString()}</span>` 
-                        : '<span class="text-muted">Never</span>'}
+                        ? `<span style="${isExpired ? 'color: #ef4444;' : ''}">${validUntil.toLocaleDateString()}</span>` 
+                        : '<span style="color: var(--text-secondary);">Never</span>'}
                 </td>
                 <td>
-                    <div class="action-buttons">
+                    <div style="display: flex; gap: 0.5rem;">
                         <button class="btn btn-sm btn-secondary" onclick="adminPanel.openQuoteModal('${quote.id}')" title="Edit">
                             ✏️
                         </button>
                         ${quote.status === 'pending' || quote.status === 'viewed' ? `
                             <button class="btn btn-sm btn-warning" onclick="adminPanel.deactivateQuote('${quote.id}')" title="Cancel">
-                                ⏸️
+                                ❌
                             </button>
                         ` : ''}
                     </div>
