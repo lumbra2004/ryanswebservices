@@ -277,8 +277,12 @@ class MessagesSystem {
         const message = await this.sendMessage(content, convId);
         
         if (message) {
-            this.messages.push(message);
-            this.renderWidgetMessages();
+            // Only add if not already added by realtime subscription
+            const exists = this.messages.some(m => m.id === message.id);
+            if (!exists) {
+                this.messages.push(message);
+                this.renderWidgetMessages();
+            }
             
             // Scroll to bottom
             const messagesContainer = document.getElementById('widgetMessages');
@@ -310,8 +314,12 @@ class MessagesSystem {
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
                 
                 if (isForCurrentConversation) {
-                    this.messages.push(newMessage);
-                    this.renderWidgetMessages();
+                    // Only add if not already in the array (prevent duplicates)
+                    const exists = this.messages.some(m => m.id === newMessage.id);
+                    if (!exists) {
+                        this.messages.push(newMessage);
+                        this.renderWidgetMessages();
+                    }
                     
                     // Auto-mark as read if widget is open
                     if (this.isWidgetOpen && newMessage.sender_id !== this.currentUser.id) {
