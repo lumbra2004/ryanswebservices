@@ -8,42 +8,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/thanksgiving.css">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --bg-dark: #0a0a0f;
-            --bg-card: #12121a;
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-
-        /* Navigation */
+        /* Blog Page Specific Styles */
+        
+        /* Blog Navigation Override */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 15, 0.9);
+            z-index: var(--z-fixed);
+            background: rgba(10, 14, 26, 0.9);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-dark);
+            padding: var(--space-md) var(--space-xl);
         }
 
         .nav-container {
@@ -54,50 +35,51 @@
             align-items: center;
         }
 
-        .logo {
+        .navbar .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-decoration: none;
         }
 
-        .nav-links {
+        .navbar .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: var(--space-xl);
             align-items: center;
+            list-style: none;
         }
 
-        .nav-links a {
+        .navbar .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color var(--transition-fast);
         }
 
-        .nav-links a:hover {
-            color: var(--text-primary);
+        .navbar .nav-links a:hover {
+            color: var(--primary);
         }
 
-        .nav-links a.active {
+        .navbar .nav-links a.active {
             color: var(--primary);
         }
 
         /* Social Links in Nav */
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-left: 1rem;
-            padding-left: 1rem;
-            border-left: 1px solid var(--border-color);
+            gap: var(--space-md);
+            margin-left: var(--space-md);
+            padding-left: var(--space-md);
+            border-left: 1px solid var(--border-dark);
         }
 
         .social-links a {
             color: var(--text-secondary);
             font-size: 1.25rem;
-            transition: color 0.3s, transform 0.3s;
+            transition: color var(--transition-fast), transform var(--transition-fast);
         }
 
         .social-links a:hover {
@@ -109,19 +91,19 @@
         .main-content {
             max-width: 900px;
             margin: 0 auto;
-            padding: 120px 2rem 4rem;
+            padding: 120px var(--space-xl) var(--space-3xl);
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: var(--space-2xl);
         }
 
         .page-header h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #94a3b8);
+            margin-bottom: var(--space-md);
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -138,31 +120,31 @@
         .blog-posts {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: var(--space-xl);
         }
 
         .blog-post {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform var(--transition-base), box-shadow var(--transition-base);
         }
 
         .blog-post:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-xl);
         }
 
         .blog-post-image {
             width: 100%;
             height: 250px;
             object-fit: cover;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
+            background: var(--gradient-primary);
         }
 
         .blog-post-content {
-            padding: 2rem;
+            padding: var(--space-xl);
         }
 
         .blog-post-meta {

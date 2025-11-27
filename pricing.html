@@ -38,189 +38,33 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/thanksgiving.css">
     <style>
-        /* CSS Reset & Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Pricing Page Specific Styles - inherits from main.css */
+        
+        /* Pricing Hero */
+        .pricing-hero {
+            text-align: center;
+            padding: 6rem 0 3rem;
         }
 
-        html {
-            background: #050810;
-            min-height: 100%;
-        }
-
-        :root {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --primary-light: #3385FF;
-            --secondary: #00D4FF;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B4BFCD;
-            --text-light: #8B95A5;
-            --bg-darker: #050810;
-            --bg-dark: #0A0E1A;
-            --card-bg: #151922;
-            --card-hover: #1A1F2E;
-            --border-dark: #1F2937;
-            --border-light: #2D3748;
-        }
-
-        /* Light Mode */
-        body.light-mode {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --primary-light: #3385FF;
-            --secondary: #00B8D4;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-light: #64748b;
-            --bg-darker: #ffffff;
-            --bg-dark: #f8fafc;
-            --card-bg: #ffffff;
-            --card-hover: #f8fafc;
-            --border-dark: #e2e8f0;
-            --border-light: #cbd5e0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
-            background-attachment: fixed;
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-text-size-adjust: 100%;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .container {
-            max-width: 1400px !important;
-            margin: 0 auto !important;
-            padding: 0 2rem !important;
-        }
-
-        /* Header */
-        header {
-            padding: 1.5rem 0;
-            backdrop-filter: blur(10px);
-            background: rgba(10, 14, 26, 0.8);
-            border-bottom: 1px solid var(--border-dark);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-
-        body.light-mode header {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-light);
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            z-index: 101;
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-toggle:hover span {
-            background: var(--primary);
-        }
-
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: translateY(8px) rotate(45deg);
-        }
-
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: translateY(-8px) rotate(-45deg);
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: left;
-            padding: 5rem 0 3rem;
-        }
-
-        .hero h1 {
+        .pricing-hero h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 900;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.02em;
-            text-align: center;
         }
 
-        .hero p {
+        .pricing-hero p {
             font-size: clamp(1.1rem, 2vw, 1.3rem);
             color: var(--text-secondary);
             max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
             margin: 0 auto 2rem;
             line-height: 1.7;
         }
@@ -228,9 +72,9 @@
         .hero-badge {
             display: inline-block;
             padding: 0.5rem 1.25rem;
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(0, 212, 255, 0.15));
-            border: 1px solid rgba(0, 102, 255, 0.3);
-            border-radius: 50px;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: var(--radius-full);
             font-size: 0.9rem;
             font-weight: 600;
             color: var(--secondary);
@@ -241,47 +85,47 @@
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
+            gap: var(--space-xl);
+            margin: var(--space-2xl) 0;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .pricing-card {
-            background: var(--card-bg);
+            background: var(--bg-card);
             border: 1px solid var(--border-dark);
-            border-radius: 20px;
-            padding: 2.5rem;
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
             position: relative;
-            transition: all 0.4s ease;
+            transition: all var(--transition-slow);
             backdrop-filter: blur(10px);
         }
 
         .pricing-card:hover {
             transform: translateY(-8px);
             border-color: var(--primary);
-            box-shadow: 0 20px 60px rgba(0, 102, 255, 0.2);
+            box-shadow: var(--shadow-xl);
         }
 
         .pricing-card.featured {
             border: 2px solid var(--primary);
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.08), rgba(0, 212, 255, 0.05));
-            transform: scale(1.05);
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08), rgba(var(--secondary-rgb), 0.05));
+            transform: scale(1.03);
         }
 
         .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-8px);
+            transform: scale(1.03) translateY(-8px);
         }
 
         .featured-badge {
             position: absolute;
             top: -12px;
             right: 30px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient-primary);
             color: white;
             padding: 0.4rem 1.2rem;
-            border-radius: 50px;
+            border-radius: var(--radius-full);
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -291,25 +135,25 @@
         .plan-name {
             font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--space-sm);
             color: var(--text-primary);
         }
 
         .plan-description {
             color: var(--text-light);
             font-size: 0.95rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: var(--space-lg);
         }
 
         .price {
             font-size: 3.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1;
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--space-sm);
         }
 
         .price-period {
@@ -1422,12 +1266,14 @@
         }
 
         .form-group input[type="number"] {
+            appearance: textfield;
             -moz-appearance: textfield;
         }
 
         .form-group input[type="number"]::-webkit-outer-spin-button,
         .form-group input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
+            appearance: none;
             margin: 0;
         }
 

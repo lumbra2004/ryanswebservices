@@ -22,25 +22,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/thanksgiving.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
+        /* Thank You Page Specific Styles */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(165deg, #050810 0%, #0A0E1A 50%, #050810 100%);
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
-            color: #FFFFFF;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: var(--space-lg);
             position: relative;
             overflow: hidden;
         }
@@ -52,9 +42,10 @@
             right: -20%;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
-            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--primary-rgb), 0.2) 0%, transparent 70%);
+            border-radius: var(--radius-full);
             filter: blur(60px);
+            animation: floatOrb 15s ease-in-out infinite;
         }
         
         body::after {
@@ -64,9 +55,10 @@
             left: -10%;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--secondary-rgb), 0.15) 0%, transparent 70%);
+            border-radius: var(--radius-full);
             filter: blur(60px);
+            animation: floatOrb 18s ease-in-out infinite reverse;
         }
         
         .thank-you-container {

@@ -21,21 +21,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/thanksgiving.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    /* Portfolio Project Page Styles */
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(165deg, #050810 0%, #0A0E1A 50%, #050810 100%);
-      color: #FFFFFF;
+      background: linear-gradient(165deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--bg-darker) 100%);
       min-height: 100vh;
-      padding: 2rem 1.5rem;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      padding: var(--space-xl) var(--space-lg);
       position: relative;
       overflow-x: hidden;
     }
@@ -47,121 +40,119 @@
       right: -20%;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(var(--primary-rgb), 0.25) 0%, transparent 70%);
       border-radius: 50%;
       filter: blur(60px);
       z-index: 0;
     }
     
-    main {
+    .project-card {
       max-width: 800px;
       margin: 0 auto;
-      background: #151922;
-      border: 1px solid #1F2937;
-      border-radius: 24px;
-      padding: 3rem 2rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-2xl) var(--space-xl);
+      box-shadow: var(--shadow-xl);
       position: relative;
       z-index: 1;
     }
     
-    h1 {
-      color: #0066FF;
+    .project-card h1 {
+      color: var(--primary);
       font-size: 2.5rem;
       font-weight: 800;
-      margin-bottom: 2rem;
+      margin-bottom: var(--space-xl);
       letter-spacing: -0.5px;
     }
     
-    img {
+    .project-card img {
       width: 100%;
-      border-radius: 16px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-lg);
     }
     
-    p {
-      color: #B4BFCD;
+    .project-card p {
+      color: var(--text-secondary);
       line-height: 1.7;
       font-size: 1.05rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: var(--space-lg);
     }
     
-    ul {
+    .project-card ul {
       list-style: none;
-      margin: 0 0 2rem 0;
+      margin: 0 0 var(--space-xl) 0;
       padding: 0;
     }
     
-    li {
-      color: #B4BFCD;
-      padding: 0.75rem 0;
+    .project-card li {
+      color: var(--text-secondary);
+      padding: var(--space-sm) 0;
       padding-left: 1.75rem;
       position: relative;
       font-size: 1.05rem;
     }
     
-    li::before {
+    .project-card li::before {
       content: '✓';
       position: absolute;
       left: 0;
-      color: #0066FF;
+      color: var(--primary);
       font-weight: 700;
     }
     
     .actions {
-      margin-top: 2.5rem;
+      margin-top: var(--space-2xl);
       display: flex;
-      gap: 1rem;
+      gap: var(--space-md);
       align-items: center;
       flex-wrap: wrap;
     }
     
-    a {
-      color: #00D4FF;
+    .actions a {
+      color: var(--accent);
       text-decoration: none;
       font-weight: 600;
-      transition: color 0.3s ease;
+      transition: color var(--transition-base);
       font-size: 1rem;
     }
     
-    a:hover {
-      color: #0066FF;
+    .actions a:hover {
+      color: var(--primary);
     }
     
-    button {
+    .actions button {
       margin-left: auto;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      border: 2px solid #0066FF;
-      background: #0066FF;
+      padding: var(--space-md) var(--space-xl);
+      border-radius: var(--radius-full);
+      border: 2px solid var(--primary);
+      background: var(--gradient-primary);
       color: #fff;
       cursor: pointer;
       font-weight: 700;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-sans);
       font-size: 1rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
+      transition: all var(--transition-slow);
+      box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.3);
       min-height: 48px;
     }
     
-    button:hover {
-      background: #0052CC;
-      border-color: #0052CC;
+    .actions button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(0, 102, 255, 0.45);
+      box-shadow: 0 12px 32px rgba(var(--primary-rgb), 0.45);
     }
     
     @media (max-width: 640px) {
       body {
-        padding: 1.5rem 1rem;
+        padding: var(--space-lg) var(--space-md);
       }
       
-      main {
-        padding: 2rem 1.5rem;
+      .project-card {
+        padding: var(--space-xl) var(--space-lg);
       }
       
-      h1 {
+      .project-card h1 {
         font-size: 2rem;
       }
       
@@ -170,7 +161,7 @@
         align-items: stretch;
       }
       
-      button {
+      .actions button {
         margin-left: 0;
         width: 100%;
       }
@@ -178,7 +169,7 @@
   </style>
 </head>
 <body>
-  <main>
+  <main class="project-card">
     <h1>Landscaping Services</h1>
     <img src="images/landscapepage.png" alt="Landscaping project">
     <p>This project is a professional website for a landscaping business, showcasing services, project galleries, and easy contact options. The site is designed to highlight quality work and inspire trust.</p>
