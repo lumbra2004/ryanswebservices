@@ -3321,16 +3321,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         try {
             const { data, error } = await supabase
                 .from('custom_quotes')
-                .select(`
-                    *,
-                    creator:created_by(email, full_name),
-                    assignee:assigned_to(email, full_name),
-                    redemptions:quote_redemptions(
-                        id,
-                        redeemed_at,
-                        user:user_id(email, full_name)
-                    )
-                `)
+                .select('*')
                 .order('created_at', { ascending: false });
             
             if (error) throw error;
