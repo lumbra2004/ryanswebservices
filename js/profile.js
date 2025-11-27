@@ -1415,7 +1415,15 @@ class ProfileManager {
     }
 
     viewDocument(fileUrl) {
-        window.open(fileUrl, '_blank');
+        // Check if this is a proxy URL format (/files/encodedUrl)
+        if (fileUrl && fileUrl.startsWith('/files/')) {
+            // Convert to full URL using production domain
+            const fullUrl = `https://ryanswebservices.com${fileUrl}`;
+            window.open(fullUrl, '_blank');
+        } else {
+            // Direct URL - open as is
+            window.open(fileUrl, '_blank');
+        }
     }
 
     async signDocument(documentId) {
