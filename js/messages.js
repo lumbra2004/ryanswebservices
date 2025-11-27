@@ -8,6 +8,7 @@ class MessagesSystem {
         this.unreadCount = 0;
         this.isWidgetOpen = false;
         this.realtimeSubscription = null;
+        this.recentlySentIds = new Set(); // Track IDs of messages we just sent
         this.init();
     }
 
@@ -291,12 +292,17 @@ class MessagesSystem {
         }
         
         if (message) {
-            // Add message to UI (realtime might beat us, so check first)
-            const exists = this.messages.some(m => m.id === message.id);
-            if (!exists) {
-                this.messages.push({ ...message, status: 'sent' });
-                this.renderWidgetMessages();
-            }
+            // Track this ID so realtime doesn't duplicate it
+            this.recentlySentIds.add(message.id);
+            
+            // Clear from tracking after 5 seconds
+            setTimeout(() => {
+                this.recentlySentIds.delete(message.id);
+            }, 5000);
+            
+            // Add message to UI
+            this.messages.push({ ...message, status: 'sent' });
+            this.renderWidgetMessages();
             
             // Scroll to bottom
             const messagesContainer = document.getElementById('widgetMessages');
@@ -323,6 +329,11 @@ class MessagesSystem {
                 table: 'messages'
             }, (payload) => {
                 const newMessage = payload.new;
+                
+                // Skip if we just sent this message (already added via sendWidgetMessage)
+                if (this.recentlySentIds.has(newMessage.id)) {
+                    return;
+                }
                 
                 // Check if message is for current user's conversation
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
