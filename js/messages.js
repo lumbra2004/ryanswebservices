@@ -125,7 +125,7 @@ class MessagesSystem {
         if (!this.currentUser) return;
 
         try {
-            // Get conversations for current user
+            // Get conversations for current user only
             const { data: conversations, error } = await supabase
                 .from('conversations')
                 .select(`
@@ -138,7 +138,7 @@ class MessagesSystem {
                         read
                     )
                 `)
-                .or(`user_id.eq.${this.currentUser.id},admin_id.eq.${this.currentUser.id}`)
+                .eq('user_id', this.currentUser.id)
                 .order('updated_at', { ascending: false });
 
             if (error) {
