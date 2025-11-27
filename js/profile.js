@@ -599,16 +599,29 @@ class ProfileManager {
                             <span>→</span>
                         </a>
                         ${request.stripe_subscription_id ? `
-                            <button onclick="profileManager.cancelSubscription('${request.id}', '${request.stripe_subscription_id}')"
+                            <button onclick="profileManager.showCancelModal('${request.id}', '${request.stripe_subscription_id}')"
+                                    class="cancel-subscription-btn"
+                                    data-request-id="${request.id}"
+                                    data-subscription-id="${request.stripe_subscription_id}"
                                     style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;"
                                     onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'"
                                     onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
                                 Cancel Subscription
                             </button>
+                            <div id="renewal-info-${request.id}" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(99, 102, 241, 0.05); border-radius: 6px; font-size: 0.85rem;">
+                                <div style="opacity: 0.7;">Loading renewal information...</div>
+                            </div>
                         ` : ''}
                     </div>
                 </div>
             `}).join('');
+
+            // Load renewal information for each subscription
+            for (const request of paidRequests) {
+                if (request.stripe_subscription_id) {
+                    this.loadRenewalInfo(request.id, request.stripe_subscription_id);
+                }
+            }
 
         } catch (error) {
             console.error('Error loading invoices:', error);
@@ -621,12 +634,123 @@ class ProfileManager {
         }
     }
 
-    async cancelSubscription(requestId, subscriptionId) {
-        if (!confirm('Are you sure you want to cancel this subscription? You will continue to have access until the end of your current billing period.')) {
-            return;
+    async loadRenewalInfo(requestId, subscriptionId) {
+        try {
+            const response = await fetch('/api/stripe/get-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subscriptionId })
+            });
+
+            if (!response.ok) throw new Error('Failed to get subscription');
+
+            const subscription = await response.json();
+            const renewalDate = new Date(subscription.current_period_end * 1000);
+            const now = new Date();
+            const daysUntilRenewal = Math.ceil((renewalDate - now) / (1000 * 60 * 60 * 24));
+
+            const renewalInfoEl = document.getElementById(`renewal-info-${requestId}`);
+            if (renewalInfoEl) {
+                renewalInfoEl.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 500; margin-bottom: 0.25rem;">🔄 Next Renewal</div>
+                            <div style="opacity: 0.8;">${renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #818cf8;">${daysUntilRenewal}</div>
+                            <div style="opacity: 0.7;">days remaining</div>
+                        </div>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error loading renewal info:', error);
+            const renewalInfoEl = document.getElementById(`renewal-info-${requestId}`);
+            if (renewalInfoEl) {
+                renewalInfoEl.style.display = 'none';
+            }
         }
+    }
+
+    async showCancelModal(requestId, subscriptionId) {
+        try {
+            // Get subscription details
+            const response = await fetch('/api/stripe/get-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subscriptionId })
+            });
+
+            if (!response.ok) throw new Error('Failed to get subscription');
+
+            const subscription = await response.json();
+            const renewalDate = new Date(subscription.current_period_end * 1000);
+            const formattedDate = renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.id = 'cancelModal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+            
+            modal.innerHTML = `
+                <div style="background: #1a1a2e; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%;">
+                    <h2 style="margin: 0 0 1rem 0; color: #ef4444;">⚠️ Cancel Subscription</h2>
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem;">Your service will remain active until:</p>
+                        <p style="margin: 0; font-size: 1.2rem; font-weight: bold; color: #818cf8;">${formattedDate}</p>
+                    </div>
+                    <p style="margin: 0 0 1.5rem 0; opacity: 0.9;">After this date, your subscription will end and you will no longer be charged. You can reactivate anytime before then.</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: start; cursor: pointer;">
+                            <input type="checkbox" id="confirmCancelCheckbox" style="margin-right: 0.75rem; margin-top: 0.25rem; width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 0.95rem;">I understand that my service will end on ${formattedDate} and I want to cancel my subscription.</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                        <button onclick="document.getElementById('cancelModal').remove()" 
+                                style="padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem;">
+                            Keep Subscription
+                        </button>
+                        <button id="confirmCancelBtn" disabled
+                                style="padding: 0.75rem 1.5rem; background: rgba(239, 68, 68, 0.3); color: #ef4444; border: none; border-radius: 6px; cursor: not-allowed; font-size: 0.95rem; transition: all 0.2s;"
+                                onclick="profileManager.confirmCancellation('${requestId}', '${subscriptionId}')">
+                            Cancel Subscription
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Enable cancel button when checkbox is checked
+            const checkbox = document.getElementById('confirmCancelCheckbox');
+            const confirmBtn = document.getElementById('confirmCancelBtn');
+            
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.style.background = 'rgba(239, 68, 68, 0.8)';
+                    confirmBtn.style.cursor = 'pointer';
+                } else {
+                    confirmBtn.disabled = true;
+                    confirmBtn.style.background = 'rgba(239, 68, 68, 0.3)';
+                    confirmBtn.style.cursor = 'not-allowed';
+                }
+            });
+        } catch (error) {
+            console.error('Error showing cancel modal:', error);
+            this.showNotification('Failed to load subscription details', 'error');
+        }
+    }
+
+    async confirmCancellation(requestId, subscriptionId) {
+        const modal = document.getElementById('cancelModal');
+        if (modal) modal.remove();
 
         try {
+            this.showNotification('Cancelling subscription...', 'info');
+            
             const response = await fetch('/api/stripe/cancel-subscription', {
                 method: 'POST',
                 headers: {
