@@ -30,6 +30,8 @@ exports.handler = async (event, context) => {
 
         const { subscriptionId } = JSON.parse(event.body);
 
+        console.log('Getting subscription:', subscriptionId);
+
         if (!subscriptionId) {
             return {
                 statusCode: 400,
@@ -40,6 +42,13 @@ exports.handler = async (event, context) => {
 
         // Get subscription details
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+        console.log('Retrieved subscription:', {
+            id: subscription.id,
+            status: subscription.status,
+            current_period_end: subscription.current_period_end,
+            current_period_start: subscription.current_period_start
+        });
 
         return {
             statusCode: 200,

@@ -642,9 +642,20 @@ class ProfileManager {
                 body: JSON.stringify({ subscriptionId })
             });
 
-            if (!response.ok) throw new Error('Failed to get subscription');
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Subscription fetch error:', errorData);
+                throw new Error('Failed to get subscription');
+            }
 
             const subscription = await response.json();
+            console.log('Subscription data received:', subscription);
+
+            if (!subscription.current_period_end) {
+                console.error('Missing current_period_end in subscription:', subscription);
+                throw new Error('Invalid subscription data');
+            }
+
             const renewalDate = new Date(subscription.current_period_end * 1000);
             const now = new Date();
             const daysUntilRenewal = Math.ceil((renewalDate - now) / (1000 * 60 * 60 * 24));
