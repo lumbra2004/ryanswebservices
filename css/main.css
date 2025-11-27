@@ -533,6 +533,7 @@ body.light-mode .hero {
     padding: 0 var(--space-xl);
     position: relative;
     z-index: 2;
+    text-align: center;
 }
 
 .brand-name {
@@ -561,6 +562,8 @@ body.light-mode .hero {
     margin-bottom: var(--space-lg);
     letter-spacing: -1px;
     max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero h1 span {
@@ -577,6 +580,8 @@ body.light-mode .hero {
     font-weight: 500;
     line-height: 1.7;
     max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero-cta {
@@ -634,7 +639,7 @@ body.light-mode .hero {
 .trust-badges {
     display: flex;
     gap: var(--space-xl);
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     margin-top: var(--space-2xl);
     flex-wrap: wrap;
