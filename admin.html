@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Dashboard | Ryan's Webservice</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/messages.css">
     <link rel="stylesheet" href="css/thanksgiving.css">
     <style>
         :root {
@@ -1184,6 +1185,11 @@
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Communication</div>
+                    <div class="nav-item" data-section="messages">
+                        <span class="icon">💬</span>
+                        <span>Messages</span>
+                        <span class="badge" id="navMessagesBadge" style="display: none;">0</span>
+                    </div>
                     <div class="nav-item" data-section="contacts">
                         <span class="icon">📬</span>
                         <span>Contact Forms</span>
@@ -1678,6 +1684,60 @@
                             </div>
                             <div id="contactsTableContainer">
                                 <div class="loading">Loading contact submissions...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section class="admin-section" id="section-messages">
+                    <div class="section-header">
+                        <h2>💬 Messages</h2>
+                        <p>View and respond to user messages</p>
+                    </div>
+                    
+                    <div class="admin-messages-grid">
+                        <!-- Conversations List -->
+                        <div class="admin-conversations-list">
+                            <div class="admin-conversations-header">
+                                <h4>Conversations</h4>
+                                <div class="admin-conversations-search">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="adminConversationSearch" placeholder="Search users...">
+                                </div>
+                            </div>
+                            <div class="admin-conversations-items" id="adminConversationsList">
+                                <div class="loading" style="padding: 2rem; text-align: center; color: #94a3b8;">Loading conversations...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Panel -->
+                        <div class="admin-chat-panel">
+                            <div class="admin-no-conversation" id="adminNoConversation">
+                                <div class="admin-no-conversation-icon">💬</div>
+                                <h4>Select a Conversation</h4>
+                                <p>Choose a conversation from the list to view and respond to messages.</p>
+                            </div>
+                            
+                            <div id="adminChatView" style="display: none; flex-direction: column; height: 100%;">
+                                <div class="admin-chat-header">
+                                    <div class="admin-chat-header-info">
+                                        <div class="admin-conversation-avatar" id="adminChatAvatar">U</div>
+                                        <div>
+                                            <h4 id="adminChatUserName">User Name</h4>
+                                            <p id="adminChatUserEmail">user@email.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-chat-messages" id="adminChatMessages">
+                                    <!-- Messages will be loaded here -->
+                                </div>
+                                
+                                <div class="admin-chat-input">
+                                    <input type="text" id="adminMessageInput" placeholder="Type your reply...">
+                                    <button class="admin-chat-send-btn" id="adminSendBtn">Send</button>
+                                </div>
                             </div>
                         </div>
                     </div>

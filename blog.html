@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/messages.css">
     <link rel="stylesheet" href="css/thanksgiving.css">
     <style>
         /* Blog Page Specific Styles */
@@ -738,6 +739,63 @@
         // Load posts on page load
         document.addEventListener('DOMContentLoaded', loadPosts);
     </script>
+
+    <!-- Message Button & Chat Widget -->
+    <button id="messageButton" class="message-button" aria-label="Messages">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        </svg>
+        <span class="unread-badge" id="messageUnreadBadge" style="display: none;">0</span>
+    </button>
+
+    <div id="chatWidget" class="chat-widget">
+        <div class="chat-widget-header">
+            <div class="chat-widget-header-info">
+                <div class="chat-widget-avatar">RW</div>
+                <div class="chat-widget-header-text">
+                    <h4>Ryan's Web Services</h4>
+                    <p>Online</p>
+                </div>
+            </div>
+            <div class="chat-widget-actions">
+                <button class="chat-widget-btn" id="expandChatBtn" title="Open full page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z"/>
+                    </svg>
+                </button>
+                <button class="chat-widget-btn" id="closeWidgetBtn" title="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="chat-login-prompt" id="chatLoginPrompt">
+            <div class="chat-login-prompt-icon">💬</div>
+            <h4>Login to Chat</h4>
+            <p>Sign in to send messages and get help with your project.</p>
+            <button class="chat-login-btn" id="chatLoginBtn">Login to Continue</button>
+        </div>
+        <div id="chatContent" style="display: none; flex-direction: column; flex: 1;">
+            <div class="chat-widget-messages" id="widgetMessages">
+                <div class="chat-empty-state">
+                    <div class="chat-empty-state-icon">💬</div>
+                    <h4>Start a Conversation</h4>
+                    <p>Send a message to get help with your project!</p>
+                </div>
+            </div>
+            <div class="chat-widget-input">
+                <input type="text" id="widgetMessageInput" placeholder="Type a message...">
+                <button class="chat-send-btn" id="widgetSendBtn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/messages.js"></script>
     <script src="js/analytics.js"></script>
     <script src="js/thanksgiving.js"></script>
 </body>

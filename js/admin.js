@@ -18,6 +18,9 @@ class AdminPanel {
         this.blogPosts = [];
         this.pageVisits = [];
         this.customQuotes = [];
+        this.conversations = [];
+        this.currentConversation = null;
+        this.currentConversationMessages = [];
         this.currentEditingQuote = null;
         this.visitorPage = 1;
         this.visitorsPerPage = 50;
@@ -151,6 +154,8 @@ class AdminPanel {
             this.loadAnalytics();
         } else if (sectionName === 'quotes') {
             this.loadCustomQuotes();
+        } else if (sectionName === 'messages') {
+            this.loadConversations();
         }
     }
 
@@ -3665,6 +3670,265 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
             console.error('Error cancelling quote:', error);
             this.showNotification('Failed to cancel quote: ' + error.message, 'error');
         }
+    }
+
+    // ==========================================
+    // MESSAGING FUNCTIONALITY
+    // ==========================================
+
+    async loadConversations() {
+        const container = document.getElementById('adminConversationsList');
+        if (!container) return;
+
+        try {
+            const { data: conversations, error } = await supabase
+                .from('conversations')
+                .select('*')
+                .order('updated_at', { ascending: false });
+
+            if (error) throw error;
+
+            this.conversations = conversations || [];
+            this.renderConversations();
+            this.updateMessagesBadge();
+        } catch (err) {
+            console.error('Error loading conversations:', err);
+            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #94a3b8;">No conversations yet</div>';
+        }
+    }
+
+    renderConversations() {
+        const container = document.getElementById('adminConversationsList');
+        if (!container) return;
+
+        if (this.conversations.length === 0) {
+            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #94a3b8;">No conversations yet. Users can start conversations from the website.</div>';
+            return;
+        }
+
+        container.innerHTML = this.conversations.map(conv => {
+            const initials = this.getInitials(conv.user_name || conv.user_email || 'User');
+            const isActive = this.currentConversation === conv.id;
+            const hasUnread = conv.unread_count > 0;
+            
+            return `
+                <div class="admin-conversation-item ${isActive ? 'active' : ''} ${hasUnread ? 'unread' : ''}" 
+                     data-id="${conv.id}" 
+                     onclick="adminPanel.selectConversation('${conv.id}')">
+                    <div class="admin-conversation-avatar">${this.escapeHtml(initials)}</div>
+                    <div class="admin-conversation-info">
+                        <div class="admin-conversation-name">${this.escapeHtml(conv.user_name || conv.user_email || 'Unknown User')}</div>
+                        <div class="admin-conversation-preview">${this.escapeHtml(conv.last_message || 'No messages yet')}</div>
+                    </div>
+                    ${hasUnread ? `<span class="badge">${conv.unread_count}</span>` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    async selectConversation(conversationId) {
+        this.currentConversation = conversationId;
+        
+        // Update UI
+        document.querySelectorAll('.admin-conversation-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.id === conversationId);
+        });
+        
+        // Show chat view
+        document.getElementById('adminNoConversation').style.display = 'none';
+        document.getElementById('adminChatView').style.display = 'flex';
+        
+        // Get conversation details
+        const conv = this.conversations.find(c => c.id === conversationId);
+        if (conv) {
+            document.getElementById('adminChatAvatar').textContent = this.getInitials(conv.user_name || conv.user_email || 'U');
+            document.getElementById('adminChatUserName').textContent = conv.user_name || 'Unknown User';
+            document.getElementById('adminChatUserEmail').textContent = conv.user_email || '';
+        }
+        
+        // Load messages
+        await this.loadConversationMessages(conversationId);
+        
+        // Setup event listeners for this conversation
+        this.setupMessageEventListeners();
+    }
+
+    async loadConversationMessages(conversationId) {
+        const container = document.getElementById('adminChatMessages');
+        if (!container) return;
+
+        try {
+            const { data: messages, error } = await supabase
+                .from('messages')
+                .select('*')
+                .eq('conversation_id', conversationId)
+                .order('created_at', { ascending: true });
+
+            if (error) throw error;
+
+            this.currentConversationMessages = messages || [];
+            this.renderConversationMessages();
+            
+            // Mark messages as read
+            await this.markMessagesAsRead(conversationId);
+        } catch (err) {
+            console.error('Error loading messages:', err);
+            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #94a3b8;">Error loading messages</div>';
+        }
+    }
+
+    renderConversationMessages() {
+        const container = document.getElementById('adminChatMessages');
+        if (!container) return;
+
+        if (this.currentConversationMessages.length === 0) {
+            container.innerHTML = `
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; color: #94a3b8;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">💬</div>
+                    <h4 style="margin: 0 0 0.5rem; color: white;">No messages yet</h4>
+                    <p style="margin: 0;">Send a message to start the conversation.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = this.currentConversationMessages.map(msg => {
+            const isAdmin = msg.sender_email === this.currentUser?.email || msg.is_admin;
+            return `
+                <div class="chat-message ${isAdmin ? 'sent' : 'received'}">
+                    <div class="chat-message-content">${this.escapeHtml(msg.content)}</div>
+                    <div class="chat-message-time">${this.formatMessageTime(msg.created_at)}</div>
+                </div>
+            `;
+        }).join('');
+        
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    }
+
+    setupMessageEventListeners() {
+        const input = document.getElementById('adminMessageInput');
+        const sendBtn = document.getElementById('adminSendBtn');
+        
+        // Remove existing listeners
+        const newInput = input?.cloneNode(true);
+        const newSendBtn = sendBtn?.cloneNode(true);
+        
+        if (input && newInput) {
+            input.parentNode.replaceChild(newInput, input);
+            newInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendAdminMessage();
+                }
+            });
+        }
+        
+        if (sendBtn && newSendBtn) {
+            sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+            newSendBtn.addEventListener('click', () => this.sendAdminMessage());
+        }
+    }
+
+    async sendAdminMessage() {
+        const input = document.getElementById('adminMessageInput');
+        if (!input || !input.value.trim() || !this.currentConversation) return;
+
+        const content = input.value.trim();
+        input.value = '';
+
+        try {
+            // Send message
+            const { data: message, error } = await supabase
+                .from('messages')
+                .insert({
+                    conversation_id: this.currentConversation,
+                    sender_id: this.currentUser.id,
+                    sender_name: 'Ryan\'s Web Services',
+                    sender_email: this.currentUser.email,
+                    content: content,
+                    is_admin: true,
+                    read: false
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            // Update conversation timestamp
+            await supabase
+                .from('conversations')
+                .update({ 
+                    updated_at: new Date().toISOString(),
+                    last_message: content.substring(0, 100)
+                })
+                .eq('id', this.currentConversation);
+
+            // Add to local messages and render
+            this.currentConversationMessages.push(message);
+            this.renderConversationMessages();
+            
+            // Reload conversations to update list
+            await this.loadConversations();
+        } catch (err) {
+            console.error('Error sending message:', err);
+            this.showNotification('Failed to send message', 'error');
+        }
+    }
+
+    async markMessagesAsRead(conversationId) {
+        try {
+            await supabase
+                .from('messages')
+                .update({ read: true })
+                .eq('conversation_id', conversationId)
+                .eq('is_admin', false);
+            
+            // Update conversation unread count
+            await supabase
+                .from('conversations')
+                .update({ unread_count: 0 })
+                .eq('id', conversationId);
+            
+            // Reload to update badge
+            await this.loadConversations();
+        } catch (err) {
+            console.error('Error marking messages as read:', err);
+        }
+    }
+
+    updateMessagesBadge() {
+        const badge = document.getElementById('navMessagesBadge');
+        if (!badge) return;
+        
+        const totalUnread = this.conversations.reduce((sum, c) => sum + (c.unread_count || 0), 0);
+        
+        if (totalUnread > 0) {
+            badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    formatMessageTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 86400000) {
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        if (diff < 604800000) {
+            return date.toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + 
+                   date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    getInitials(name) {
+        if (!name) return 'U';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
     }
 }
 
