@@ -537,7 +537,12 @@ class ProfileManager {
                 return;
             }
 
-            container.innerHTML = paidRequests.map(request => `
+            container.innerHTML = paidRequests.map(request => {
+                const packageDetails = request.package_details || {};
+                const oneTimeCost = packageDetails.oneTimeCost || request.total_amount || 0;
+                const monthlyCost = packageDetails.monthlyCost || 0;
+                
+                return `
                 <div class="invoice-item" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 1rem; background: rgba(255,255,255,0.02);">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                         <div>
@@ -548,11 +553,13 @@ class ProfileManager {
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;">
-                                $${parseFloat(request.one_time_cost).toFixed(2)}
+                                $${parseFloat(oneTimeCost).toFixed(2)}
                             </div>
-                            <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.25rem;">
-                                + $${parseFloat(request.monthly_cost).toFixed(2)}/month
-                            </div>
+                            ${monthlyCost > 0 ? `
+                                <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.25rem;">
+                                    + $${parseFloat(monthlyCost).toFixed(2)}/month
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                     <div style="display: flex; gap: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
@@ -578,7 +585,7 @@ class ProfileManager {
                         </a>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
 
         } catch (error) {
             console.error('Error loading invoices:', error);
