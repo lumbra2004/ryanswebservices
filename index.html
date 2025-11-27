@@ -112,153 +112,424 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/auth.css">
     <style>
-        /* Premium Thanksgiving Theme */
+        /* ═══════════════════════════════════════════════════════════════
+           PREMIUM THANKSGIVING THEME - FULL SITE OVERHAUL
+           ═══════════════════════════════════════════════════════════════ */
+        
         :root {
-            --thanksgiving-gold: #D4A853;
-            --thanksgiving-copper: #B87333;
-            --thanksgiving-burgundy: #722F37;
-            --thanksgiving-cream: #FFF8E7;
-            --thanksgiving-dark: #2D1810;
+            /* Thanksgiving Color Palette */
+            --tg-gold: #D4A853;
+            --tg-gold-light: #E8C97A;
+            --tg-copper: #B87333;
+            --tg-burgundy: #722F37;
+            --tg-burgundy-dark: #4A1F24;
+            --tg-cream: #FFF8E7;
+            --tg-warm-white: #FFFDF9;
+            --tg-dark: #1A0F0A;
+            --tg-brown: #3D2314;
+            --tg-orange: #D2691E;
+            --tg-amber: #FFBF00;
         }
         
-        .thanksgiving-banner {
-            background: linear-gradient(135deg, var(--thanksgiving-dark) 0%, var(--thanksgiving-burgundy) 50%, var(--thanksgiving-dark) 100%);
-            color: var(--thanksgiving-cream);
-            text-align: center;
-            padding: 1rem 2rem;
-            font-size: 1rem;
+        /* ══════════ GLOBAL THANKSGIVING OVERRIDES ══════════ */
+        body {
+            background: linear-gradient(180deg, var(--tg-dark) 0%, #0d0d0d 100%) !important;
+        }
+        
+        /* Header with integrated thanksgiving design */
+        header {
+            background: linear-gradient(135deg, var(--tg-burgundy-dark) 0%, var(--tg-dark) 50%, var(--tg-burgundy-dark) 100%) !important;
+            border-bottom: 1px solid rgba(212, 168, 83, 0.3) !important;
             position: relative;
-            overflow: hidden;
-            border-bottom: 2px solid var(--thanksgiving-gold);
-            box-shadow: 0 4px 20px rgba(212, 168, 83, 0.15);
         }
         
-        .thanksgiving-banner::before {
+        header::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent 0%, rgba(212, 168, 83, 0.1) 50%, transparent 100%);
-            animation: shine 3s ease-in-out infinite;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--tg-gold) 20%, var(--tg-copper) 50%, var(--tg-gold) 80%, transparent 100%);
         }
         
-        @keyframes shine {
-            0%, 100% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-        }
-        
-        .thanksgiving-content {
+        /* Thanksgiving message integrated into nav */
+        .thanksgiving-integrated {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(184, 115, 51, 0.1) 100%);
+            border: 1px solid rgba(212, 168, 83, 0.25);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--tg-gold-light);
+            white-space: nowrap;
+        }
+        
+        .thanksgiving-integrated .tg-icon {
+            font-size: 1rem;
+        }
+        
+        /* Logo with thanksgiving accent */
+        .logo {
             position: relative;
-            z-index: 1;
         }
         
-        .thanksgiving-icon {
-            font-size: 1.5rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        .logo::after {
+            content: '🍂';
+            position: absolute;
+            top: -8px;
+            right: -20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
         
-        .thanksgiving-text {
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        /* Nav links with warm hover */
+        .nav-links a:hover {
+            color: var(--tg-gold) !important;
         }
         
-        .thanksgiving-text .highlight {
-            color: var(--thanksgiving-gold);
-            font-weight: 700;
+        /* ══════════ HERO THANKSGIVING OVERHAUL ══════════ */
+        .hero {
+            background: 
+                radial-gradient(ellipse at top left, rgba(212, 168, 83, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(184, 115, 51, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at center, rgba(114, 47, 55, 0.1) 0%, transparent 70%),
+                linear-gradient(180deg, var(--tg-dark) 0%, #0a0a0a 100%) !important;
+            position: relative;
+            overflow: hidden;
         }
         
-        .thanksgiving-accent {
-            width: 40px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--thanksgiving-gold), transparent);
-        }
-        
-        /* Elegant floating elements */
-        .autumn-element {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0;
-            font-size: 1.2rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-        
-        @keyframes floatDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px) rotate(0deg) scale(0.8);
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(360deg) scale(0.6);
-            }
-        }
-        
-        /* Golden accent on hero section */
         .hero::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--thanksgiving-gold), var(--thanksgiving-copper), var(--thanksgiving-gold), transparent);
-            z-index: 10;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--tg-burgundy) 15%,
+                var(--tg-gold) 35%, 
+                var(--tg-copper) 50%, 
+                var(--tg-gold) 65%,
+                var(--tg-burgundy) 85%,
+                transparent 100%);
         }
         
-        /* Subtle golden glow on CTA */
-        .hero-cta {
-            box-shadow: 0 0 30px rgba(212, 168, 83, 0.2);
-        }
-        
-        /* Festive corner accents */
-        .corner-accent {
-            position: fixed;
-            width: 150px;
-            height: 150px;
-            pointer-events: none;
-            z-index: 9997;
+        /* Decorative autumn elements in hero */
+        .hero::after {
+            content: '🍁';
+            position: absolute;
+            top: 15%;
+            right: 8%;
+            font-size: 3rem;
             opacity: 0.15;
+            animation: gentleSway 6s ease-in-out infinite;
         }
         
-        .corner-accent.top-left {
-            top: 80px;
+        @keyframes gentleSway {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(5deg) translateY(-10px); }
+        }
+        
+        /* Hero title with thanksgiving styling */
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-copper) 50%, var(--tg-gold) 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        
+        /* Brand name with gold accent */
+        .brand-name {
+            color: var(--tg-gold) !important;
+            letter-spacing: 3px;
+        }
+        
+        /* CTA Button thanksgiving style */
+        .hero-cta {
+            background: linear-gradient(135deg, var(--tg-burgundy) 0%, var(--tg-burgundy-dark) 100%) !important;
+            border: 2px solid var(--tg-gold) !important;
+            box-shadow: 
+                0 0 30px rgba(212, 168, 83, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 168, 83, 0.2), transparent);
+            animation: ctaShine 3s ease-in-out infinite;
+        }
+        
+        @keyframes ctaShine {
+            0%, 100% { left: -100%; }
+            50% { left: 100%; }
+        }
+        
+        .hero-cta:hover {
+            background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-copper) 100%) !important;
+            border-color: var(--tg-gold-light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(212, 168, 83, 0.4) !important;
+        }
+        
+        .hero-cta:hover span {
+            color: var(--tg-dark) !important;
+        }
+        
+        /* Trust badges with warm styling */
+        .trust-badge {
+            background: rgba(212, 168, 83, 0.08) !important;
+            border: 1px solid rgba(212, 168, 83, 0.2) !important;
+        }
+        
+        .trust-badge-icon {
+            color: var(--tg-gold) !important;
+        }
+        
+        /* ══════════ STATS SECTION ══════════ */
+        .stats-section {
+            background: linear-gradient(135deg, var(--tg-burgundy-dark) 0%, var(--tg-dark) 100%) !important;
+            border-top: 1px solid rgba(212, 168, 83, 0.2);
+            border-bottom: 1px solid rgba(212, 168, 83, 0.2);
+        }
+        
+        .stat-number {
+            color: var(--tg-gold) !important;
+        }
+        
+        /* ══════════ SERVICE CARDS ══════════ */
+        .service-card {
+            background: linear-gradient(145deg, rgba(45, 24, 16, 0.6) 0%, rgba(26, 15, 10, 0.8) 100%) !important;
+            border: 1px solid rgba(212, 168, 83, 0.15) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
             left: 0;
-            background: radial-gradient(circle at top left, var(--thanksgiving-gold) 0%, transparent 70%);
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--tg-burgundy), var(--tg-gold), var(--tg-copper));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
-        .corner-accent.top-right {
-            top: 80px;
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-card:hover {
+            border-color: rgba(212, 168, 83, 0.4) !important;
+            box-shadow: 0 20px 40px rgba(212, 168, 83, 0.1) !important;
+        }
+        
+        .service-card h3 {
+            color: var(--tg-cream) !important;
+        }
+        
+        /* ══════════ SECTION TITLES ══════════ */
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--tg-burgundy), var(--tg-gold), var(--tg-burgundy));
+            border-radius: 2px;
+        }
+        
+        /* ══════════ PORTFOLIO CARDS ══════════ */
+        .portfolio-item {
+            border: 1px solid rgba(212, 168, 83, 0.15) !important;
+        }
+        
+        .portfolio-item:hover {
+            border-color: var(--tg-gold) !important;
+            box-shadow: 0 20px 50px rgba(212, 168, 83, 0.15) !important;
+        }
+        
+        .portfolio-content h3 {
+            color: var(--tg-gold-light) !important;
+        }
+        
+        /* ══════════ CONTACT SECTION ══════════ */
+        #contact {
+            background: 
+                radial-gradient(ellipse at top, rgba(114, 47, 55, 0.15) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0a 0%, var(--tg-dark) 100%) !important;
+        }
+        
+        #contact h2 {
+            color: var(--tg-cream) !important;
+        }
+        
+        .contact-email {
+            color: var(--tg-gold) !important;
+        }
+        
+        /* Form inputs with warm accents */
+        #contactForm input:focus,
+        #contactForm textarea:focus {
+            border-color: var(--tg-gold) !important;
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.15) !important;
+        }
+        
+        /* Submit button */
+        .button-success {
+            background: linear-gradient(135deg, var(--tg-burgundy) 0%, var(--tg-burgundy-dark) 100%) !important;
+            border: 2px solid var(--tg-gold) !important;
+        }
+        
+        .button-success:hover {
+            background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-copper) 100%) !important;
+            color: var(--tg-dark) !important;
+        }
+        
+        /* ══════════ FOOTER ══════════ */
+        footer {
+            background: linear-gradient(180deg, var(--tg-dark) 0%, var(--tg-burgundy-dark) 100%) !important;
+            border-top: 1px solid rgba(212, 168, 83, 0.2);
+        }
+        
+        footer a {
+            color: var(--tg-gold) !important;
+        }
+        
+        /* ══════════ FLOATING THANKSGIVING ELEMENTS ══════════ */
+        .autumn-float {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            font-size: 1.5rem;
+            opacity: 0;
+            filter: blur(0.5px);
+        }
+        
+        @keyframes floatAcross {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px) translateX(0) rotate(0deg);
+            }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(100px) rotate(360deg);
+            }
+        }
+        
+        /* ══════════ DECORATIVE CORNER ACCENTS ══════════ */
+        .corner-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .corner-glow.top-left {
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at top left, rgba(212, 168, 83, 0.08) 0%, transparent 60%);
+        }
+        
+        .corner-glow.bottom-right {
+            bottom: 0;
             right: 0;
-            background: radial-gradient(circle at top right, var(--thanksgiving-copper) 0%, transparent 70%);
+            background: radial-gradient(circle at bottom right, rgba(114, 47, 55, 0.1) 0%, transparent 60%);
+        }
+        
+        /* ══════════ THANKSGIVING TOAST/NOTIFICATION ══════════ */
+        .thanksgiving-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, var(--tg-burgundy-dark) 0%, var(--tg-dark) 100%);
+            border: 1px solid var(--tg-gold);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            color: var(--tg-cream);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(212, 168, 83, 0.2);
+            z-index: 10000;
+            opacity: 0;
+            animation: toastIn 0.5s ease-out 1s forwards, toastOut 0.5s ease-in 6s forwards;
+        }
+        
+        @keyframes toastIn {
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes toastOut {
+            to { transform: translateX(-50%) translateY(100px); opacity: 0; }
+        }
+        
+        .thanksgiving-toast .toast-icon {
+            font-size: 1.5rem;
+        }
+        
+        .thanksgiving-toast .toast-text {
+            font-weight: 500;
+        }
+        
+        .thanksgiving-toast .toast-text strong {
+            color: var(--tg-gold);
+        }
+        
+        /* Login button with thanksgiving accent */
+        .login-btn {
+            border: 1px solid rgba(212, 168, 83, 0.3) !important;
+        }
+        
+        .login-btn:hover {
+            border-color: var(--tg-gold) !important;
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.2) !important;
+        }
+        
+        /* Settings button */
+        .settings-button {
+            border: 1px solid rgba(212, 168, 83, 0.2) !important;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .thanksgiving-integrated {
+                display: none;
+            }
+            
+            .hero::after {
+                font-size: 2rem;
+                right: 5%;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <!-- Premium Thanksgiving Banner -->
-        <div class="thanksgiving-banner">
-            <div class="thanksgiving-content">
-                <div class="thanksgiving-accent"></div>
-                <span class="thanksgiving-icon">✦</span>
-                <span class="thanksgiving-text"><span class="highlight">Happy Thanksgiving</span> — Wishing you warmth, gratitude & joy this season</span>
-                <span class="thanksgiving-icon">✦</span>
-                <div class="thanksgiving-accent"></div>
-            </div>
-        </div>
         <nav class="container-nav">
             <div class="logo">Ryan's Webservice</div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
@@ -271,6 +542,10 @@
                 <li><a href="pricing.html">Pricing</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li class="thanksgiving-integrated">
+                    <span class="tg-icon">🍂</span>
+                    <span>Happy Thanksgiving!</span>
+                </li>
                 <li>
                     <a href="login.html" id="loginBtn" class="login-btn" style="display: inline-block;">Login</a>
                     <a href="signup.html" id="signupBtn" class="login-btn" style="display: none; margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #059669);">Sign Up</a>
@@ -626,28 +901,49 @@
     <script src="js/main.js"></script>
     <script src="js/analytics.js"></script>
     <script>
-        // Elegant autumn floating elements
-        function createAutumnElement() {
-            const elements = ['🍂', '✦', '🍁'];
+        // ═══════════════════════════════════════════════════════════════
+        // THANKSGIVING THEME ENHANCEMENTS
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Create subtle floating autumn elements
+        function createAutumnFloat() {
+            const elements = ['🍂', '🍁', '✦'];
             const el = document.createElement('div');
-            el.className = 'autumn-element';
+            el.className = 'autumn-float';
             el.textContent = elements[Math.floor(Math.random() * elements.length)];
-            el.style.left = (Math.random() * 90 + 5) + 'vw';
-            el.style.animationName = 'floatDown';
-            el.style.animationDuration = (Math.random() * 8 + 12) + 's';
+            el.style.left = (Math.random() * 100) + 'vw';
+            el.style.animationName = 'floatAcross';
+            el.style.animationDuration = (Math.random() * 10 + 15) + 's';
             el.style.animationTimingFunction = 'linear';
+            el.style.animationFillMode = 'forwards';
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 20000);
+            setTimeout(() => el.remove(), 25000);
         }
-        // Subtle, less frequent elements
-        setInterval(createAutumnElement, 3000);
-        // Add corner accents
-        const cornerLeft = document.createElement('div');
-        cornerLeft.className = 'corner-accent top-left';
-        document.body.appendChild(cornerLeft);
-        const cornerRight = document.createElement('div');
-        cornerRight.className = 'corner-accent top-right';
-        document.body.appendChild(cornerRight);
+        
+        // Sparse, elegant floating elements
+        setInterval(createAutumnFloat, 4000);
+        
+        // Add corner glow effects
+        const cornerTL = document.createElement('div');
+        cornerTL.className = 'corner-glow top-left';
+        document.body.appendChild(cornerTL);
+        
+        const cornerBR = document.createElement('div');
+        cornerBR.className = 'corner-glow bottom-right';
+        document.body.appendChild(cornerBR);
+        
+        // Show thanksgiving toast on first visit
+        if (!sessionStorage.getItem('tg-toast-shown')) {
+            const toast = document.createElement('div');
+            toast.className = 'thanksgiving-toast';
+            toast.innerHTML = `
+                <span class="toast-icon">🦃</span>
+                <span class="toast-text"><strong>Happy Thanksgiving!</strong> Wishing you warmth & gratitude</span>
+            `;
+            document.body.appendChild(toast);
+            sessionStorage.setItem('tg-toast-shown', 'true');
+            setTimeout(() => toast.remove(), 7000);
+        }
     </script>
 </body>
 </html>
