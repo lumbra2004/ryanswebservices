@@ -46,14 +46,19 @@ class ProfileManager {
         const paymentIntentId = urlParams.get('payment_intent');
         const redirectStatus = urlParams.get('redirect_status');
 
+        console.log('Checking Stripe return:', { paymentIntentId, redirectStatus });
+
         if (paymentIntentId && redirectStatus === 'succeeded') {
             // Get the request ID from localStorage
             const requestId = localStorage.getItem('pending_payment_request_id');
             const customerId = localStorage.getItem('pending_customer_id');
             const priceId = localStorage.getItem('pending_price_id');
 
+            console.log('Payment data from localStorage:', { requestId, customerId, priceId });
+
             if (requestId && customerId && priceId) {
                 try {
+                    console.log('Creating subscription...');
                     // Create subscription
                     const response = await fetch('/api/stripe/create-subscription', {
                         method: 'POST',
@@ -69,10 +74,12 @@ class ProfileManager {
                     });
 
                     const subscriptionData = await response.json();
+                    console.log('Subscription response:', subscriptionData);
 
                     if (response.ok) {
+                        console.log('Updating database...');
                         // Update request status to 'paid'
-                        await supabase
+                        const { data, error } = await supabase
                             .from('service_requests')
                             .update({ 
                                 status: 'paid',
@@ -82,16 +89,31 @@ class ProfileManager {
                             })
                             .eq('id', requestId);
 
+                        if (error) {
+                            console.error('Database update error:', error);
+                        } else {
+                            console.log('Database updated successfully');
+                        }
+
                         // Clear localStorage
                         localStorage.removeItem('pending_payment_request_id');
                         localStorage.removeItem('pending_customer_id');
                         localStorage.removeItem('pending_price_id');
 
                         this.showNotification('Payment successful! 🎉', 'success');
+                        
+                        // Reload requests to show updated status
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        console.error('Subscription creation failed:', subscriptionData);
                     }
                 } catch (error) {
                     console.error('Error completing payment:', error);
                 }
+            } else {
+                console.log('Missing payment data in localStorage');
             }
 
             // Clean up URL
