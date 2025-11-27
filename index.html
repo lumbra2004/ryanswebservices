@@ -126,7 +126,8 @@
                 <li><a href="pricing.html">Pricing</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li>
-                    <button id="loginBtn" class="login-btn">Login</button>
+                    <a href="login.html" id="loginBtn" class="login-btn" style="display: inline-block;">Login</a>
+                    <a href="signup.html" id="signupBtn" class="login-btn" style="display: none; margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #059669);">Sign Up</a>
                     <div id="userMenu" class="user-menu" style="display: none;">
                         <button id="userButton" class="user-button">
                             <div id="userAvatar" class="user-avatar">JD</div>
@@ -275,8 +276,7 @@
             <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 1rem;">I will respond as soon as possible.</p>
         </div>
 
-        <form id="contactForm" class="gform pure-form pure-form-stacked" method="POST" data-email="ryanlumbra@icloud.com"
-            action="https://script.google.com/macros/s/AKfycbzpMxq6Rxh50nHKH5BNa7vPp6b5fNfKgZGKxmJ1J_Ihd7irVz6EL2zLcqIlbqhitpu3/exec">
+        <form id="contactForm" class="pure-form pure-form-stacked">
             
             <div class="form-elements">
                 <fieldset>
@@ -295,8 +295,8 @@
                 </fieldset>
 
                 <fieldset>
-                    <label for="color">How did you find me?<span style="font-weight: 400; opacity: 0.7;">(Optional)</span></label>
-                    <input id="color" name="where" placeholder="Google, friend referral, social media...">
+                    <label for="source">How did you find me?<span style="font-weight: 400; opacity: 0.7;">(Optional)</span></label>
+                    <input id="source" name="source" placeholder="Google, friend referral, social media...">
                 </fieldset>
 
                 <fieldset class="honeypot-field">
@@ -345,15 +345,15 @@
             <div class="auth-error"></div>
 
             <!-- Login Form -->
-            <form id="loginForm" class="auth-form active">
+            <form id="loginForm" class="auth-form active" autocomplete="on">
                 <div class="auth-field">
                     <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    <input type="email" id="loginEmail" name="email" placeholder="your@email.com" autocomplete="email" required>
                 </div>
                 <div class="auth-field">
                     <label for="loginPassword">Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                        <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
                         <button type="button" class="password-toggle" data-target="loginPassword" aria-label="Toggle password visibility">
                             <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -377,23 +377,23 @@
             </form>
 
             <!-- Signup Form -->
-            <form id="signupForm" class="auth-form">
+            <form id="signupForm" class="auth-form" autocomplete="on">
                 <div class="auth-field">
                     <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" placeholder="John Doe" required>
+                    <input type="text" id="signupName" name="name" placeholder="John Doe" autocomplete="name" required>
                 </div>
                 <div class="auth-field">
                     <label for="signupBusiness">Business Name <span style="color: var(--text-secondary); font-weight: 400;">(Optional)</span></label>
-                    <input type="text" id="signupBusiness" placeholder="Your Company LLC">
+                    <input type="text" id="signupBusiness" name="business" placeholder="Your Company LLC" autocomplete="organization">
                 </div>
                 <div class="auth-field full-width">
                     <label for="signupEmail">Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    <input type="email" id="signupEmail" name="email" placeholder="your@email.com" autocomplete="email" required>
                 </div>
                 <div class="auth-field full-width">
                     <label for="signupPassword">Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="signupPassword" placeholder="••••••••" required minlength="8">
+                        <input type="password" id="signupPassword" name="new-password" placeholder="••••••••" autocomplete="new-password" required minlength="8">
                         <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
                             <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -427,7 +427,7 @@
                 <div class="auth-field full-width">
                     <label for="signupConfirmPassword">Confirm Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="signupConfirmPassword" placeholder="••••••••" required minlength="8">
+                        <input type="password" id="signupConfirmPassword" name="confirm-password" placeholder="••••••••" autocomplete="new-password" required minlength="8">
                         <button type="button" class="password-toggle" id="toggleConfirmPassword" aria-label="Toggle password visibility">
                             <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -463,9 +463,9 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="js/form-submission-handler.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
+    <script src="js/contact-form.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
 </body>

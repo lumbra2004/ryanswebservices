@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Dashboard | Ryan's Webservice</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .admin-container {
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+        }
+
+        .admin-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-size: 2rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 68, 68, 0.4);
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 102, 255, 0.2);
+        }
+
+        .admin-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .data-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: rgba(0, 102, 255, 0.1);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-header h2 {
+            margin: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-content {
+            padding: 2rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: var(--primary);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn.delete {
+            background: #ff4444;
+        }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.4);
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls input,
+        .filter-controls select {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            min-width: 200px;
+            font-size: 0.95rem;
+        }
+
+        .filter-controls input:focus,
+        .filter-controls select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .filter-controls input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-controls select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Status select dropdowns */
+        .status-select {
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.2s;
+        }
+
+        .status-select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .status-select:hover {
+            opacity: 0.9;
+        }
+
+        .status-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Badge styling */
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        /* Force dark background on all select options */
+        select option {
+            background-color: #1a1f2e !important;
+            color: white !important;
+        }
+
+        select {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: white !important;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .table-content {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h1>🔐 Admin Login</h1>
+            <div id="loginError" class="error-message"></div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Login to Admin Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1>⚙️ Admin Dashboard</h1>
+            <div>
+                <span id="adminUserEmail" style="margin-right: 1rem; color: #94a3b8;"></span>
+                <button id="reloadBtn" class="logout-btn" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); margin-right: 0.5rem;">🔄 Reload</button>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="admin-grid">
+            <div class="admin-card">
+                <h2>Total Users</h2>
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Registered accounts</div>
+            </div>
+            <div class="admin-card">
+                <h2>Total Orders</h2>
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">All time orders</div>
+            </div>
+            <div class="admin-card">
+                <h2>Total Revenue</h2>
+                <div class="stat-number" id="totalRevenue">$0</div>
+                <div class="stat-label">All time revenue</div>
+            </div>
+            <div class="admin-card">
+                <h2>Active Files</h2>
+                <div class="stat-number" id="totalFiles">0</div>
+                <div class="stat-label">Files in storage</div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h2>👥 User Management</h2>
+            </div>
+            <div class="table-content">
+                <div class="filter-controls">
+                    <input type="text" id="userSearch" placeholder="Search users...">
+                    <select id="userFilter">
+                        <option value="all">All Users</option>
+                        <option value="verified">Verified Only</option>
+                        <option value="unverified">Unverified Only</option>
+                    </select>
+                </div>
+                <div id="usersTableContainer">
+                    <div class="loading">Loading users...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h2>📦 Orders Management</h2>
+            </div>
+            <div class="table-content">
+                <div class="filter-controls">
+                    <input type="text" id="orderSearch" placeholder="Search orders...">
+                    <select id="orderStatusFilter">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div id="ordersTableContainer">
+                    <div class="loading">Loading orders...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Requests Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h2>📋 Service Requests</h2>
+            </div>
+            <div class="table-content">
+                <div class="filter-controls">
+                    <input type="text" id="requestSearch" placeholder="Search requests...">
+                    <select id="requestStatusFilter">
+                        <option value="all">All Requests</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="ready_to_purchase">Ready to Purchase</option>
+                        <option value="paid">Paid</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div id="requestsTableContainer">
+                    <div class="loading">Loading requests...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Submissions Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h2>📬 Contact Submissions</h2>
+                <span class="badge" id="newContactsBadge" style="background: #ef4444; display: none;">0 New</span>
+            </div>
+            <div class="table-content">
+                <div class="filter-controls">
+                    <input type="text" id="contactSearch" placeholder="Search submissions...">
+                    <select id="contactStatusFilter">
+                        <option value="all">All Submissions</option>
+                        <option value="new">New</option>
+                        <option value="read">Read</option>
+                        <option value="replied">Replied</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div id="contactsTableContainer">
+                    <div class="loading">Loading contact submissions...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Files Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h2>📁 Files Management</h2>
+                <button id="uploadFileBtn" class="action-btn" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">+ Upload File for User</button>
+            </div>
+            <div class="table-content">
+                <div class="filter-controls">
+                    <input type="text" id="fileSearch" placeholder="Search files...">
+                </div>
+                <div id="filesTableContainer">
+                    <div class="loading">Loading files...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload File Modal -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div id="uploadModalContent" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; width: 90%; max-width: 500px;">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Upload File for User</h2>
+            <form id="uploadFileForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Select User</label>
+                    <select id="userSelect" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                        <option value="" style="background: #1a1f2e; color: white;">Loading users...</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">File Name</label>
+                    <input type="text" id="fileName" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Upload File</label>
+                    <input type="file" id="fileUpload" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Description (Optional)</label>
+                    <textarea id="fileDescription" rows="3" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="action-btn" style="flex: 1; background: var(--primary); padding: 0.75rem;">Upload</button>
+                    <button type="button" id="closeUploadModal" class="action-btn" style="flex: 1; background: #6b7280; padding: 0.75rem;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

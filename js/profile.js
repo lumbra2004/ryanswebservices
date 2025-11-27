@@ -2,25 +2,40 @@
 class ProfileManager {
     constructor() {
         this.currentUser = null;
+        this.isEditMode = false;
+        this.originalValues = {};
+        this.stripeHandler = null;
+        this.currentPaymentData = null;
         this.init();
     }
 
     async init() {
-        // Check authentication
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-            // Redirect to home if not logged in
-            window.location.href = 'index.html';
-            return;
-        }
+        try {
+            // Check authentication
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (!session) {
+                // Redirect to home if not logged in
+                window.location.href = 'index.html';
+                return;
+            }
 
-        this.currentUser = session.user;
-        await this.loadProfile();
-        await this.loadOrders();
-        await this.loadFiles();
-        await this.updateStats();
-        this.setupEventListeners();
+            this.currentUser = session.user;
+            console.log('Profile init - Current user:', this.currentUser.id);
+            
+            await this.loadProfile();
+            await this.loadOrders();
+            await this.loadRequests();
+            
+            console.log('About to load documents...');
+            await this.loadDocuments();
+            console.log('Documents loaded successfully');
+            
+            await this.updateStats();
+            this.setupEventListeners();
+        } catch (error) {
+            console.error('Error in profile init:', error);
+        }
     }
 
     async updateStats() {
@@ -31,12 +46,6 @@ class ProfileManager {
                 .select('amount')
                 .eq('user_id', this.currentUser.id);
 
-            // Get file count
-            const { data: files } = await supabase
-                .from('customer_files')
-                .select('id')
-                .eq('user_id', this.currentUser.id);
-
             // Update stat cards (with null checks)
             const totalOrdersEl = document.getElementById('totalOrders');
             if (totalOrdersEl) totalOrdersEl.textContent = orders?.length || 0;
@@ -45,9 +54,6 @@ class ProfileManager {
             const totalSpentEl = document.getElementById('totalSpent');
             if (totalSpentEl) totalSpentEl.textContent = '$' + totalSpent.toFixed(2);
             
-            const totalFilesEl = document.getElementById('totalFiles');
-            if (totalFilesEl) totalFilesEl.textContent = files?.length || 0;
-            
             const memberSince = new Date(this.currentUser.created_at).getFullYear();
             const memberSinceEl = document.getElementById('memberSince');
             if (memberSinceEl) memberSinceEl.textContent = memberSince;
@@ -55,45 +61,291 @@ class ProfileManager {
             // Update badges (with null checks)
             const orderCountEl = document.getElementById('orderCount');
             if (orderCountEl) orderCountEl.textContent = `${orders?.length || 0} Orders`;
-            
-            const fileCountEl = document.getElementById('fileCount');
-            if (fileCountEl) fileCountEl.textContent = `${files?.length || 0} Files`;
 
         } catch (error) {
             console.error('Error updating stats:', error);
         }
     }
 
+    async loadRequests() {
+        try {
+            const container = document.getElementById('requestsContainer');
+            if (!container) return;
+
+            // Get service requests for current user
+            const { data: requests, error } = await supabase
+                .from('service_requests')
+                .select('*')
+                .eq('user_id', this.currentUser.id)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            // Update request count
+            const requestCountEl = document.getElementById('requestCount');
+            if (requestCountEl) {
+                requestCountEl.textContent = `${requests.length} Service${requests.length !== 1 ? 's' : ''}`;
+            }
+
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <div class="no-documents">
+                        <div class="no-documents-icon">🛠️</div>
+                        <p>No services yet</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Request a service from the <a href="pricing.html" style="color: var(--primary);">pricing page</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            this.renderRequests(requests);
+
+        } catch (error) {
+            console.error('Error loading requests:', error);
+            const container = document.getElementById('requestsContainer');
+            if (container) {
+                container.innerHTML = '<p class="error">Error loading requests</p>';
+            }
+        }
+    }
+
+    renderRequests(requests) {
+        const container = document.getElementById('requestsContainer');
+        if (!container) return;
+
+        const statusColors = {
+            'pending': '#fbbf24',
+            'in_progress': '#3b82f6',
+            'active': '#10b981',
+            'ready_to_purchase': '#10b981',
+            'paid': '#22c55e',
+            'cancelled': '#ef4444'
+        };
+
+        const statusLabels = {
+            'pending': '⏳ Pending Review',
+            'in_progress': '🔧 In Progress',
+            'active': '✨ Active',
+            'ready_to_purchase': '💳 Ready to Purchase',
+            'paid': '✅ Paid',
+            'cancelled': '❌ Cancelled'
+        };
+
+        let html = `
+            <table class="documents-table services-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"></th>
+                        <th>Service</th>
+                        <th>One-Time</th>
+                        <th>Monthly</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Contract</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        requests.forEach((request, index) => {
+            const statusColor = statusColors[request.status] || '#6b7280';
+            const statusLabel = statusLabels[request.status] || request.status;
+            const date = new Date(request.created_at).toLocaleDateString();
+            
+            // Calculate monthly cost
+            const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost || 0;
+            const workspaceCost = request.package_details?.google_workspace?.monthly_cost || 0;
+            const monthlyTotal = maintenanceCost + workspaceCost;
+
+            html += `
+                <tr class="service-row" data-request-id="${request.id}">
+                    <td>
+                        <button class="expand-btn" data-index="${index}" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0.25rem; color: var(--text-secondary); transition: transform 0.2s;">▶</button>
+                    </td>
+                    <td>
+                        <strong>${request.service_name}</strong>
+                    </td>
+                    <td style="font-weight: 600;">$${parseFloat(request.total_amount).toFixed(2)}</td>
+                    <td style="font-weight: 600; color: var(--secondary);">$${monthlyTotal.toFixed(2)}/mo</td>
+                    <td>
+                        <span style="background: ${statusColor}22; color: ${statusColor}; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; white-space: nowrap;">${statusLabel}</span>
+                        ${request.status === 'ready_to_purchase' ? 
+                            `<button class="btn-pay-now" data-request-id="${request.id}" data-service-name="${request.service_name}" data-onetime="${request.total_amount}" data-monthly="${monthlyTotal}" style="margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #22c55e); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(16, 185, 129, 0.3)'">💳 Pay Now</button>` : 
+                            ''
+                        }
+                    </td>
+                    <td>${date}</td>
+                    <td>
+                        ${request.contract_file_id ? 
+                            `<button class="btn-view-contract" data-file-id="${request.contract_file_id}" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem;">View</button>` : 
+                            '<span style="opacity: 0.5;">No Contract Yet</span>'
+                        }
+                    </td>
+                </tr>
+                <tr class="service-details" id="details-${index}" style="display: none;">
+                    <td></td>
+                    <td colspan="6" style="padding: 1.5rem; background: rgba(0, 102, 255, 0.05); border-left: 3px solid var(--primary);">
+                        <div style="display: grid; gap: 1rem;">
+                            <div>
+                                <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">📦 Package Details</h4>
+                                <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
+                                    <div><strong>Package:</strong> ${request.package_details?.package || 'N/A'}</div>
+                                    ${request.package_details?.details ? `<div><strong>Details:</strong> ${request.package_details.details}</div>` : ''}
+                                </div>
+                            </div>
+                            
+                            ${request.package_details?.maintenance_plan ? `
+                                <div>
+                                    <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">🔧 Maintenance Plan</h4>
+                                    <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
+                                        <div><strong>Plan:</strong> ${request.package_details.maintenance_plan.name || request.package_details.maintenance_plan.type}</div>
+                                        <div><strong>Monthly Cost:</strong> $${maintenanceCost.toFixed(2)}/month</div>
+                                        <div style="opacity: 0.7;"><em>Includes 1 Google Workspace user</em></div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${request.package_details?.google_workspace ? `
+                                <div>
+                                    <h4 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem;">📧 Google Workspace</h4>
+                                    <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
+                                        <div><strong>Plan:</strong> ${request.package_details.google_workspace.name || request.package_details.google_workspace.plan}</div>
+                                        <div><strong>Additional Users:</strong> ${request.package_details.google_workspace.additional_users || 0}</div>
+                                        <div><strong>Unit Price:</strong> $${(request.package_details.google_workspace.unit_price || 0).toFixed(2)}/user/month</div>
+                                        <div><strong>Monthly Cost:</strong> $${workspaceCost.toFixed(2)}/month</div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1rem; margin-top: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 0.9rem; opacity: 0.7;">Total Monthly Recurring</div>
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--secondary);">$${monthlyTotal.toFixed(2)}/month</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 0.9rem; opacity: 0.7;">One-Time Setup</div>
+                                        <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary);">$${parseFloat(request.total_amount).toFixed(2)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += `
+                </tbody>
+            </table>
+        `;
+
+        container.innerHTML = html;
+
+        // Add event listeners for expand buttons
+        container.querySelectorAll('.expand-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = e.target.dataset.index;
+                const detailsRow = document.getElementById(`details-${index}`);
+                const isExpanded = detailsRow.style.display !== 'none';
+                
+                if (isExpanded) {
+                    detailsRow.style.display = 'none';
+                    e.target.style.transform = 'rotate(0deg)';
+                } else {
+                    detailsRow.style.display = 'table-row';
+                    e.target.style.transform = 'rotate(90deg)';
+                }
+            });
+        });
+
+        // Add event listeners for view contract buttons
+        container.querySelectorAll('.btn-view-contract').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const fileId = e.target.dataset.fileId;
+                // Scroll to documents section
+                const docsSection = document.getElementById('documentsContainer');
+                if (docsSection) {
+                    docsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Highlight the contract row after scrolling
+                    setTimeout(() => {
+                        const contractRow = docsSection.querySelector(`[data-file-id="${fileId}"]`);
+                        if (contractRow) {
+                            const row = contractRow.closest('tr');
+                            if (row) {
+                                row.style.background = 'rgba(0, 102, 255, 0.2)';
+                                row.style.transition = 'background 2s';
+                                setTimeout(() => {
+                                    row.style.background = '';
+                                }, 2000);
+                            }
+                        }
+                    }, 500);
+                }
+            });
+        });
+
+        // Add event listeners for pay now buttons
+        container.querySelectorAll('.btn-pay-now').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const requestId = e.target.dataset.requestId;
+                const serviceName = e.target.dataset.serviceName;
+                const onetimeCost = parseFloat(e.target.dataset.onetime);
+                const monthlyCost = parseFloat(e.target.dataset.monthly);
+                this.openPaymentModal(requestId, serviceName, onetimeCost, monthlyCost);
+            });
+        });
+    }
+
     async loadProfile() {
         try {
-            // Get user profile from database
-            const { data: profile, error } = await supabase
-                .from('user_profiles')
-                .select('*')
-                .eq('id', this.currentUser.id)
-                .single();
+            console.log('Loading profile...');
+            // Try to get user profile from database, but don't fail if table doesn't exist
+            let profile = null;
+            try {
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('id', this.currentUser.id)
+                    .single();
 
-            if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-                console.error('Error loading profile:', error);
+                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+                    console.warn('user_profiles table issue (non-critical):', error.message);
+                }
+                profile = data;
+            } catch (profileError) {
+                console.warn('Could not load from user_profiles, using auth metadata instead');
             }
 
             // Update UI with profile data
-            const name = profile?.full_name || this.currentUser.user_metadata.full_name || this.currentUser.email.split('@')[0];
+            const name = profile?.full_name || this.currentUser.user_metadata?.full_name || this.currentUser.email?.split('@')[0] || 'User';
             const email = this.currentUser.email;
 
-            document.getElementById('profileName').textContent = name;
-            document.getElementById('profileEmail').textContent = email;
-            document.getElementById('profileAvatar').textContent = this.getInitials(name);
+            const profileNameEl = document.getElementById('profileName');
+            const profileEmailEl = document.getElementById('profileEmail');
+            const profileAvatarEl = document.getElementById('profileAvatar');
+            
+            if (profileNameEl) profileNameEl.textContent = name;
+            if (profileEmailEl) profileEmailEl.textContent = email;
+            if (profileAvatarEl) profileAvatarEl.textContent = this.getInitials(name);
             
             // Fill form
-            document.getElementById('fullName').value = profile?.full_name || '';
-            document.getElementById('email').value = email;
-            document.getElementById('phone').value = profile?.phone || '';
-            document.getElementById('company').value = profile?.company || '';
+            const fullNameInput = document.getElementById('fullName');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const companyInput = document.getElementById('company');
+            
+            if (fullNameInput) fullNameInput.value = profile?.full_name || '';
+            if (emailInput) emailInput.value = email;
+            if (phoneInput) phoneInput.value = profile?.phone || '';
+            if (companyInput) companyInput.value = profile?.company || '';
+            
+            console.log('Profile loaded successfully');
 
         } catch (error) {
             console.error('Error in loadProfile:', error);
-            this.showNotification('Error loading profile', 'error');
+            // Don't throw - allow init to continue
         }
     }
 
@@ -241,6 +493,78 @@ class ProfileManager {
         if (profileForm) {
             profileForm.addEventListener('submit', (e) => this.updateProfile(e));
         }
+
+        // Edit profile button
+        const editBtn = document.getElementById('editProfileBtn');
+        if (editBtn) {
+            editBtn.addEventListener('click', () => this.toggleEditMode());
+        }
+
+        // Cancel edit button
+        const cancelBtn = document.getElementById('cancelEditBtn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => this.cancelEdit());
+        }
+
+        // Setup payment modal listeners
+        this.setupPaymentListeners();
+    }
+
+    toggleEditMode() {
+        this.isEditMode = !this.isEditMode;
+        
+        const fullNameInput = document.getElementById('fullName');
+        const phoneInput = document.getElementById('phone');
+        const companyInput = document.getElementById('company');
+        const editBtn = document.getElementById('editProfileBtn');
+        const profileActions = document.getElementById('profileActions');
+        
+        if (this.isEditMode) {
+            // Store original values
+            this.originalValues = {
+                fullName: fullNameInput.value,
+                phone: phoneInput.value,
+                company: companyInput.value
+            };
+            
+            // Enable inputs
+            fullNameInput.disabled = false;
+            phoneInput.disabled = false;
+            companyInput.disabled = false;
+            
+            // Show save/cancel buttons, hide edit button
+            editBtn.style.display = 'none';
+            profileActions.style.display = 'flex';
+            
+            // Focus first input
+            fullNameInput.focus();
+        } else {
+            // Disable inputs
+            fullNameInput.disabled = true;
+            phoneInput.disabled = true;
+            companyInput.disabled = true;
+            
+            // Hide save/cancel buttons, show edit button
+            editBtn.style.display = 'inline-block';
+            profileActions.style.display = 'none';
+        }
+    }
+
+    cancelEdit() {
+        // Restore original values
+        const fullNameInput = document.getElementById('fullName');
+        const phoneInput = document.getElementById('phone');
+        const companyInput = document.getElementById('company');
+        
+        if (this.originalValues) {
+            fullNameInput.value = this.originalValues.fullName;
+            phoneInput.value = this.originalValues.phone;
+            companyInput.value = this.originalValues.company;
+        }
+        
+        // Exit edit mode
+        this.isEditMode = true; // Set to true so toggleEditMode will turn it off
+        this.toggleEditMode();
     }
 
     async updateProfile(e) {
@@ -251,7 +575,7 @@ class ProfileManager {
         const company = document.getElementById('company').value;
 
         try {
-            // Update or insert profile
+            // Update or insert profile in user_profiles table
             const { error } = await supabase
                 .from('user_profiles')
                 .upsert({
@@ -264,9 +588,24 @@ class ProfileManager {
 
             if (error) throw error;
 
+            // Also update the profiles table for admin page
+            const { error: profilesError } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: fullName,
+                    business_name: company,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', this.currentUser.id);
+
+            if (profilesError) console.warn('Could not update profiles table:', profilesError);
+
             // Update auth metadata
             const { error: authError } = await supabase.auth.updateUser({
-                data: { full_name: fullName }
+                data: { 
+                    full_name: fullName,
+                    business_name: company
+                }
             });
 
             if (authError) throw authError;
@@ -275,6 +614,10 @@ class ProfileManager {
             
             // Reload profile to update display
             await this.loadProfile();
+            
+            // Exit edit mode
+            this.isEditMode = true; // Set to true so toggleEditMode will turn it off
+            this.toggleEditMode();
 
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -361,10 +704,490 @@ class ProfileManager {
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
+
+    async loadDocuments() {
+        const container = document.getElementById('documentsContainer');
+        if (!container) {
+            console.error('documentsContainer not found in DOM');
+            return;
+        }
+        
+        try {
+            console.log('Loading documents for user:', this.currentUser.id);
+            const { data: documents, error } = await supabase
+                .from('files')
+                .select('*')
+                .eq('user_id', this.currentUser.id)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading documents:', error);
+                throw error;
+            }
+
+            console.log('Documents loaded:', documents);
+            
+            // Check for duplicate file IDs
+            const fileIds = documents.map(d => d.id);
+            const uniqueIds = [...new Set(fileIds)];
+            if (fileIds.length !== uniqueIds.length) {
+                console.warn('DUPLICATE FILES DETECTED!', documents);
+            }
+            
+            this.renderDocuments(documents || []);
+        } catch (error) {
+            console.error('Error loading documents:', error);
+            document.getElementById('documentsContainer').innerHTML = `
+                <div class="no-documents">
+                    <div class="no-documents-icon">⚠️</div>
+                    <p>Error loading documents: ${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    renderDocuments(documents) {
+        const container = document.getElementById('documentsContainer');
+        
+        if (!documents || documents.length === 0) {
+            container.innerHTML = `
+                <div class="no-documents">
+                    <div class="no-documents-icon">📄</div>
+                    <p>No documents at this time</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Separate unsigned and signed documents
+        const unsigned = documents.filter(doc => doc.status === 'pending');
+        const signed = documents.filter(doc => doc.status === 'signed');
+
+        let html = '';
+
+        // Unsigned documents section
+        if (unsigned.length > 0) {
+            html += `
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.25rem;">📝 Documents to Sign (${unsigned.length})</h3>
+                    <table class="documents-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Description</th>
+                                <th>Uploaded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${unsigned.map(doc => `
+                                <tr data-file-id="${doc.id}">
+                                    <td><strong>${this.escapeHtml(doc.file_name)}</strong></td>
+                                    <td>${doc.description ? this.escapeHtml(doc.description) : '-'}</td>
+                                    <td>${new Date(doc.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        <div class="doc-actions">
+                                            <button class="doc-btn view" onclick="profileManager.viewDocument('${doc.file_url}')">
+                                                👁️ View
+                                            </button>
+                                            <button class="doc-btn sign" onclick="profileManager.signDocument('${doc.id}')">
+                                                ✍️ Sign
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Signed documents section
+        if (signed.length > 0) {
+            html += `
+                <div>
+                    <h3 style="color: #10b981; margin-bottom: 1rem; font-size: 1.25rem;">✅ Signed Documents (${signed.length})</h3>
+                    <table class="documents-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Description</th>
+                                <th>Uploaded</th>
+                                <th>Signed Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${signed.map(doc => `
+                                <tr style="opacity: 0.8;" data-file-id="${doc.id}">
+                                    <td><strong>${this.escapeHtml(doc.file_name)}</strong></td>
+                                    <td>${doc.description ? this.escapeHtml(doc.description) : '-'}</td>
+                                    <td>${new Date(doc.created_at).toLocaleDateString()}</td>
+                                    <td style="color: #10b981;">
+                                        ${doc.signed_at ? new Date(doc.signed_at).toLocaleDateString() : '-'}
+                                    </td>
+                                    <td>
+                                        <button class="doc-btn view" onclick="profileManager.viewDocument('${doc.file_url}')">
+                                            👁️ View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        container.innerHTML = html;
+    }
+
+    viewDocument(fileUrl) {
+        window.open(fileUrl, '_blank');
+    }
+
+    async signDocument(documentId) {
+        console.log('🔍 signDocument called with ID:', documentId);
+        console.log('🔍 profileManager instance:', this);
+        
+        // Store the document ID and get document details
+        this.currentDocumentToSign = documentId;
+        const fileDocument = await this.getDocumentById(documentId);
+        
+        console.log('🔍 Document fetched:', fileDocument);
+        
+        if (!fileDocument) {
+            this.showNotification('Document not found', 'error');
+            return;
+        }
+
+        this.currentDocumentUrl = fileDocument.file_url;
+        this.hasViewedDocument = false;
+
+        // Show the signing modal
+        const modal = document.getElementById('signContractModal');
+        console.log('🔍 Modal element:', modal);
+        
+        if (modal) {
+            modal.style.display = 'flex';
+            this.setupSigningModal();
+        } else {
+            console.error('❌ Modal not found!');
+        }
+    }
+
+    async getDocumentById(docId) {
+        try {
+            const { data, error } = await supabase
+                .from('files')
+                .select('*')
+                .eq('id', docId)
+                .eq('user_id', this.currentUser.id)
+                .single();
+
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error('Error fetching document:', error);
+            return null;
+        }
+    }
+
+    setupSigningModal() {
+        const viewBtn = document.getElementById('viewDocumentBtn');
+        const agreeCheckbox = document.getElementById('agreeCheckbox');
+        const confirmBtn = document.getElementById('confirmSignBtn');
+        const cancelBtn = document.getElementById('cancelSignBtn');
+        const closeBtn = document.getElementById('closeSignModalBtn');
+        const viewStatus = document.getElementById('viewStatus');
+
+        // Reset state
+        this.hasViewedDocument = false;
+        agreeCheckbox.checked = false;
+        agreeCheckbox.disabled = true;
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = '0.5';
+        confirmBtn.style.cursor = 'not-allowed';
+        viewStatus.innerHTML = '<span style="display: inline-block;">📋 You must view the document before signing</span>';
+
+        // View document button
+        viewBtn.onclick = () => {
+            window.open(this.currentDocumentUrl, '_blank');
+            this.hasViewedDocument = true;
+            
+            // Enable checkbox after viewing with animation
+            agreeCheckbox.disabled = false;
+            viewStatus.innerHTML = '<span style="display: inline-block; color: #10b981;">✅ Document viewed - you may now proceed</span>';
+            viewStatus.style.background = 'rgba(16, 185, 129, 0.1)';
+            viewBtn.innerHTML = '<span style="display: flex; align-items: center; justify-content: center; gap: 0.75rem;"><span>✅</span><span>View Again</span></span>';
+            viewBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        };
+
+        // Agreement checkbox
+        agreeCheckbox.onchange = (e) => {
+            if (e.target.checked && this.hasViewedDocument) {
+                confirmBtn.disabled = false;
+                confirmBtn.style.opacity = '1';
+                confirmBtn.style.cursor = 'pointer';
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.style.opacity = '0.5';
+                confirmBtn.style.cursor = 'not-allowed';
+            }
+        };
+
+        // Confirm sign button
+        confirmBtn.onclick = async () => {
+            if (!this.hasViewedDocument || !agreeCheckbox.checked) {
+                this.showNotification('Please view the document and agree to the terms before signing.', 'error');
+                return;
+            }
+            await this.confirmSignDocument();
+        };
+
+        // Cancel and close buttons
+        const closeModal = () => this.closeSigningModal();
+        cancelBtn.onclick = closeModal;
+        closeBtn.onclick = closeModal;
+    }
+
+    closeSigningModal() {
+        const modal = document.getElementById('signContractModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        this.currentDocumentToSign = null;
+        this.currentDocumentUrl = null;
+        this.hasViewedDocument = false;
+    }
+
+    async confirmSignDocument() {
+        if (!this.currentDocumentToSign) return;
+
+        try {
+            const { error } = await supabase
+                .from('files')
+                .update({
+                    status: 'signed',
+                    signed_at: new Date().toISOString()
+                })
+                .eq('id', this.currentDocumentToSign)
+                .eq('user_id', this.currentUser.id);
+
+            if (error) throw error;
+
+            this.showNotification('Document signed successfully!');
+            this.closeSigningModal();
+            await this.loadDocuments();
+        } catch (error) {
+            console.error('Error signing document:', error);
+            this.showNotification('Error signing document', 'error');
+        }
+    }
+
+    openPaymentModal(requestId, serviceName, onetimeCost, monthlyCost) {
+        this.currentRequestToPay = requestId;
+        this.currentPaymentData = {
+            requestId,
+            serviceName,
+            onetimeCost,
+            monthlyCost
+        };
+        
+        // Populate payment details
+        document.getElementById('paymentServiceName').textContent = serviceName;
+        document.getElementById('paymentOneTime').textContent = '$' + onetimeCost.toFixed(2);
+        document.getElementById('paymentMonthly').textContent = '$' + monthlyCost.toFixed(2) + '/month';
+        document.getElementById('recurringAmount').textContent = '$' + monthlyCost.toFixed(2) + '/month';
+        
+        // Show modal
+        const modal = document.getElementById('paymentModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Initialize Stripe payment
+        this.initializeStripePayment(onetimeCost, monthlyCost, serviceName);
+    }
+
+    async initializeStripePayment(onetimeCost, monthlyCost, serviceName) {
+        try {
+            // Initialize Stripe handler if not already done
+            if (!this.stripeHandler) {
+                this.stripeHandler = new StripePaymentHandler();
+                await this.stripeHandler.init();
+            }
+
+            // Get user profile data
+            const { data: profile } = await supabase.auth.getUser();
+            const email = profile.user.email;
+            const name = profile.user.user_metadata?.full_name || email;
+
+            // Create payment intent and subscription
+            const paymentData = await this.stripeHandler.processPayment(
+                email,
+                name,
+                onetimeCost,
+                monthlyCost,
+                {
+                    requestId: this.currentRequestToPay,
+                    serviceName: serviceName,
+                    userId: this.currentUser.id
+                }
+            );
+
+            // Create Stripe payment UI
+            await this.stripeHandler.createPaymentUI(paymentData.clientSecret);
+
+            // Store price ID for subscription
+            this.currentPriceId = paymentData.priceId;
+            this.currentCustomerId = paymentData.customerId;
+
+        } catch (error) {
+            console.error('Error initializing Stripe payment:', error);
+            this.showNotification('Error loading payment form. Please try again.', 'error');
+            this.closePaymentModal();
+        }
+    }
+
+    closePaymentModal() {
+        const modal = document.getElementById('paymentModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        
+        // Destroy Stripe elements
+        if (this.stripeHandler) {
+            this.stripeHandler.destroy();
+        }
+        
+        // Reset consent checkbox
+        const consentCheckbox = document.getElementById('recurringConsent');
+        if (consentCheckbox) {
+            consentCheckbox.checked = false;
+        }
+    }
+
+    setupPaymentListeners() {
+        // Close button
+        const closeBtn = document.getElementById('closePaymentModalBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closePaymentModal());
+        }
+
+        // Cancel button
+        const cancelBtn = document.getElementById('cancelPaymentBtn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => this.closePaymentModal());
+        }
+
+        // Confirm payment button
+        const confirmBtn = document.getElementById('confirmPaymentBtn');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', (e) => this.handleStripePayment(e));
+        }
+    }
+
+    async handleStripePayment(e) {
+        e.preventDefault();
+
+        // Check consent checkbox
+        const consentCheckbox = document.getElementById('recurringConsent');
+        if (!consentCheckbox.checked) {
+            this.showNotification('Please agree to recurring payments', 'error');
+            return;
+        }
+
+        const confirmBtn = document.getElementById('confirmPaymentBtn');
+        const originalText = confirmBtn.innerHTML;
+        
+        try {
+            // Disable button and show loading
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '⏳ Processing Payment...';
+
+            // Confirm payment with Stripe
+            await this.stripeHandler.confirmPayment();
+
+            // After successful payment, create subscription
+            const response = await fetch('/api/stripe/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerId: this.currentCustomerId,
+                    priceId: this.currentPriceId,
+                    metadata: {
+                        requestId: this.currentRequestToPay,
+                        userId: this.currentUser.id,
+                    },
+                }),
+            });
+
+            const subscriptionData = await response.json();
+
+            if (!response.ok) {
+                throw new Error(subscriptionData.error || 'Subscription creation failed');
+            }
+
+            // Update request status to 'paid'
+            const { error } = await supabase
+                .from('service_requests')
+                .update({ 
+                    status: 'paid',
+                    paid_at: new Date().toISOString(),
+                    stripe_customer_id: this.currentCustomerId,
+                    stripe_subscription_id: subscriptionData.subscriptionId
+                })
+                .eq('id', this.currentRequestToPay)
+                .eq('user_id', this.currentUser.id);
+
+            if (error) throw error;
+
+            // Close modal
+            this.closePaymentModal();
+
+            // Show success notification
+            this.showNotification('✅ Payment successful! Your service is now active.', 'success');
+
+            // Reload requests to update status
+            await this.loadRequests();
+
+        } catch (error) {
+            console.error('Error processing payment:', error);
+            
+            // Check if error is from Stripe redirect (payment was successful)
+            if (error.type === 'validation_error') {
+                this.showNotification('Please complete all payment fields', 'error');
+            } else {
+                this.showNotification('Payment processing. Redirecting...', 'success');
+                // Stripe is handling the redirect
+                return;
+            }
+            
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = originalText;
+        }
+    }
+
+    escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
 }
 
 // Initialize profile manager when page loads
 let profileManager;
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Initializing ProfileManager...');
     profileManager = new ProfileManager();
+    window.profileManager = profileManager; // Make explicitly global
+    console.log('✅ ProfileManager initialized:', profileManager);
+    console.log('✅ window.profileManager:', window.profileManager);
 });

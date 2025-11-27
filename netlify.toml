@@ -1,3 +1,27 @@
 [build]
-  # Ensure Netlify picks up functions from this folder
   functions = "netlify/functions"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect API calls to Netlify Functions
+[[redirects]]
+  from = "/api/stripe/create-combined-payment"
+  to = "/.netlify/functions/stripe-payment"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe/config"
+  to = "/.netlify/functions/stripe-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe/webhook"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe/create-subscription"
+  to = "/.netlify/functions/stripe-subscription"
+  status = 200

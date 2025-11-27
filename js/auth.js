@@ -6,8 +6,12 @@ class AuthSystem {
     }
 
     async init() {
+        console.log('AuthSystem initializing...');
+        
         // Check if user is logged in with Supabase
         const { data: { session } } = await supabase.auth.getSession();
+        
+        console.log('Session check complete:', session ? 'User logged in' : 'No session');
         
         if (session) {
             this.currentUser = {
@@ -16,11 +20,16 @@ class AuthSystem {
                 name: session.user.user_metadata.full_name || session.user.email.split('@')[0],
                 initials: this.getInitials(session.user.user_metadata.full_name || session.user.email)
             };
+            console.log('Current user set:', this.currentUser);
+            this.updateUI();
+        } else {
+            console.log('No current user, updating UI to logged out state');
             this.updateUI();
         }
 
         // Listen for auth state changes
         supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event);
             if (event === 'SIGNED_IN' && session) {
                 this.currentUser = {
                     id: session.user.id,
@@ -217,6 +226,9 @@ class AuthSystem {
                 initials: this.getInitials(data.user.user_metadata.full_name || data.user.email)
             };
 
+            // Trigger browser password save by submitting a hidden form
+            this.triggerPasswordSave(email, password);
+
             this.updateUI();
             this.hideAuthModal();
             
@@ -266,8 +278,8 @@ class AuthSystem {
 
             if (error) throw error;
 
-            // Show success message
-            this.showNotification('Account created! Please check your email to verify your account.');
+            // Trigger browser password save
+            this.triggerPasswordSave(email, password);
             
             // Auto login after signup (if email confirmation is disabled in Supabase settings)
             if (data.session) {
@@ -278,11 +290,19 @@ class AuthSystem {
                     initials: this.getInitials(name)
                 };
 
+                // Show success message for auto-login
+                this.showNotification('Account created successfully! Welcome, ' + name + '!');
+                
                 this.updateUI();
                 this.hideAuthModal();
             } else {
-                // If email confirmation is enabled, switch to login tab
-                this.switchTab('login');
+                // If email confirmation is enabled, show instruction and keep modal open
+                this.showNotification('Account created! Please check your email (' + email + ') to verify your account before logging in.');
+                
+                // Switch to login tab after 3 seconds
+                setTimeout(() => {
+                    this.switchTab('login');
+                }, 3000);
             }
             
         } catch (error) {
@@ -319,20 +339,35 @@ class AuthSystem {
     }
 
     updateUI() {
+        console.log('updateUI called, currentUser:', this.currentUser);
+        
         const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
         const userMenu = document.getElementById('userMenu');
+
+        console.log('UI Elements found:', {
+            loginBtn: !!loginBtn,
+            signupBtn: !!signupBtn,
+            userMenu: !!userMenu
+        });
 
         if (this.currentUser) {
             // User is logged in
+            console.log('Updating UI for logged in user');
             if (loginBtn) loginBtn.style.display = 'none';
+            if (signupBtn) signupBtn.style.display = 'none';
             if (userMenu) {
                 userMenu.style.display = 'block';
-                document.getElementById('userName').textContent = this.currentUser.name;
-                document.getElementById('userAvatar').textContent = this.currentUser.initials;
+                const userNameEl = document.getElementById('userName');
+                const userAvatarEl = document.getElementById('userAvatar');
+                if (userNameEl) userNameEl.textContent = this.currentUser.name;
+                if (userAvatarEl) userAvatarEl.textContent = this.currentUser.initials;
             }
         } else {
             // User is logged out
-            if (loginBtn) loginBtn.style.display = 'block';
+            console.log('Updating UI for logged out user');
+            if (loginBtn) loginBtn.style.display = 'inline-block';
+            if (signupBtn) signupBtn.style.display = 'inline-block';
             if (userMenu) userMenu.style.display = 'none';
         }
     }
@@ -461,11 +496,43 @@ class AuthSystem {
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
+
+    triggerPasswordSave(email, password) {
+        // Create a hidden form to trigger browser's password save prompt
+        const form = document.createElement('form');
+        form.style.display = 'none';
+        form.method = 'post';
+        form.action = window.location.href;
+
+        const emailInput = document.createElement('input');
+        emailInput.type = 'email';
+        emailInput.name = 'email';
+        emailInput.value = email;
+        emailInput.autocomplete = 'username';
+
+        const passwordInput = document.createElement('input');
+        passwordInput.type = 'password';
+        passwordInput.name = 'password';
+        passwordInput.value = password;
+        passwordInput.autocomplete = 'current-password';
+
+        form.appendChild(emailInput);
+        form.appendChild(passwordInput);
+        document.body.appendChild(form);
+
+        // Submit and immediately remove
+        setTimeout(() => {
+            form.submit();
+            setTimeout(() => {
+                document.body.removeChild(form);
+            }, 100);
+        }, 0);
+    }
 }
 
 // Add animations
-const style = document.createElement('style');
-style.textContent = `
+const authStyle = document.createElement('style');
+authStyle.textContent = `
     @keyframes slideIn {
         from {
             transform: translateX(400px);
@@ -487,7 +554,7 @@ style.textContent = `
         }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(authStyle);
 
 // Initialize auth system when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
