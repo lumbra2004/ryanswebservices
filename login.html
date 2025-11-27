@@ -14,11 +14,20 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         body {
             background: #0f1419;
             min-height: 100vh;
             display: flex;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            overscroll-behavior-x: none;
         }
 
         .auth-wrapper {
