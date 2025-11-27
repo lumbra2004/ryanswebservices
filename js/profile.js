@@ -540,7 +540,22 @@ class ProfileManager {
             container.innerHTML = paidRequests.map(request => {
                 const packageDetails = request.package_details || {};
                 const oneTimeCost = packageDetails.oneTimeCost || request.total_amount || 0;
-                const monthlyCost = packageDetails.monthlyCost || 0;
+                
+                // Calculate total monthly cost from all subscription components
+                const maintenanceCost = packageDetails.maintenance_plan?.monthly_cost || 0;
+                const workspaceCost = packageDetails.google_workspace?.monthly_cost || 0;
+                const monthlyCost = maintenanceCost + workspaceCost;
+                
+                // Debug logging
+                console.log('Invoice item:', {
+                    serviceName: request.service_name,
+                    packageDetails: request.package_details,
+                    oneTimeCost,
+                    maintenanceCost,
+                    workspaceCost,
+                    monthlyCost,
+                    hasSubscription: !!request.stripe_subscription_id
+                });
                 
                 return `
                 <div class="invoice-item" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 1rem; background: rgba(255,255,255,0.02);">
@@ -583,7 +598,7 @@ class ProfileManager {
                             <span>View in Stripe</span>
                             <span>→</span>
                         </a>
-                        ${request.stripe_subscription_id && monthlyCost > 0 ? `
+                        ${request.stripe_subscription_id ? `
                             <button onclick="profileManager.cancelSubscription('${request.id}', '${request.stripe_subscription_id}')"
                                     style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;"
                                     onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'"
