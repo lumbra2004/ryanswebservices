@@ -12,7 +12,7 @@
   gtag('config', 'G-S4S74TXQDB');
 </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>404 - Page Not Found | Ryan's Webservice</title>
     <meta name="description" content="Oops! The page you're looking for doesn't exist. Return to Ryan's Webservice homepage.">
     
@@ -32,6 +32,7 @@
             min-height: 100%;
             overflow-x: hidden;
             width: 100%;
+            background: #0A0E1A;
         }
         
         body {
@@ -41,6 +42,16 @@
             width: 100%;
             max-width: 100vw;
             overscroll-behavior-x: none;
+            background: #0A0E1A;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        
+        @supports (padding: env(safe-area-inset-top)) {
+            html {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
         }
         
         /* 404 Header Override */

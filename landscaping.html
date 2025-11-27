@@ -11,7 +11,7 @@
   gtag('config', 'G-S4S74TXQDB');
 </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Landscaping Project | Ryan's Web Services</title>
   <!-- Meta Pixel Code --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '1524340988599573'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=1524340988599573&ev=PageView&noscript=1"/></noscript><!-- End Meta Pixel Code -->
   <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -28,16 +28,25 @@
     html {
       overflow-x: hidden;
       width: 100%;
+      background: #050810;
     }
     body {
       background: linear-gradient(165deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--bg-darker) 100%);
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       padding: var(--space-xl) var(--space-lg);
       position: relative;
       overflow-x: hidden;
       width: 100%;
       max-width: 100vw;
       overscroll-behavior-x: none;
+    }
+    
+    @supports (padding: env(safe-area-inset-top)) {
+      html {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
     }
     
     body::before {
