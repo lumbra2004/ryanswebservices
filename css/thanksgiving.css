@@ -166,6 +166,12 @@ header::after {
 /* Logo Enhancement */
 .logo {
     position: relative;
+    background: var(--tg-gold-shimmer) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: shimmer 3s linear infinite !important;
 }
 
 .logo::after {
