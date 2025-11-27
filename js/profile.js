@@ -27,7 +27,6 @@ class ProfileManager {
             await this.handleStripeReturn();
             
             await this.loadProfile();
-            await this.loadOrders();
             await this.loadRequests();
             await this.loadInvoices();
             
@@ -455,6 +454,10 @@ class ProfileManager {
 
     async loadOrders() {
         const container = document.getElementById('ordersContainer');
+        if (!container) {
+            console.log('ordersContainer not found, skipping loadOrders');
+            return;
+        }
         
         try {
             const { data: orders, error } = await supabase
