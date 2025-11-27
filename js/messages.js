@@ -337,21 +337,45 @@ class MessagesSystem {
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
                 
                 if (isForCurrentConversation) {
-                    // Only add if not already in the array and not our own message (we use optimistic UI)
-                    const exists = this.messages.some(m => m.id === newMessage.id || (m.id && m.id.startsWith && m.id.startsWith('temp-')));
-                    if (!exists && newMessage.sender_id !== this.currentUser.id) {
+                    // Skip if this is our own message (we already show it via optimistic UI)
+                    if (newMessage.sender_id === this.currentUser.id) {
+                        // Just update the temp message to have the real ID if it exists
+                        const tempIndex = this.messages.findIndex(m => m.id && m.id.toString().startsWith('temp-'));
+                        if (tempIndex !== -1) {
+                            this.messages[tempIndex] = { ...newMessage, status: 'sent' };
+                            this.renderWidgetMessages();
+                        }
+                        return;
+                    }
+                    
+                    // For messages from others, add if not already present
+                    const exists = this.messages.some(m => m.id === newMessage.id);
+                    if (!exists) {
                         this.messages.push(newMessage);
                         this.renderWidgetMessages();
                     }
                     
                     // Auto-mark as read if widget is open
-                    if (this.isWidgetOpen && newMessage.sender_id !== this.currentUser.id) {
+                    if (this.isWidgetOpen) {
                         this.markMessagesAsRead(this.currentConversation);
                     }
                 }
                 
                 // Reload conversations to update unread counts
                 this.loadConversations();
+            })
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'messages'
+            }, (payload) => {
+                // Update read status when messages are marked as read
+                const updatedMessage = payload.new;
+                const index = this.messages.findIndex(m => m.id === updatedMessage.id);
+                if (index !== -1) {
+                    this.messages[index] = { ...this.messages[index], ...updatedMessage };
+                    this.renderWidgetMessages();
+                }
             })
             .subscribe();
     }
@@ -458,19 +482,20 @@ class MessagesSystem {
     }
 
     getMessageStatusIcon(msg) {
-        // Check status
+        // Check status - sending
         if (msg.status === 'sending') {
             return '<span class="status-sending">○</span>';
         }
+        // Failed to send
         if (msg.status === 'failed') {
             return '<span class="status-failed">✕</span>';
         }
-        // Sent but not read - show checkmark
-        if (!msg.read) {
-            return '<span class="status-sent">✓</span>';
+        // Read - show company logo (check both 'read' field and is_read)
+        if (msg.read === true || msg.is_read === true) {
+            return '<img src="favicon_io/favicon-16x16.png" alt="Seen" class="status-read-logo">';
         }
-        // Read - show company logo
-        return '<img src="/favicon_io/favicon-16x16.png" alt="Seen" class="status-read-logo">';
+        // Sent but not read - show checkmark
+        return '<span class="status-sent">✓</span>';
     }
 
     escapeHtml(text) {
