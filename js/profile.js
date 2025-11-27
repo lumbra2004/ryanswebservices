@@ -23,6 +23,9 @@ class ProfileManager {
             this.currentUser = session.user;
             console.log('Profile init - Current user:', this.currentUser.id);
             
+            // Check if returning from Stripe payment
+            await this.handleStripeReturn();
+            
             await this.loadProfile();
             await this.loadOrders();
             await this.loadRequests();
@@ -35,6 +38,64 @@ class ProfileManager {
             this.setupEventListeners();
         } catch (error) {
             console.error('Error in profile init:', error);
+        }
+    }
+
+    async handleStripeReturn() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentIntentId = urlParams.get('payment_intent');
+        const redirectStatus = urlParams.get('redirect_status');
+
+        if (paymentIntentId && redirectStatus === 'succeeded') {
+            // Get the request ID from localStorage
+            const requestId = localStorage.getItem('pending_payment_request_id');
+            const customerId = localStorage.getItem('pending_customer_id');
+            const priceId = localStorage.getItem('pending_price_id');
+
+            if (requestId && customerId && priceId) {
+                try {
+                    // Create subscription
+                    const response = await fetch('/api/stripe/create-subscription', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customerId: customerId,
+                            priceId: priceId,
+                            metadata: {
+                                requestId: requestId,
+                                userId: this.currentUser.id,
+                            },
+                        }),
+                    });
+
+                    const subscriptionData = await response.json();
+
+                    if (response.ok) {
+                        // Update request status to 'paid'
+                        await supabase
+                            .from('service_requests')
+                            .update({ 
+                                status: 'paid',
+                                paid_at: new Date().toISOString(),
+                                stripe_customer_id: customerId,
+                                stripe_subscription_id: subscriptionData.subscriptionId
+                            })
+                            .eq('id', requestId);
+
+                        // Clear localStorage
+                        localStorage.removeItem('pending_payment_request_id');
+                        localStorage.removeItem('pending_customer_id');
+                        localStorage.removeItem('pending_price_id');
+
+                        this.showNotification('Payment successful! 🎉', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error completing payment:', error);
+                }
+            }
+
+            // Clean up URL
+            window.history.replaceState({}, document.title, '/profile.html');
         }
     }
 
@@ -1105,7 +1166,12 @@ class ProfileManager {
             confirmBtn.disabled = true;
             confirmBtn.innerHTML = '⏳ Processing Payment...';
 
-            // Confirm payment with Stripe
+            // Save data to localStorage before redirect
+            localStorage.setItem('pending_payment_request_id', this.currentRequestToPay);
+            localStorage.setItem('pending_customer_id', this.currentCustomerId);
+            localStorage.setItem('pending_price_id', this.currentPriceId);
+
+            // Confirm payment with Stripe (this will redirect)
             await this.stripeHandler.confirmPayment();
 
             // After successful payment, create subscription
