@@ -160,11 +160,16 @@ class MessagesSystem {
         if (!conversationId) return;
 
         try {
+            console.log('Loading messages for conversation:', conversationId);
+            
             const { data: messages, error } = await supabase
                 .from('messages')
                 .select('*')
                 .eq('conversation_id', conversationId)
                 .order('created_at', { ascending: true });
+
+            console.log('Messages loaded:', messages);
+            console.log('Error if any:', error);
 
             if (error) {
                 console.error('Error loading messages:', error);
