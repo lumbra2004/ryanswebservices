@@ -588,7 +588,9 @@ body.light-mode .hero {
 }
 
 .texas-badge {
-    display: inline-block;
+    position: absolute;
+    top: 100px;
+    left: 30px;
     background: linear-gradient(135deg, rgba(191, 149, 63, 0.2), rgba(212, 175, 55, 0.3));
     border: 1px solid rgba(212, 175, 55, 0.5);
     color: #D4AF37;
@@ -597,8 +599,8 @@ body.light-mode .hero {
     letter-spacing: 1px;
     padding: 0.5rem 1.25rem;
     border-radius: 50px;
-    margin-bottom: var(--space-md);
     text-transform: uppercase;
+    z-index: 10;
 }
 
 .brand-name {
@@ -1273,6 +1275,13 @@ footer p {
 }
 
 @media (max-width: 639px) {
+
+    .texas-badge {
+        top: 80px;
+        left: 15px;
+        font-size: 0.75rem;
+        padding: 0.4rem 1rem;
+    }
 
     .hero {
         padding: 5rem 0 2.5rem;
