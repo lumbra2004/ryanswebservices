@@ -23,11 +23,32 @@ exports.handler = async (event, context) => {
     try {
         const { customerId, priceId, metadata } = JSON.parse(event.body);
 
-        // Create subscription (payment method is already attached from the payment)
+        // Get the customer to find their payment methods
+        const paymentMethods = await stripe.paymentMethods.list({
+            customer: customerId,
+            type: 'card',
+        });
+
+        if (paymentMethods.data.length === 0) {
+            throw new Error('No payment method found for customer');
+        }
+
+        // Use the most recent payment method as default
+        const paymentMethodId = paymentMethods.data[0].id;
+
+        // Set as default payment method
+        await stripe.customers.update(customerId, {
+            invoice_settings: {
+                default_payment_method: paymentMethodId,
+            },
+        });
+
+        // Create subscription (payment method is now attached and set as default)
         const subscription = await stripe.subscriptions.create({
             customer: customerId,
             items: [{ price: priceId }],
             metadata,
+            default_payment_method: paymentMethodId,
         });
 
         return {
