@@ -587,6 +587,20 @@ body.light-mode .hero {
     text-align: center;
 }
 
+.texas-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(191, 149, 63, 0.2), rgba(212, 175, 55, 0.3));
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    color: #D4AF37;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+}
+
 .brand-name {
     font-size: 0.9rem;
     font-weight: 700;
