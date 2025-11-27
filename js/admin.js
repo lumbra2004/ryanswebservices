@@ -1917,16 +1917,39 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         content.innerHTML = '<div class="loading">Loading order details...</div>';
         
         try {
-            // Fetch the full order data
+            // Fetch the order data
             const { data: order, error } = await supabase
                 .from('service_requests')
-                .select('*, profiles:user_id(*), contract_file:contract_file_id(*), promo_code:promo_code_id(*)')
+                .select('*')
                 .eq('id', requestId)
                 .single();
             
             if (error) throw error;
             
-            const customer = order.profiles || {};
+            // Fetch the profile separately
+            let customer = {};
+            if (order.user_id) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', order.user_id)
+                    .single();
+                customer = profile || {};
+            }
+            
+            // Fetch contract file if exists
+            let contractFile = null;
+            if (order.contract_file_id) {
+                const { data: file } = await supabase
+                    .from('user_files')
+                    .select('*')
+                    .eq('id', order.contract_file_id)
+                    .single();
+                contractFile = file;
+            }
+            
+            order.profiles = customer;
+            order.contract_file = contractFile;
             const packageDetails = order.package_details || {};
             const monthlyCost = (packageDetails.maintenance_plan?.monthly_cost || 0) + (packageDetails.google_workspace?.monthly_cost || 0);
             
