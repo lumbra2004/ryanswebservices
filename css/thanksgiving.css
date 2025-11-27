@@ -1,0 +1,517 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RYAN'S WEBSERVICES - PREMIUM THANKSGIVING THEME 2024
+   A refined, elegant fall theme applied site-wide
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Thanksgiving Color System */
+    --tg-gold: #C9A227;
+    --tg-gold-light: #E3C565;
+    --tg-gold-dark: #8B7023;
+    --tg-copper: #9E5E3A;
+    --tg-copper-light: #C17F5A;
+    --tg-burgundy: #6B2D3A;
+    --tg-burgundy-dark: #4A1E28;
+    --tg-burgundy-light: #8B3D4A;
+    --tg-cream: #FDF6E3;
+    --tg-warm-brown: #3D2B1F;
+    --tg-dark: #1A1210;
+    --tg-charcoal: #2A2220;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BODY & GLOBAL OVERRIDES
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body {
+    background: linear-gradient(180deg, var(--tg-dark) 0%, #0D0A09 100%) !important;
+}
+
+/* Subtle texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HEADER / NAVIGATION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+header {
+    background: linear-gradient(180deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%) !important;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.15) !important;
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(201, 162, 39, 0.4) 20%,
+        var(--tg-gold) 50%,
+        rgba(201, 162, 39, 0.4) 80%,
+        transparent 100%
+    );
+}
+
+/* Nav styling */
+.nav-links a {
+    transition: color 0.2s ease !important;
+}
+
+.nav-links a:hover {
+    color: var(--tg-gold) !important;
+}
+
+/* Thanksgiving badge in nav */
+.thanksgiving-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.12) 0%, rgba(158, 94, 58, 0.08) 100%);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--tg-gold-light);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+}
+
+.thanksgiving-badge .tg-leaf {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* Logo accent */
+.logo {
+    position: relative;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HERO SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.hero {
+    background: 
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(201, 162, 39, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(107, 45, 58, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, var(--tg-dark) 0%, #0D0A09 100%) !important;
+    position: relative;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 5%, 
+        var(--tg-burgundy) 20%,
+        var(--tg-gold) 50%, 
+        var(--tg-burgundy) 80%,
+        transparent 95%
+    );
+}
+
+/* Hero title gradient text */
+.hero h1 span {
+    background: linear-gradient(135deg, var(--tg-gold-light) 0%, var(--tg-gold) 40%, var(--tg-copper-light) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.brand-name {
+    color: var(--tg-gold) !important;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+/* CTA Button */
+.hero-cta {
+    background: linear-gradient(135deg, var(--tg-burgundy) 0%, var(--tg-burgundy-dark) 100%) !important;
+    border: 1px solid var(--tg-gold) !important;
+    box-shadow: 0 4px 20px rgba(201, 162, 39, 0.15) !important;
+    transition: all 0.3s ease !important;
+}
+
+.hero-cta:hover {
+    background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-gold-dark) 100%) !important;
+    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.25) !important;
+    transform: translateY(-2px) !important;
+}
+
+.hero-cta:hover span {
+    color: var(--tg-dark) !important;
+}
+
+/* Trust badges */
+.trust-badge {
+    background: rgba(201, 162, 39, 0.06) !important;
+    border: 1px solid rgba(201, 162, 39, 0.12) !important;
+}
+
+.trust-badge-icon {
+    color: var(--tg-gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   STATS SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.stats-section {
+    background: linear-gradient(135deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%) !important;
+    border-top: 1px solid rgba(201, 162, 39, 0.1);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+.stat-number {
+    color: var(--tg-gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CARDS (Service, Portfolio, Profile, etc.)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.service-card,
+.portfolio-item,
+.profile-card,
+.settings-card,
+.dashboard-card,
+.admin-card,
+.card {
+    background: linear-gradient(145deg, rgba(42, 34, 32, 0.8) 0%, rgba(26, 18, 16, 0.9) 100%) !important;
+    border: 1px solid rgba(201, 162, 39, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.service-card:hover,
+.portfolio-item:hover,
+.profile-card:hover,
+.dashboard-card:hover,
+.card:hover {
+    border-color: rgba(201, 162, 39, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(201, 162, 39, 0.05) !important;
+}
+
+.service-card h3,
+.portfolio-content h3,
+.card h3 {
+    color: var(--tg-cream) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SECTION HEADERS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.section-title {
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--tg-gold), var(--tg-copper));
+    margin: 0.75rem auto 0;
+    border-radius: 1px;
+}
+
+.section-header {
+    text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FORMS & INPUTS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--tg-gold) !important;
+    box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.1) !important;
+    outline: none !important;
+}
+
+/* Primary buttons */
+.btn-primary,
+.button-success,
+.auth-submit,
+.action-btn {
+    background: linear-gradient(135deg, var(--tg-burgundy) 0%, var(--tg-burgundy-dark) 100%) !important;
+    border: 1px solid rgba(201, 162, 39, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover,
+.button-success:hover,
+.auth-submit:hover,
+.action-btn:hover {
+    background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-gold-dark) 100%) !important;
+    color: var(--tg-dark) !important;
+    border-color: var(--tg-gold) !important;
+}
+
+/* Secondary buttons */
+.btn-secondary,
+.login-btn {
+    border: 1px solid rgba(201, 162, 39, 0.2) !important;
+}
+
+.btn-secondary:hover,
+.login-btn:hover {
+    border-color: var(--tg-gold) !important;
+    color: var(--tg-gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CONTACT SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#contact {
+    background: 
+        radial-gradient(ellipse at top, rgba(107, 45, 58, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, #0D0A09 0%, var(--tg-dark) 100%) !important;
+}
+
+.contact-email {
+    color: var(--tg-gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════════════════════ */
+
+footer {
+    background: linear-gradient(180deg, var(--tg-dark) 0%, var(--tg-charcoal) 100%) !important;
+    border-top: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+footer a {
+    color: var(--tg-gold) !important;
+    transition: opacity 0.2s ease;
+}
+
+footer a:hover {
+    opacity: 0.8;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PROFILE PAGE SPECIFIC
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.profile-header {
+    background: linear-gradient(135deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%) !important;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+}
+
+.profile-tabs .tab-btn.active,
+.tab-btn.active {
+    border-bottom-color: var(--tg-gold) !important;
+    color: var(--tg-gold) !important;
+}
+
+.profile-stat-value,
+.stat-value {
+    color: var(--tg-gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ADMIN PANEL SPECIFIC
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.admin-sidebar,
+.sidebar {
+    background: linear-gradient(180deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%) !important;
+    border-right: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background: rgba(201, 162, 39, 0.1) !important;
+    color: var(--tg-gold) !important;
+}
+
+.admin-header {
+    border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MODALS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.modal-content,
+.auth-modal {
+    background: linear-gradient(145deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%) !important;
+    border: 1px solid rgba(201, 162, 39, 0.15) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(201, 162, 39, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BADGES & TAGS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.badge-primary,
+.badge-success {
+    background: linear-gradient(135deg, var(--tg-gold) 0%, var(--tg-gold-dark) 100%) !important;
+    color: var(--tg-dark) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--tg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--tg-burgundy) 0%, var(--tg-burgundy-dark) 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--tg-gold);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SETTINGS BUTTON
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.settings-button {
+    border: 1px solid rgba(201, 162, 39, 0.2) !important;
+    background: var(--tg-charcoal) !important;
+}
+
+.settings-button:hover {
+    border-color: var(--tg-gold) !important;
+}
+
+.settings-menu {
+    background: var(--tg-charcoal) !important;
+    border: 1px solid rgba(201, 162, 39, 0.15) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THANKSGIVING TOAST NOTIFICATION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.tg-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: linear-gradient(135deg, var(--tg-charcoal) 0%, var(--tg-dark) 100%);
+    border: 1px solid var(--tg-gold);
+    border-radius: 12px;
+    padding: 0.875rem 1.5rem;
+    color: var(--tg-cream);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201, 162, 39, 0.1);
+    z-index: 10000;
+    opacity: 0;
+    animation: tgToastIn 0.4s ease-out 0.8s forwards, tgToastOut 0.4s ease-in 5.5s forwards;
+}
+
+@keyframes tgToastIn {
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes tgToastOut {
+    to { transform: translateX(-50%) translateY(120px); opacity: 0; }
+}
+
+.tg-toast-icon {
+    font-size: 1.25rem;
+}
+
+.tg-toast-text strong {
+    color: var(--tg-gold);
+    font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CORNER AMBIENT GLOW
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.tg-ambient {
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.tg-ambient-tl {
+    top: 0;
+    left: 0;
+    width: 40vw;
+    height: 40vh;
+    background: radial-gradient(ellipse at top left, rgba(201, 162, 39, 0.04) 0%, transparent 60%);
+}
+
+.tg-ambient-br {
+    bottom: 0;
+    right: 0;
+    width: 40vw;
+    height: 40vh;
+    background: radial-gradient(ellipse at bottom right, rgba(107, 45, 58, 0.06) 0%, transparent 60%);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .thanksgiving-badge {
+        display: none;
+    }
+    
+    .tg-toast {
+        left: 16px;
+        right: 16px;
+        transform: translateX(0) translateY(120px);
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    @keyframes tgToastIn {
+        to { transform: translateX(0) translateY(0); opacity: 1; }
+    }
+    
+    @keyframes tgToastOut {
+        to { transform: translateX(0) translateY(120px); opacity: 0; }
+    }
+}
