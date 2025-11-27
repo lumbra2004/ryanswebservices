@@ -1,47 +1,47 @@
 -- Fix Messages RLS Policies
 -- Run this in Supabase SQL Editor to fix the issue where users only see their own messages
 
--- Drop existing messages policies
+-- Drop ALL existing messages policies first
 DROP POLICY IF EXISTS "Users can view messages in their conversations" ON messages;
 DROP POLICY IF EXISTS "Users can send messages" ON messages;
 DROP POLICY IF EXISTS "Message sender or admin can update messages" ON messages;
+DROP POLICY IF EXISTS "Enable read access for users" ON messages;
+DROP POLICY IF EXISTS "Enable insert for users" ON messages;
+DROP POLICY IF EXISTS "Enable update for users" ON messages;
 
--- Recreate with fixed logic
--- Users can see ALL messages in conversations they own (including admin replies)
-CREATE POLICY "Users can view messages in their conversations" ON messages
+-- Simple policy: If you own the conversation, you can see ALL messages in it
+CREATE POLICY "Users can view all messages in their conversations" ON messages
     FOR SELECT USING (
-        EXISTS (
-            SELECT 1 FROM conversations 
-            WHERE conversations.id = messages.conversation_id 
-            AND conversations.user_id = auth.uid()
+        conversation_id IN (
+            SELECT id FROM conversations WHERE user_id = auth.uid()
         )
+        OR 
+        sender_id = auth.uid()
         OR
-        EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+        (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
     );
 
--- Users can send messages in their own conversations, admins can send anywhere
-CREATE POLICY "Users can send messages" ON messages
+-- Users can insert messages if they own the conversation or are admin
+CREATE POLICY "Users can send messages in their conversations" ON messages
     FOR INSERT WITH CHECK (
-        auth.uid() = sender_id AND
-        (
-            EXISTS (
-                SELECT 1 FROM conversations 
-                WHERE conversations.id = conversation_id 
-                AND conversations.user_id = auth.uid()
+        sender_id = auth.uid()
+        AND (
+            conversation_id IN (
+                SELECT id FROM conversations WHERE user_id = auth.uid()
             )
             OR
-            EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+            (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
         )
     );
 
--- Users can update (mark as read) messages in their conversations
-CREATE POLICY "Message sender or admin can update messages" ON messages
+-- Users can update messages in their conversations (for marking read)
+CREATE POLICY "Users can update messages in their conversations" ON messages
     FOR UPDATE USING (
-        EXISTS (
-            SELECT 1 FROM conversations 
-            WHERE conversations.id = messages.conversation_id 
-            AND conversations.user_id = auth.uid()
+        conversation_id IN (
+            SELECT id FROM conversations WHERE user_id = auth.uid()
         )
         OR
-        EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+        sender_id = auth.uid()
+        OR
+        (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
     );
