@@ -62,6 +62,7 @@ ALTER TABLE custom_quotes ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Anyone can view quote by code" ON custom_quotes;
 DROP POLICY IF EXISTS "Admins can manage quotes" ON custom_quotes;
 DROP POLICY IF EXISTS "Users can view their redeemed quotes" ON custom_quotes;
+DROP POLICY IF EXISTS "Users can redeem quotes" ON custom_quotes;
 
 -- 3. RLS Policies
 -- Anyone can look up a quote by code (for redemption)
