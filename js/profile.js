@@ -574,7 +574,7 @@ class ProfileManager {
                             </div>
                         ` : ''}
                     </div>
-                    <div style="margin-top: 1rem;">
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
                         <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
                            target="_blank" 
                            style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(99, 102, 241, 0.1); color: #818cf8; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: all 0.2s;"
@@ -583,6 +583,14 @@ class ProfileManager {
                             <span>View in Stripe</span>
                             <span>→</span>
                         </a>
+                        ${request.stripe_subscription_id && monthlyCost > 0 ? `
+                            <button onclick="profileManager.cancelSubscription('${request.id}', '${request.stripe_subscription_id}')"
+                                    style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;"
+                                    onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'"
+                                    onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
+                                Cancel Subscription
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
             `}).join('');
@@ -595,6 +603,46 @@ class ProfileManager {
                     <p>Error loading invoices. Please try again later.</p>
                 </div>
             `;
+        }
+    }
+
+    async cancelSubscription(requestId, subscriptionId) {
+        if (!confirm('Are you sure you want to cancel this subscription? You will continue to have access until the end of your current billing period.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/stripe/cancel-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ subscriptionId })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to cancel subscription');
+            }
+
+            const data = await response.json();
+            
+            // Update the service request status
+            const { error: updateError } = await supabase
+                .from('service_requests')
+                .update({ 
+                    status: 'cancelled',
+                    stripe_subscription_id: null
+                })
+                .eq('id', requestId);
+
+            if (updateError) throw updateError;
+
+            this.showNotification('Subscription cancelled successfully', 'success');
+            await this.loadInvoices(); // Reload to remove the cancel button
+        } catch (error) {
+            console.error('Error cancelling subscription:', error);
+            this.showNotification('Failed to cancel subscription: ' + error.message, 'error');
         }
     }
 

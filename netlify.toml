@@ -25,3 +25,8 @@
   from = "/api/stripe/create-subscription"
   to = "/.netlify/functions/stripe-subscription"
   status = 200
+
+[[redirects]]
+  from = "/api/stripe/cancel-subscription"
+  to = "/.netlify/functions/stripe-cancel-subscription"
+  status = 200
