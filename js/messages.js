@@ -274,20 +274,43 @@ class MessagesSystem {
             convId = this.conversations[0].id;
         }
 
+        // Create optimistic message (show immediately with "sending" status)
+        const tempId = 'temp-' + Date.now();
+        const optimisticMessage = {
+            id: tempId,
+            content: content,
+            sender_id: this.currentUser.id,
+            created_at: new Date().toISOString(),
+            status: 'sending',
+            read: false
+        };
+        
+        // Add to UI immediately
+        this.messages.push(optimisticMessage);
+        this.renderWidgetMessages();
+        
+        // Scroll to bottom
+        const messagesContainer = document.getElementById('widgetMessages');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Actually send the message
         const message = await this.sendMessage(content, convId);
         
         if (message) {
-            // Only add if not already added by realtime subscription
-            const exists = this.messages.some(m => m.id === message.id);
-            if (!exists) {
-                this.messages.push(message);
+            // Replace optimistic message with real one
+            const index = this.messages.findIndex(m => m.id === tempId);
+            if (index !== -1) {
+                this.messages[index] = { ...message, status: 'sent' };
                 this.renderWidgetMessages();
             }
-            
-            // Scroll to bottom
-            const messagesContainer = document.getElementById('widgetMessages');
-            if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } else {
+            // Mark as failed if send failed
+            const index = this.messages.findIndex(m => m.id === tempId);
+            if (index !== -1) {
+                this.messages[index].status = 'failed';
+                this.renderWidgetMessages();
             }
         }
     }
@@ -314,9 +337,9 @@ class MessagesSystem {
                 const isForCurrentConversation = newMessage.conversation_id === this.currentConversation;
                 
                 if (isForCurrentConversation) {
-                    // Only add if not already in the array (prevent duplicates)
-                    const exists = this.messages.some(m => m.id === newMessage.id);
-                    if (!exists) {
+                    // Only add if not already in the array and not our own message (we use optimistic UI)
+                    const exists = this.messages.some(m => m.id === newMessage.id || (m.id && m.id.startsWith && m.id.startsWith('temp-')));
+                    if (!exists && newMessage.sender_id !== this.currentUser.id) {
                         this.messages.push(newMessage);
                         this.renderWidgetMessages();
                     }
@@ -415,15 +438,39 @@ class MessagesSystem {
             return;
         }
 
-        container.innerHTML = this.messages.map(msg => `
-            <div class="chat-message ${msg.sender_id === this.currentUser?.id ? 'sent' : 'received'}">
-                <div class="chat-message-content">${this.escapeHtml(msg.content)}</div>
-                <div class="chat-message-time">${this.formatTime(msg.created_at)}</div>
-            </div>
-        `).join('');
+        container.innerHTML = this.messages.map(msg => {
+            const isSent = msg.sender_id === this.currentUser?.id;
+            const statusIcon = this.getMessageStatusIcon(msg);
+            
+            return `
+                <div class="chat-message ${isSent ? 'sent' : 'received'} ${msg.status || ''}">
+                    <div class="chat-message-content">${this.escapeHtml(msg.content)}</div>
+                    <div class="chat-message-meta">
+                        <span class="chat-message-time">${this.formatTime(msg.created_at)}</span>
+                        ${isSent ? `<span class="chat-message-status">${statusIcon}</span>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
 
         // Scroll to bottom
         container.scrollTop = container.scrollHeight;
+    }
+
+    getMessageStatusIcon(msg) {
+        // Check status
+        if (msg.status === 'sending') {
+            return '<span class="status-sending">○</span>';
+        }
+        if (msg.status === 'failed') {
+            return '<span class="status-failed">✕</span>';
+        }
+        // Sent but not read - show checkmark
+        if (!msg.read) {
+            return '<span class="status-sent">✓</span>';
+        }
+        // Read - show company logo
+        return '<img src="/favicon_io/favicon-16x16.png" alt="Seen" class="status-read-logo">';
     }
 
     escapeHtml(text) {
