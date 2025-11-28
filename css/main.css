@@ -18,6 +18,7 @@ html {
     width: 100%;
     position: relative;
     background: #0A0E1A;
+    background-color: #0A0E1A;
 }
 
 body {
@@ -28,38 +29,29 @@ body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: none;
     background: #0A0E1A;
+    background-color: #0A0E1A;
     min-height: 100vh;
+    min-height: 100dvh;
     min-height: -webkit-fill-available;
 }
 
 /* iOS Safe Area Background Coverage */
 @supports (padding: env(safe-area-inset-top)) {
     html {
+        background: #0A0E1A;
+        background-color: #0A0E1A;
+    }
+    
+    body {
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
-        background: #0A0E1A;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
     }
     
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: env(safe-area-inset-top);
-        background: #0A0E1A;
-        z-index: 9999;
-    }
-    
-    body::after {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: env(safe-area-inset-bottom);
-        background: #0A0E1A;
-        z-index: 9999;
+    /* Fixed header should account for safe area */
+    header, .header, nav.fixed, .navbar {
+        padding-top: env(safe-area-inset-top);
     }
 }
 
