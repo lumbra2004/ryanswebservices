@@ -455,7 +455,8 @@ class AdminPanel {
                 this.loadFiles(),
                 this.loadPayments(),
                 this.loadPromoCodes(),
-                this.loadBlogPosts()
+                this.loadBlogPosts(),
+                this.loadConversations()
             ]);
 
             this.updateStats();
@@ -466,9 +467,53 @@ class AdminPanel {
             this.renderPayments();
             this.renderSubscriptions();
             this.renderRecentActivity();
+            
+            // Setup realtime subscriptions for messages
+            this.setupMessagesRealtime();
         } catch (error) {
             console.error('Error loading data:', error);
         }
+    }
+    
+    setupMessagesRealtime() {
+        // Subscribe to new conversations
+        supabase
+            .channel('admin-conversations')
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'public',
+                table: 'conversations'
+            }, (payload) => {
+                console.log('[Admin] Conversation change:', payload);
+                this.loadConversations();
+            })
+            .subscribe((status) => {
+                console.log('[Admin] Conversations subscription status:', status);
+            });
+        
+        // Subscribe to new messages
+        supabase
+            .channel('admin-messages')
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'public',
+                table: 'messages'
+            }, (payload) => {
+                console.log('[Admin] Message change:', payload);
+                // If it's a new message for the current conversation, add it
+                if (payload.eventType === 'INSERT' && payload.new.conversation_id === this.currentConversation) {
+                    // Only add if it's not from admin (we already added our own)
+                    if (!payload.new.is_admin) {
+                        this.currentConversationMessages.push(payload.new);
+                        this.renderConversationMessages();
+                    }
+                }
+                // Reload conversations to update unread counts
+                this.loadConversations();
+            })
+            .subscribe((status) => {
+                console.log('[Admin] Messages subscription status:', status);
+            });
     }
 
     async loadPayments() {
@@ -3848,7 +3893,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                     sender_email: this.currentUser.email,
                     content: content,
                     is_admin: true,
-                    read: false
+                    is_read: false
                 })
                 .select()
                 .single();
@@ -3880,7 +3925,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
         try {
             await supabase
                 .from('messages')
-                .update({ read: true })
+                .update({ is_read: true })
                 .eq('conversation_id', conversationId)
                 .eq('is_admin', false);
             

@@ -1,0 +1,412 @@
+/* ==========================================================================
+   PAGE SECTIONS - Services, Portfolio, Contact, Stats, etc.
+   ========================================================================== */
+
+/* ========================================================================
+   STATS SECTION
+   ======================================================================== */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+    max-width: var(--container-lg);
+    margin: 0 auto var(--space-16);
+}
+
+.stat-card {
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xl);
+}
+
+.stat-value {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    color: var(--color-primary-400);
+    margin-bottom: var(--space-2);
+}
+
+.stat-label {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+}
+
+/* ========================================================================
+   SERVICES SECTION
+   ======================================================================== */
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+    max-width: var(--container-xl);
+    margin: 0 auto;
+}
+
+.service-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    transition: var(--transition-all);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary-500), var(--color-accent-500));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-xl);
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: var(--radius-lg);
+    font-size: 1.75rem;
+    margin-bottom: var(--space-5);
+}
+
+.service-card h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.service-card p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+/* ========================================================================
+   PORTFOLIO SECTION
+   ======================================================================== */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--space-8);
+    max-width: var(--container-xl);
+    margin: 0 auto;
+}
+
+.portfolio-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    transition: var(--transition-all);
+    text-decoration: none;
+    display: block;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-primary-500);
+    box-shadow: var(--shadow-2xl), var(--shadow-glow-soft);
+}
+
+.portfolio-image {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+
+.portfolio-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.portfolio-card:hover .portfolio-image img {
+    transform: scale(1.05);
+}
+
+.portfolio-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.8) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.portfolio-card:hover .portfolio-image::after {
+    opacity: 1;
+}
+
+.portfolio-content {
+    padding: var(--space-6);
+}
+
+.portfolio-content h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.portfolio-content p {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+.portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+}
+
+.portfolio-tag {
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+@media (max-width: 768px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================================================
+   CONTACT SECTION
+   ======================================================================== */
+
+.contact-section {
+    background: var(--bg-surface);
+    border-radius: var(--radius-3xl);
+    padding: var(--space-16);
+    max-width: var(--container-md);
+    margin: 0 auto;
+    border: 1px solid var(--border-default);
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+}
+
+.contact-header h2 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.contact-email {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    color: var(--color-primary-400);
+    font-weight: var(--font-medium);
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.contact-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+}
+
+@media (max-width: 640px) {
+    .contact-section {
+        padding: var(--space-8);
+        border-radius: var(--radius-2xl);
+    }
+
+    .contact-form .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Copy Email Button */
+.copy-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-all);
+}
+
+.copy-email-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+/* Privacy Notice */
+.privacy-notice {
+    margin-top: var(--space-8);
+    padding: var(--space-4);
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    line-height: var(--leading-relaxed);
+}
+
+/* ========================================================================
+   PRICING SECTION
+   ======================================================================== */
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+    max-width: var(--container-xl);
+    margin: 0 auto;
+}
+
+.pricing-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    position: relative;
+    transition: var(--transition-all);
+}
+
+.pricing-card.featured {
+    border-color: var(--color-primary-500);
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+}
+
+.pricing-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary-500), var(--color-accent-500));
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.pricing-badge {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    padding: var(--space-1) var(--space-3);
+    background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+    color: var(--color-gray-900);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+}
+
+.pricing-header {
+    text-align: center;
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-default);
+    margin-bottom: var(--space-6);
+}
+
+.pricing-name {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.pricing-price {
+    font-size: var(--text-5xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+.pricing-price span {
+    font-size: var(--text-lg);
+    font-weight: var(--font-normal);
+    color: var(--text-tertiary);
+}
+
+.pricing-description {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    margin-top: var(--space-2);
+}
+
+.pricing-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+}
+
+.pricing-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.pricing-feature svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-success-500);
+    margin-top: 2px;
+}
+
+.pricing-cta {
+    width: 100%;
+}

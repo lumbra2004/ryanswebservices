@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EQPX62LKVE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EQPX62LKVE');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works | Ryan's Web Services</title>
+    <meta name="description" content="Learn how our web design process works from first contact to launch. A step-by-step guide to getting your business online.">
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    
+    <!-- Fonts & Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../stylesheets/main.css">
+    
+    <style>
+        .article-hero {
+            padding: 10rem 1.5rem 4rem;
+            text-align: center;
+            background: radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .article-category {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .article-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .article-hero .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .article-content {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
+        }
+        
+        .article-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 3rem 0 1rem;
+            color: var(--text-primary);
+        }
+        
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .article-content p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+        
+        .article-content ul, .article-content ol {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+        
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-content strong {
+            color: var(--text-primary);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: gap 0.3s ease;
+        }
+        
+        .back-link:hover {
+            gap: 0.75rem;
+        }
+        
+        /* Process Steps */
+        .process-timeline {
+            position: relative;
+            margin: 3rem 0;
+        }
+        
+        .process-step {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-light), #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .step-line {
+            width: 2px;
+            flex: 1;
+            background: linear-gradient(to bottom, var(--primary-light), transparent);
+            margin-top: 0.5rem;
+        }
+        
+        .process-step:last-child .step-line {
+            display: none;
+        }
+        
+        .step-content {
+            padding-bottom: 1rem;
+        }
+        
+        .step-content h3 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .step-content p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+        }
+        
+        .status-badge.pending {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+            color: #f59e0b;
+        }
+        
+        .status-badge.progress {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        
+        .status-badge.ready {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #a855f7;
+        }
+        
+        .status-badge.paid {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        
+        .status-badge.complete {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .info-box h4 {
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-box p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+        
+        .info-box ul {
+            margin: 0.75rem 0 0 0;
+        }
+        
+        /* Screenshot Placeholder */
+        .screenshot-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .screenshot-box img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border-secondary);
+        }
+        
+        .screenshot-box .placeholder {
+            background: var(--bg-primary);
+            border: 2px dashed var(--border-secondary);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .screenshot-caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+        
+        /* Contract Info */
+        .contract-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .contract-box h4 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contract-box ul {
+            margin: 0;
+        }
+        
+        /* Quick Reference */
+        .status-reference {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .status-reference h4 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .status-item p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        /* CTA */
+        .article-cta {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .article-cta h3 {
+            margin-top: 0;
+        }
+        
+        .article-cta p {
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 600px) {
+            .process-step {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .step-indicator {
+                flex-direction: row;
+                gap: 1rem;
+            }
+            
+            .step-line {
+                height: 2px;
+                width: auto;
+                flex: 1;
+                margin-top: 0;
+                background: linear-gradient(to right, var(--primary-light), transparent);
+            }
+            
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="../images/logo.png" alt="Ryans Web Services" class="logo-img">
+                Ryans Web Services, LLC
+            </a>
+            
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="../resources/" class="nav-link active">Resources</a></li>
+                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Article Hero -->
+    <section class="article-hero">
+        <a href="../resources/" class="back-link">← Back to Resources</a>
+        <div class="article-meta">
+            <span class="article-category">Getting Started</span>
+            <span>November 28, 2025</span>
+            <span>6 min read</span>
+        </div>
+        <h1>How It Works: From First Contact to Launch</h1>
+        <p class="subtitle">A complete guide to our process, so you know exactly what to expect when working with Ryan's Web Services.</p>
+    </section>
+
+    <!-- Article Content -->
+    <article class="article-content">
+        
+        <p>Getting a professional website for your business shouldn't be complicated. Here's a step-by-step breakdown of how we work together—from your first message to your site going live.</p>
+
+        <h2>The Process</h2>
+
+        <div class="process-timeline">
+            
+            <!-- Step 1 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Get In Touch</h3>
+                    <p>The first step is reaching out. You can contact me through:</p>
+                    <ul>
+                        <li><strong>The contact form</strong> on the homepage</li>
+                        <li><strong>Email</strong> at ryan@ryanswebservices.com</li>
+                        <li><strong>Submitting a request</strong> through your account (if you've already signed up)</li>
+                    </ul>
+                    <p>Tell me a little about your business and what you're looking for. Don't worry if you're not sure exactly what you need—that's what the next step is for.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>We Discuss Your Needs</h3>
+                    <p>Once you reach out, we'll have a conversation about your business. I'll ask questions like:</p>
+                    <ul>
+                        <li>What does your business do?</li>
+                        <li>Who are your customers?</li>
+                        <li>Do you have a logo, photos, or content ready?</li>
+                        <li>Do you need a domain name or professional email?</li>
+                    </ul>
+                    <p>Based on our conversation, I'll recommend a plan that fits your needs—or provide a custom quote if your project requires something unique.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Submit Your Request</h3>
+                    <span class="status-badge pending">📋 Pending</span>
+                    <p style="margin-top: 1rem;">Once you've decided on a plan, head to the <a href="../pricing.html">Pricing page</a> and select your packages. You'll fill out a brief form with details about your project and submit a request.</p>
+                    <p>At this point, your request status will show as <strong>Pending</strong> while I review the details.</p>
+                    
+                    <div class="screenshot-box">
+                        <img src="../images/step1.png" alt="Pricing page package selection">
+                        <p class="screenshot-caption">Select your packages and add-ons on the pricing page</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">4</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Building Your Website</h3>
+                    <span class="status-badge progress">🔨 In Progress</span>
+                    <p style="margin-top: 1rem;">This is where the magic happens. Once I begin working on your project, the status changes to <strong>In Progress</strong>.</p>
+                    <p>During this phase, we'll communicate back and forth as I build your site. You'll be able to:</p>
+                    <ul>
+                        <li>Review progress and provide feedback</li>
+                        <li>Send over any additional content or photos</li>
+                        <li>Request changes or adjustments</li>
+                    </ul>
+                    <p>We'll keep refining until you're completely happy with your website.</p>
+                    
+                    <div class="screenshot-box">
+                        <img src="../images/step2.png" alt="My Services dashboard showing Starter Website Package with monthly cost" style="max-width: 100%; border-radius: 8px;">
+                        <p class="screenshot-caption">Track your project status from your dashboard</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">5</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Review & Sign the Contract</h3>
+                    <span class="status-badge ready">📝 Ready to Purchase</span>
+                    <p style="margin-top: 1rem;">Once you've approved the final design, I'll attach a contract to your request. The contract covers:</p>
+                    
+                    <div class="contract-box">
+                        <h4>📄 What's in the Contract</h4>
+                        <ul>
+                            <li><strong>Ownership:</strong> You are purchasing the rights to the website (the software) I've built for you</li>
+                            <li><strong>Hosting Services:</strong> I will host and maintain the website on your behalf using that software</li>
+                            <li><strong>Terms of Service:</strong> Details about maintenance, support, and what's included</li>
+                        </ul>
+                    </div>
+                    
+                    <p>After you review and sign the contract, your status will change to <strong>Ready to Purchase</strong>.</p>
+                    
+                    <div class="screenshot-box">
+                        <img src="../images/step3.png" alt="Contract attachment on request page" style="max-width: 100%; border-radius: 8px;">
+                        <p class="screenshot-caption">Your contract will appear as an attachment on your request</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">6</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Make Your Payment</h3>
+                    <span class="status-badge paid">💳 Paid</span>
+                    <p style="margin-top: 1rem;">Once the contract is signed, you'll complete your payment. After payment is confirmed, your status updates to <strong>Paid</strong>.</p>
+                    <p>Now it's time to go live!</p>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="process-step">
+                <div class="step-indicator">
+                    <div class="step-number">7</div>
+                    <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                    <h3>Launch & Setup</h3>
+                    <span class="status-badge complete">✅ Complete</span>
+                    <p style="margin-top: 1rem;">After payment, I'll handle all the technical setup:</p>
+                    <ul>
+                        <li><strong>Publishing your website</strong> to your chosen domain name</li>
+                        <li><strong>Setting up your professional email</strong> (if included in your plan)</li>
+                        <li><strong>Configuring analytics</strong> so you can track visitors</li>
+                        <li><strong>Final testing</strong> to make sure everything works perfectly</li>
+                    </ul>
+                    <p>Once your site is live and everything is configured, your status changes to <strong>Complete</strong>. 🎉</p>
+                </div>
+            </div>
+
+        </div>
+
+        <h2>After Launch: Ongoing Support</h2>
+        
+        <p>Your relationship with Ryan's Web Services doesn't end at launch. I'm here for the long haul:</p>
+        
+        <ul>
+            <li><strong>Need changes to your site?</strong> Just reach out and I'll make updates for you</li>
+            <li><strong>Having trouble with email or hosting?</strong> I'll help you troubleshoot</li>
+            <li><strong>Want to add new features?</strong> We can discuss expanding your site as your business grows</li>
+        </ul>
+        
+        <p>Your website is an investment in your business, and I'm committed to making sure it keeps working for you.</p>
+
+        <div class="info-box">
+            <h4>💡 Quick Tip</h4>
+            <p>Keep an eye on your email for updates about your project. I'll send notifications when your status changes or when I need something from you.</p>
+        </div>
+
+        <h2>Status Reference Guide</h2>
+        
+        <p>Here's a quick reference for what each status means:</p>
+        
+        <div class="status-reference">
+            <h4>Understanding Your Request Status</h4>
+            <div class="status-list">
+                <div class="status-item">
+                    <span class="status-badge pending">📋 Pending</span>
+                    <p>Your request has been submitted and is waiting for review</p>
+                </div>
+                <div class="status-item">
+                    <span class="status-badge progress">🔨 In Progress</span>
+                    <p>Work has begun on your website</p>
+                </div>
+                <div class="status-item">
+                    <span class="status-badge ready">📝 Ready to Purchase</span>
+                    <p>Website is complete, contract signed, awaiting payment</p>
+                </div>
+                <div class="status-item">
+                    <span class="status-badge paid">💳 Paid</span>
+                    <p>Payment received, preparing to launch</p>
+                </div>
+                <div class="status-item">
+                    <span class="status-badge complete">✅ Complete</span>
+                    <p>Your website is live!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-cta">
+            <h3>Ready to Get Started?</h3>
+            <p>Have questions or ready to begin your project? I'd love to hear from you.</p>
+            <a href="../index.html#contact" class="hero-cta">Contact Me</a>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2025-2026 Ryans Web Services, LLC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

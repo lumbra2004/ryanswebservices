@@ -1,122 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4S74TXQDB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S4S74TXQDB');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>My Profile | Ryan's Webservice</title>
+    <title>My Profile | Ryans Web Services, LLC</title>
     <meta name="description" content="Manage your account, view orders, and access your files.">
     
+    <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
     <link rel="manifest" href="favicon_io/site.webmanifest">
+    
+    <!-- Fonts & Styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/messages.css">
-    <link rel="stylesheet" href="css/thanksgiving.css">>
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <link rel="stylesheet" href="stylesheets/auth.css">
+    <link rel="stylesheet" href="stylesheets/messages.css">
+
     <style>
-        html {
-            min-height: 100%;
-            height: 100%;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--bg-darker) 100%);
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            background-attachment: fixed;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .quick-action-card:hover {
-            transform: translateY(-4px) !important;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2) !important;
-        }
-
-        /* Light Mode Styles */
-        body.light-mode {
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
-        }
-
-        body.light-mode .profile-header {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: #e2e8f0;
-        }
-
-        body.light-mode .profile-card {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: #e2e8f0;
-            border-left-color: var(--primary);
-        }
-
-        body.light-mode .profile-card:hover {
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        body.light-mode .profile-avatar-large {
-            background: rgba(0, 102, 255, 0.08);
-            border-color: rgba(0, 102, 255, 0.2);
-        }
-
-        body.light-mode .member-badge {
-            background: rgba(0, 102, 255, 0.08);
-            border-color: rgba(0, 102, 255, 0.2);
-        }
-
-        body.light-mode .stat-value {
-            color: var(--text-primary);
-        }
-
-        body.light-mode .quick-link-btn {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: #e2e8f0;
-        }
-
-        body.light-mode .quick-link-btn:hover {
-            background: rgba(255, 255, 255, 1);
-            border-color: var(--primary);
-        }
-
-        body.light-mode input,
-        body.light-mode textarea {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: #e2e8f0;
-            color: var(--text-primary);
-        }
-
-        body.light-mode input:focus,
-        body.light-mode textarea:focus {
-            border-color: var(--primary);
-            background: #ffffff;
-        }
-
+        /* Profile Page Specific Styles - Using Design System v3.0 */
+        
         .profile-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 8rem 2rem 4rem;
+            padding: 7rem var(--space-6) var(--space-16);
         }
 
+        /* Profile Header */
         .profile-header {
-            text-align: left;
-            margin-bottom: 3rem;
-            padding: 3rem 3.5rem;
-            background: rgba(10, 15, 25, 0.6);
-            border-radius: 0;
-            border: none;
-            border-left: 4px solid var(--primary);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
-            gap: 3rem;
+            gap: var(--space-8);
+            padding: var(--space-8);
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+            position: relative;
+            overflow: hidden;
         }
 
         .profile-header::before {
@@ -125,785 +58,461 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(90deg, transparent 0%, rgba(0, 102, 255, 0.02) 50%, transparent 100%),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 102, 255, 0.03) 2px, rgba(0, 102, 255, 0.03) 4px);
-            opacity: 0.4;
-            z-index: 0;
+            height: 4px;
+            background: var(--gradient-accent);
         }
 
-        .profile-header > * {
-            position: relative;
-            z-index: 1;
+        .profile-avatar-large {
+            width: 88px;
+            height: 88px;
+            border-radius: var(--radius-xl);
+            background: var(--gradient-accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-lg);
         }
 
         .profile-header-content {
             flex: 1;
         }
 
-        .profile-avatar-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 4px;
-            background: rgba(0, 102, 255, 0.1);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 700;
-            box-shadow: none;
-            border: 1px solid rgba(0, 102, 255, 0.3);
-            position: relative;
-            font-family: 'Courier New', monospace;
-            flex-shrink: 0;
-        }
-
-        .profile-avatar-large::after {
-            display: none;
-        }
-
         .profile-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-2);
         }
 
         .profile-header p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            opacity: 0.7;
-            font-family: 'Courier New', monospace;
+            color: var(--color-text-secondary);
+            font-size: var(--text-base);
+            margin-bottom: var(--space-4);
         }
 
         .member-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 102, 255, 0.05);
-            border: 1px solid rgba(0, 102, 255, 0.2);
-            border-radius: 3px;
-            color: rgba(0, 102, 255, 0.9);
-            font-size: 0.85rem;
-            margin-top: 0;
-            backdrop-filter: none;
-            box-shadow: none;
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: var(--color-accent-subtle);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-full);
+            color: var(--color-accent);
+            font-size: var(--text-sm);
+            font-weight: 500;
         }
 
-        .member-badge::before {
-            content: '●';
-            font-size: 0.6rem;
-            color: var(--primary);
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: var(--space-2);
+            padding: var(--space-2);
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+            overflow-x: auto;
         }
 
-        .member-badge strong {
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: var(--space-3) var(--space-5);
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid transparent;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-text-primary);
+            background: var(--color-bg-card);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-accent);
+            color: white;
             font-weight: 600;
-            font-size: 0.85rem;
+            box-shadow: var(--shadow-md);
         }
 
+        /* Profile Grid */
         .profile-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
         }
 
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            body {
-                min-height: 100vh;
-                background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 50%, var(--bg-darker) 100%) fixed;
-            }
-
-            html {
-                min-height: 100vh;
-                background: var(--bg-darker);
-            }
-
-            .profile-container {
-                padding: 6rem 1rem 3rem;
-            }
-
-            .profile-header {
-                padding: 2rem 1.5rem;
-                margin-bottom: 2rem;
-            }
-
-            .profile-header-content {
-                gap: 1.5rem;
-            }
-
-            .avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .profile-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .profile-header p {
-                font-size: 0.85rem;
-            }
-
-            .member-badge {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.7rem;
-            }
-
-            .profile-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .profile-card {
-                padding: 1.5rem;
-            }
-
-            .profile-card h2 {
-                font-size: 0.85rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
-            }
-
-            .stat-value {
-                font-size: 1.5rem;
-            }
-
-            .stat-label {
-                font-size: 0.7rem;
-            }
-
-            .quick-links-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-link-btn {
-                padding: 1.25rem;
-            }
-
-            .form-group label {
-                font-size: 0.8rem;
-            }
-
-            .form-group input {
-                padding: 0.875rem;
-                font-size: 0.9rem;
-            }
-
-            .btn-primary {
-                width: 100%;
-                padding: 1rem;
-            }
-
-            /* User menu in mobile nav */
-            .nav-links .user-button {
-                background: transparent;
-                border: none;
-                justify-content: flex-start;
-            }
-
-            .nav-links .user-button:hover {
-                background: rgba(0, 102, 255, 0.1);
-            }
-        }
-
-        @media (max-width: 968px) {
-            .profile-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        /* Profile Card */
         .profile-card {
-            background: rgba(10, 15, 25, 0.4);
-            border-radius: 0;
-            padding: 2.5rem;
-            box-shadow: none;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-left: 2px solid rgba(0, 102, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 102, 255, 0.02) 2px,
-                rgba(0, 102, 255, 0.02) 4px
-            );
-            opacity: 0.3;
-            pointer-events: none;
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            transition: all var(--transition-base);
         }
 
         .profile-card:hover {
-            transform: translateX(2px);
-            border-left-color: var(--primary);
-            background: rgba(10, 15, 25, 0.6);
+            border-color: var(--color-border);
         }
 
-        .profile-card h2 {
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.9;
-        }
-
-        .profile-card h2::before {
-            content: '';
-            display: inline-block;
-            width: 3px;
-            height: 16px;
-            background: var(--primary);
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        .profile-info-item {
-            margin-bottom: 2rem;
-        }
-
-        .profile-info-item label {
-            display: block;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .profile-info-item input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            backdrop-filter: none;
-            font-family: 'Courier New', monospace;
-        }
-
-        .profile-info-item input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: none;
-            transform: none;
-        }
-
-        .profile-info-item input:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .profile-info-item input:not(:disabled) {
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 2px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn::before {
-            display: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: none;
-            position: relative;
-            border: 1px solid var(--primary);
-        }
-
-        .btn-primary::after {
-            display: none;
-        }
-
-        .btn-primary:hover {
-            transform: none;
-            background: var(--primary-dark);
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: none;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: none;
-        }
-
-        .orders-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .orders-table th,
-        .orders-table td {
-            padding: 1.25rem 1.5rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .orders-table th {
-            font-weight: 700;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .orders-table th:first-child {
-            border-radius: 12px 0 0 0;
-        }
-
-        .orders-table th:last-child {
-            border-radius: 0 12px 0 0;
-        }
-
-        .orders-table td {
-            color: var(--text-primary);
-            font-size: 1rem;
-        }
-
-        .orders-table tbody tr {
-            transition: background 0.2s ease;
-        }
-
-        .orders-table tbody tr:hover {
-            background: rgba(0, 102, 255, 0.05);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-pending {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.3);
-        }
-
-        .status-paid {
-            background: rgba(76, 175, 80, 0.15);
-            color: #4caf50;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-
-        .status-completed {
-            background: rgba(33, 150, 243, 0.15);
-            color: #2196f3;
-            border: 1px solid rgba(33, 150, 243, 0.3);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-
-        .file-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.5rem;
-            background: var(--bg-darker);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .file-item:hover {
-            background: rgba(0, 102, 255, 0.05);
-            border-color: rgba(0, 102, 255, 0.2);
-            transform: translateX(4px);
-        }
-
-        .file-info {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        .file-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
-        }
-
-        .file-details h4 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 1.05rem;
-        }
-
-        .file-details p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .file-download {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
-        }
-
-        .file-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .quick-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .quick-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.25rem 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
-            text-align: left;
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-left: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quick-link::before {
-            display: none;
-        }
-
-        .quick-link:hover {
-            background: rgba(0, 102, 255, 0.05);
-            transform: translateX(4px);
-            border-left-color: var(--primary);
-            box-shadow: none;
-        }
-
-        .quick-link-icon {
-            font-size: 1.25rem;
-            margin-bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 102, 255, 0.1);
-            border-radius: 2px;
-            filter: none;
-            transition: none;
-            flex-shrink: 0;
-        }
-
-        .quick-link:hover .quick-link-icon {
-            transform: none;
-            background: rgba(0, 102, 255, 0.15);
-        }
-
-        .quick-link div:last-child {
-            font-weight: 500;
-            font-size: 0.95rem;
-            position: relative;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        /* Enhanced Table */
-        .orders-table tbody tr {
-            transition: background 0.2s ease;
-        }
-
-        .orders-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Profile Actions */
-        .profile-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .profile-actions .btn {
-            flex: 0 0 auto;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .section-header h2 {
-            margin: 0;
-            padding-bottom: 0;
-            border: none;
-        }
-
-        .section-header h2::before {
-            display: none;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 0.875rem;
-            border-radius: 2px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: rgba(0, 102, 255, 0.08);
-            color: rgba(0, 102, 255, 0.9);
-            border: 1px solid rgba(0, 102, 255, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: none;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* Full width cards */
         .profile-card.full-width {
             grid-column: 1 / -1;
         }
 
-        /* Documents table */
+        .profile-card h2 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .stat-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+        }
+
+        .stat-card:hover {
+            border-color: var(--color-border-accent);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .stat-card .stat-label {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-card .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Quick Actions */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .quick-action-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-5);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: inherit;
+            transition: all var(--transition-base);
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--color-border-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action-text h4 {
+            font-size: var(--text-base);
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .quick-action-text p {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .section-header h2 {
+            margin-bottom: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            background: var(--color-accent-subtle);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        /* Form Styles */
+        .profile-info-item {
+            margin-bottom: var(--space-5);
+        }
+
+        .profile-info-item label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .profile-info-item input,
+        .profile-info-item textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-size: var(--text-base);
+            font-family: inherit;
+            transition: all var(--transition-fast);
+        }
+
+        .profile-info-item input:focus,
+        .profile-info-item textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px var(--color-accent-subtle);
+        }
+
+        .profile-info-item input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-accent);
+            background: var(--color-bg-elevated);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+            flex-wrap: wrap;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: var(--space-10);
+            color: var(--color-text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--color-border-light);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-4);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-10);
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+            opacity: 0.4;
+        }
+
+        /* Quote Code Input */
+        .quote-input-container {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .quote-input-container input {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--space-3) var(--space-4);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-accent);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Documents Table */
         .documents-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
         }
 
         .documents-table th,
         .documents-table td {
-            padding: 1rem;
+            padding: var(--space-4);
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        body.light-mode .documents-table th,
-        body.light-mode .documents-table td {
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--color-border-light);
         }
 
         .documents-table th {
-            color: var(--primary);
+            font-size: var(--text-sm);
             font-weight: 600;
-            font-size: 0.875rem;
+            color: var(--color-accent);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .documents-table td {
-            color: var(--text-secondary);
-        }
-
-        body.light-mode .documents-table td {
-            color: var(--text-primary);
+            color: var(--color-text-secondary);
         }
 
         .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
             font-weight: 500;
         }
 
         .status-badge.pending {
-            background: rgba(251, 191, 36, 0.1);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--color-warning);
+            border: 1px solid rgba(210, 153, 34, 0.3);
         }
 
-        .status-badge.signed {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+        .status-badge.signed,
+        .status-badge.paid {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--color-success);
+            border: 1px solid rgba(63, 185, 80, 0.3);
         }
 
         .doc-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: var(--space-2);
         }
 
         .doc-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
             border: none;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: var(--text-sm);
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
+            font-family: inherit;
         }
 
         .doc-btn.view {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: var(--color-accent-subtle);
+            color: var(--color-accent);
+            border: 1px solid var(--color-border-accent);
         }
 
         .doc-btn.view:hover {
-            background: rgba(59, 130, 246, 0.2);
+            background: var(--color-accent-muted);
         }
 
         .doc-btn.sign {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient-accent);
             color: white;
         }
 
         .doc-btn.sign:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
         }
 
         .doc-btn:disabled {
@@ -911,33 +520,89 @@
             cursor: not-allowed;
         }
 
-        .no-documents {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-secondary);
-        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 6rem var(--space-4) var(--space-10);
+            }
 
-        body.light-mode .no-documents {
-            color: var(--text-primary);
-        }
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-4);
+                padding: var(--space-6);
+            }
 
-        .no-documents-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+            .profile-avatar-large {
+                width: 72px;
+                height: 72px;
+                font-size: var(--text-2xl);
+            }
 
-        @media (max-width: 968px) {
-            .documents-table {
-                display: block;
-                overflow-x: auto;
+            .profile-header h1 {
+                font-size: var(--text-xl);
+            }
+
+            .tab-navigation {
+                padding: var(--space-1);
+            }
+
+            .tab-btn {
+                padding: var(--space-2) var(--space-4);
+                font-size: var(--text-xs);
+            }
+
+            .profile-card {
+                padding: var(--space-5);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .profile-actions .btn {
+                width: 100%;
+            }
+
+            .quote-input-container {
+                flex-direction: column;
+            }
+
+            .quote-input-container input,
+            .quote-input-container .btn {
+                width: 100%;
             }
         }
 
-        /* Enhanced animations */
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-5);
+        }
+
+        /* Card Animation */
+        .profile-card {
+            animation: fadeInUp 0.5s ease backwards;
+        }
+
+        .profile-card:nth-child(1) { animation-delay: 0.1s; }
+        .profile-card:nth-child(2) { animation-delay: 0.2s; }
+        .profile-card:nth-child(3) { animation-delay: 0.3s; }
+        .profile-card:nth-child(4) { animation-delay: 0.4s; }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -945,32 +610,140 @@
             }
         }
 
-        .profile-card {
-            animation: fadeInUp 0.6s ease-out backwards;
+        /* Settings Button */
+        .settings-button {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-accent);
+            border: none;
+            border-radius: var(--radius-full);
+            color: white;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-base);
+            z-index: var(--z-sticky);
         }
 
-        .profile-card:nth-child(1) { animation-delay: 0.1s; }
-        .profile-card:nth-child(2) { animation-delay: 0.2s; }
-        .profile-card:nth-child(3) { animation-delay: 0.3s; }
-        .profile-card:nth-child(4) { animation-delay: 0.4s; }
+        .settings-button:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow-lg);
+        }
+
+        /* Settings Menu */
+        .settings-menu {
+            position: fixed;
+            bottom: calc(var(--space-6) + 70px);
+            right: var(--space-6);
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            min-width: 200px;
+            box-shadow: var(--shadow-xl);
+            z-index: var(--z-sticky);
+            display: none;
+        }
+
+        .settings-menu.active {
+            display: block;
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .settings-menu-item:hover {
+            background: var(--color-bg-card);
+        }
+
+        .settings-menu-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            color: var(--color-text-primary);
+            font-size: var(--text-sm);
+        }
+
+        .settings-menu-icon {
+            font-size: var(--text-base);
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: var(--color-bg-card);
+            border-radius: var(--radius-full);
+            position: relative;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+        }
+
+        .toggle-switch.active {
+            background: var(--color-accent);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* Highlight Card */
+        .highlight-card {
+            background: linear-gradient(135deg, var(--color-accent-subtle), rgba(163, 113, 247, 0.1));
+            border-color: var(--color-border-accent);
+        }
+
+        .highlight-card p {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-5);
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
-        <nav class="container-nav">
-            <div class="logo">Ryan's Webservice</div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="images/logo.png" alt="Ryans Web Services" class="logo-img">
+                Ryans Web Services, LLC
+            </a>
+            
+            <button class="mobile-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="profile.html" class="active">Profile</a></li>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="resources/" class="nav-link">Resources</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
                 <li>
-                    <a href="login.html" id="loginBtn" class="login-btn" style="display: none;">Login</a>
-                    <a href="signup.html" id="signupBtn" class="login-btn" style="display: none; margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #059669);">Sign Up</a>
+                    <a href="login.html" id="loginBtn" class="nav-link nav-cta" style="display: none;">Login</a>
+                    <a href="signup.html" id="signupBtn" class="nav-link nav-cta" style="display: none; background: var(--color-success);">Sign Up</a>
                     <div id="userMenu" class="user-menu" style="display: none;">
                         <button id="userButton" class="user-button">
                             <div id="userAvatar" class="user-avatar">RW</div>
@@ -990,72 +763,71 @@
     </header>
 
     <div class="profile-container">
+        <!-- Profile Header -->
         <div class="profile-header">
             <div class="profile-avatar-large" id="profileAvatar">RW</div>
             <div class="profile-header-content">
                 <h1 id="profileName">Loading...</h1>
                 <p id="profileEmail">Loading...</p>
                 <div class="member-badge">
-                    <span>Since</span>
+                    <span>✨</span>
+                    <span>Member since</span>
                     <strong id="memberSince">2025</strong>
                 </div>
             </div>
         </div>
 
         <!-- Tab Navigation -->
-        <div style="background: rgba(10, 15, 25, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 0.5rem; margin-bottom: 2rem; display: flex; gap: 0.5rem; overflow-x: auto; backdrop-filter: blur(10px);">
-            <button class="tab-btn active" data-tab="overview" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); white-space: nowrap;">
-                🏠 Overview
-            </button>
-            <button class="tab-btn" data-tab="services" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
-                📋 My Services
-            </button>
-            <button class="tab-btn" data-tab="invoices" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
-                💳 Invoices
-            </button>
-            <button class="tab-btn" data-tab="documents" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
-                📄 Documents
-            </button>
-            <button class="tab-btn" data-tab="settings" style="flex: 1; min-width: 120px; padding: 0.875rem 1.5rem; background: rgba(99, 102, 241, 0.1); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s; white-space: nowrap;">
-                ⚙️ Settings
-            </button>
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="overview">🏠 Overview</button>
+            <button class="tab-btn" data-tab="services">📋 My Services</button>
+            <button class="tab-btn" data-tab="invoices">💳 Invoices</button>
+            <button class="tab-btn" data-tab="documents">📄 Documents</button>
+            <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
         </div>
 
         <!-- Tab Content: Overview -->
         <div class="tab-content" id="tab-overview">
             <div class="profile-grid">
-                <!-- Quick Stats Cards -->
-                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1rem;">
-                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
-                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Active Services</div>
-                        <div style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="stat-services">0</div>
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Services</div>
+                        <div class="stat-value" id="stat-services">0</div>
                     </div>
-                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
-                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Total Invoices</div>
-                        <div style="font-size: 2rem; font-weight: 700; color: #10b981;" id="stat-invoices">0</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Invoices</div>
+                        <div class="stat-value" id="stat-invoices">0</div>
                     </div>
-                    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(10px);">
-                        <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.5rem;">Pending Documents</div>
-                        <div style="font-size: 2rem; font-weight: 700; color: #60a5fa;" id="stat-documents">0</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Documents</div>
+                        <div class="stat-value" id="stat-documents">0</div>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="profile-card" style="grid-column: 1 / -1;">
-                    <h2 style="margin-bottom: 1.5rem;">⚡ Quick Actions</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <a href="pricing.html" class="quick-action-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">🛒</div>
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 0.25rem;">New Service</div>
-                                <div style="font-size: 0.85rem; opacity: 0.7;">Request a service</div>
+                <div class="profile-card">
+                    <h2>⚡ Quick Actions</h2>
+                    <div class="quick-actions-grid">
+                        <a href="pricing.html" class="quick-action-card">
+                            <div class="quick-action-icon">🛒</div>
+                            <div class="quick-action-text">
+                                <h4>New Service</h4>
+                                <p>Request a service</p>
                             </div>
                         </a>
-                        <a href="index.html#contact" class="quick-action-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.3s;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">💬</div>
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Get Support</div>
-                                <div style="font-size: 0.85rem; opacity: 0.7;">Contact us</div>
+                        <a href="index.html#contact" class="quick-action-card">
+                            <div class="quick-action-icon">💬</div>
+                            <div class="quick-action-text">
+                                <h4>Get Support</h4>
+                                <p>Contact us</p>
+                            </div>
+                        </a>
+                        <a href="messages.html" class="quick-action-card">
+                            <div class="quick-action-icon">📨</div>
+                            <div class="quick-action-text">
+                                <h4>Messages</h4>
+                                <p>View conversations</p>
                             </div>
                         </a>
                     </div>
@@ -1066,25 +838,18 @@
         <!-- Tab Content: Services -->
         <div class="tab-content" id="tab-services" style="display: none;">
             <!-- Redeem Quote Code Card -->
-            <div class="profile-card full-width" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: rgba(99, 102, 241, 0.3); margin-bottom: 1.5rem;">
-                <div class="section-header" style="margin-bottom: 1rem;">
-                    <h2 style="display: flex; align-items: center; gap: 0.75rem;">
-                        🎟️ Have a Quote Code?
-                    </h2>
+            <div class="profile-card highlight-card" style="margin-bottom: var(--space-6);">
+                <div class="section-header">
+                    <h2>🎟️ Have a Quote Code?</h2>
                 </div>
-                <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.95rem;">
-                    If you received a custom quote code from Ryan's Webservices, enter it below to view your personalized pricing and start your project.
+                <p>
+                    If you received a custom quote code from Ryan's Web Services, enter it below to view your personalized pricing and start your project.
                 </p>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <input type="text" id="quoteCodeInput" placeholder="Enter code (e.g., RWS-XXXXXXXX)" 
-                            style="width: 100%; padding: 0.875rem 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.3); background: rgba(0, 0, 0, 0.2); color: var(--text-primary); font-family: monospace; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">
-                    </div>
-                    <button id="redeemQuoteBtn" class="btn btn-primary" style="padding: 0.875rem 1.5rem; border-radius: 10px; white-space: nowrap;">
-                        ✨ Redeem Code
-                    </button>
+                <div class="quote-input-container">
+                    <input type="text" id="quoteCodeInput" placeholder="Enter code (e.g., RWS-XXXXXXXX)">
+                    <button id="redeemQuoteBtn" class="btn btn-primary">✨ Redeem Code</button>
                 </div>
-                <div id="quoteRedemptionResult" style="display: none; margin-top: 1.25rem;"></div>
+                <div id="quoteRedemptionResult" style="display: none; margin-top: var(--space-5);"></div>
             </div>
 
             <div class="profile-card full-width">
@@ -1092,8 +857,11 @@
                     <h2>📋 My Services</h2>
                     <span class="badge" id="requestCount">0 Services</span>
                 </div>
-                <div id="requestsContainer" style="margin-top: 1.5rem;">
-                    <div class="loading">Loading services...</div>
+                <div id="requestsContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading services...
+                    </div>
                 </div>
             </div>
         </div>
@@ -1105,8 +873,11 @@
                     <h2>💳 Invoices & Payments</h2>
                     <span class="badge" id="invoiceCount">0 Invoices</span>
                 </div>
-                <div id="invoicesContainer" style="margin-top: 1.5rem;">
-                    <div class="loading">Loading invoices...</div>
+                <div id="invoicesContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading invoices...
+                    </div>
                 </div>
             </div>
         </div>
@@ -1118,161 +889,104 @@
                     <h2>📄 Documents</h2>
                     <span class="badge" id="documentCount">0 Documents</span>
                 </div>
-                <div id="documentsContainer" style="margin-top: 1.5rem;">
-                    <div class="loading">Loading documents...</div>
+                <div id="documentsContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading documents...
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Tab Content: Settings -->
         <div class="tab-content" id="tab-settings" style="display: none;">
-            <div class="profile-grid">
-                <!-- Profile Information -->
-                <div class="profile-card" style="grid-column: 1 / -1;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2 style="margin: 0;">👤 Profile Information</h2>
-                        <button type="button" id="editProfileBtn" class="btn btn-secondary" style="padding: 0.75rem 1.25rem; font-size: 0.9rem; border-radius: 10px;">
-                            <span id="editBtnText">✏️ Edit Profile</span>
-                        </button>
-                    </div>
-                    <form id="profileForm">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                            <div class="profile-info-item">
-                                <label>Full Name</label>
-                                <input type="text" id="fullName" placeholder="Enter your name" disabled>
-                            </div>
-                            <div class="profile-info-item">
-                                <label>Email</label>
-                                <input type="email" id="email" disabled>
-                            </div>
-                            <div class="profile-info-item">
-                                <label>Phone</label>
-                                <input type="tel" id="phone" placeholder="Enter your phone" disabled>
-                            </div>
-                            <div class="profile-info-item">
-                                <label>Company</label>
-                                <input type="text" id="company" placeholder="Enter company name" disabled>
-                            </div>
-                        </div>
-                        <div class="profile-actions" id="profileActions" style="display: none; margin-top: 2rem;">
-                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                            <button type="button" class="btn btn-secondary" id="cancelEditBtn">✕ Cancel</button>
-                        </div>
-                    </form>
+            <div class="profile-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+                    <h2 style="margin: 0;">👤 Profile Information</h2>
+                    <button type="button" id="editProfileBtn" class="btn btn-secondary">
+                        <span id="editBtnText">✏️ Edit Profile</span>
+                    </button>
                 </div>
+                <form id="profileForm">
+                    <div class="form-grid">
+                        <div class="profile-info-item">
+                            <label>Full Name</label>
+                            <input type="text" id="fullName" placeholder="Enter your name" disabled>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Email</label>
+                            <input type="email" id="email" disabled>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Phone</label>
+                            <input type="tel" id="phone" placeholder="Enter your phone" disabled>
+                        </div>
+                        <div class="profile-info-item">
+                            <label>Company</label>
+                            <input type="text" id="company" placeholder="Enter company name" disabled>
+                        </div>
+                    </div>
+                    <div class="profile-actions" id="profileActions" style="display: none;">
+                        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                        <button type="button" class="btn btn-secondary" id="cancelEditBtn">✕ Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <!-- Contract Signing Modal -->
-    <div id="signContractModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.2s ease;">
-        <div style="background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px; padding: clamp(1.5rem, 4vw, 2.5rem); width: 100%; max-width: 500px; max-height: 95vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: slideUp 0.3s ease;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-                <h2 style="color: var(--primary); margin: 0; display: flex; align-items: center; gap: 0.75rem; font-size: clamp(1.25rem, 4vw, 1.75rem);">
+    <div id="signContractModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); z-index: var(--z-modal); align-items: center; justify-content: center; padding: var(--space-4);">
+        <div style="background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-2xl); padding: var(--space-8); width: 100%; max-width: 500px; max-height: 95vh; overflow-y: auto; box-shadow: var(--shadow-xl);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6);">
+                <h2 style="color: var(--color-accent); margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xl);">
                     <span style="font-size: 1.5em;">✍️</span>
                     <span>Sign Document</span>
                 </h2>
-                <button id="closeSignModalBtn" style="background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.25rem; line-height: 1; transition: color 0.2s; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">×</button>
+                <button id="closeSignModalBtn" style="background: none; border: none; color: var(--color-text-secondary); font-size: var(--text-xl); cursor: pointer; padding: var(--space-2); border-radius: var(--radius-md); transition: background var(--transition-fast);" onmouseover="this.style.background='var(--color-bg-card)'" onmouseout="this.style.background='none'">×</button>
             </div>
             
-            <div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 146, 60, 0.1)); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid #fbbf24;">
-                <p style="color: #fbbf24; margin: 0; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+            <div style="background: rgba(210, 153, 34, 0.1); border: 1px solid rgba(210, 153, 34, 0.4); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-6); border-left: 4px solid var(--color-warning);">
+                <p style="color: var(--color-warning); margin: 0; font-weight: 600; font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-2);">
                     <span style="font-size: 1.25em;">⚠️</span>
                     <span>Please review the document carefully before signing</span>
                 </p>
             </div>
 
-            <div style="margin-bottom: 1.75rem;">
-                <button id="viewDocumentBtn" class="btn-primary" style="width: 100%; padding: 1.25rem; font-size: 1.05rem; margin-bottom: 1rem; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 12px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
-                    <span style="display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
-                        <span style="font-size: 1.25em;">👁️</span>
+            <div style="margin-bottom: var(--space-6);">
+                <button id="viewDocumentBtn" class="btn btn-primary" style="width: 100%; padding: var(--space-4); font-size: var(--text-base); margin-bottom: var(--space-4);">
+                    <span style="display: flex; align-items: center; justify-content: center; gap: var(--space-3);">
+                        <span>👁️</span>
                         <span>View Document</span>
                     </span>
                 </button>
-                <div id="viewStatus" style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; transition: all 0.3s;">
-                    <span style="display: inline-block;">📋 You must view the document before signing</span>
+                <div id="viewStatus" style="text-align: center; color: var(--color-text-secondary); font-size: var(--text-sm); padding: var(--space-3); background: var(--color-bg-card); border-radius: var(--radius-md);">
+                    <span>📋 You must view the document before signing</span>
                 </div>
             </div>
 
-            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.75rem;">
-                <label style="display: flex; align-items: start; gap: 1rem; cursor: pointer; user-select: none;">
-                    <input type="checkbox" id="agreeCheckbox" disabled style="margin-top: 0.25rem; width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0;">
-                    <span style="color: var(--text-primary); line-height: 1.7; font-size: 0.95rem;">
+            <div style="background: var(--color-bg-card); border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-6);">
+                <label style="display: flex; align-items: start; gap: var(--space-4); cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="agreeCheckbox" disabled style="margin-top: var(--space-1); width: 20px; height: 20px; cursor: pointer; accent-color: var(--color-accent); flex-shrink: 0;">
+                    <span style="color: var(--color-text-primary); line-height: 1.6; font-size: var(--text-sm);">
                         I have read and reviewed the document above, and I agree to the terms and conditions outlined in this contract. By checking this box and signing below, I acknowledge that I understand and accept all terms.
                     </span>
                 </label>
             </div>
 
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <button id="confirmSignBtn" disabled class="btn-success" style="flex: 1; min-width: 140px; padding: 1.25rem 1.5rem; font-size: 1rem; font-weight: 600; opacity: 0.5; cursor: not-allowed; border-radius: 12px; transition: all 0.3s; background: linear-gradient(135deg, #10b981, #059669); border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
-                    <span style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+                <button id="confirmSignBtn" disabled class="btn btn-primary" style="flex: 1; min-width: 140px; padding: var(--space-4); opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);">
+                    <span style="display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
                         <span>✅</span>
                         <span>Sign Document</span>
                     </span>
                 </button>
-                <button id="cancelSignBtn" class="btn-secondary" style="flex: 1; min-width: 140px; padding: 1.25rem 1.5rem; font-size: 1rem; font-weight: 600; background: rgba(107, 114, 128, 0.2); border: 1px solid rgba(107, 114, 128, 0.4); border-radius: 12px; transition: all 0.3s; color: var(--text-primary);">
+                <button id="cancelSignBtn" class="btn btn-secondary" style="flex: 1; min-width: 140px; padding: var(--space-4);">
                     Cancel
                 </button>
             </div>
         </div>
     </div>
-    
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        #viewDocumentBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
-        }
-        
-        #confirmSignBtn:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
-        }
-        
-        #cancelSignBtn:hover {
-            background: rgba(107, 114, 128, 0.3) !important;
-            border-color: rgba(107, 114, 128, 0.6) !important;
-        }
-        
-        #agreeCheckbox:not(:disabled) {
-            cursor: pointer;
-        }
-        
-        #agreeCheckbox:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-        
-        @media (max-width: 640px) {
-            #signContractModal > div {
-                border-radius: 20px !important;
-            }
-            
-            #signContractModal > div > div:last-child {
-                flex-direction: column;
-            }
-            
-            #signContractModal > div > div:last-child button {
-                width: 100%;
-                min-width: unset;
-            }
-        }
-    </style>
 
     <!-- Settings Button -->
     <button class="settings-button" id="settingsButton" aria-label="Settings">⚙️</button>
@@ -1289,63 +1003,63 @@
     </div>
 
     <!-- Payment Modal -->
-    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 1rem;">
-        <div style="background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 600px; max-height: 95vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
-                <h2 style="color: var(--primary); margin: 0; display: flex; align-items: center; gap: 0.75rem; font-size: 1.75rem;">
+    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); z-index: var(--z-modal); align-items: center; justify-content: center; padding: var(--space-4);">
+        <div style="background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-2xl); padding: var(--space-8); width: 100%; max-width: 600px; max-height: 95vh; overflow-y: auto; box-shadow: var(--shadow-xl);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-8);">
+                <h2 style="color: var(--color-accent); margin: 0; display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xl);">
                     <span style="font-size: 1.5em;">💳</span>
                     <span>Complete Payment</span>
                 </h2>
-                <button id="closePaymentModalBtn" style="background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.25rem; line-height: 1; transition: color 0.2s; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">×</button>
+                <button id="closePaymentModalBtn" style="background: none; border: none; color: var(--color-text-secondary); font-size: var(--text-xl); cursor: pointer; padding: var(--space-2); border-radius: var(--radius-md); transition: background var(--transition-fast);" onmouseover="this.style.background='var(--color-bg-card)'" onmouseout="this.style.background='none'">×</button>
             </div>
 
             <!-- Payment Summary -->
-            <div style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(0, 212, 255, 0.1)); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
-                <h3 style="color: var(--primary); margin: 0 0 1rem 0; font-size: 1.1rem;">Payment Summary</h3>
-                <div style="display: grid; gap: 0.75rem;">
+            <div style="background: var(--gradient-card); border: 1px solid var(--color-border-accent); border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-8);">
+                <h3 style="color: var(--color-accent); margin: 0 0 var(--space-4) 0; font-size: var(--text-base);">Payment Summary</h3>
+                <div style="display: grid; gap: var(--space-3);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: var(--text-secondary);">Service:</span>
-                        <span id="paymentServiceName" style="font-weight: 600; color: var(--text-primary);"></span>
+                        <span style="color: var(--color-text-secondary);">Service:</span>
+                        <span id="paymentServiceName" style="font-weight: 600; color: var(--color-text-primary);"></span>
                     </div>
-                    <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 0.75rem; margin-top: 0.25rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <span style="color: var(--text-secondary);">One-Time Setup Fee:</span>
-                            <span id="paymentOneTime" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);"></span>
+                    <div style="border-top: 1px solid var(--color-border-light); padding-top: var(--space-3); margin-top: var(--space-1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                            <span style="color: var(--color-text-secondary);">One-Time Setup Fee:</span>
+                            <span id="paymentOneTime" style="font-size: var(--text-xl); font-weight: 700; color: var(--color-accent);"></span>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: var(--text-secondary);">Monthly Recurring:</span>
-                            <span id="paymentMonthly" style="font-size: 1.25rem; font-weight: 700; color: var(--secondary);"></span>
+                            <span style="color: var(--color-text-secondary);">Monthly Recurring:</span>
+                            <span id="paymentMonthly" style="font-size: var(--text-xl); font-weight: 700; color: #a371f7;"></span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Stripe Payment Element -->
-            <div id="stripe-payment-element" style="margin-bottom: 1.5rem;"></div>
+            <div id="stripe-payment-element" style="margin-bottom: var(--space-6);"></div>
 
             <!-- Recurring Payment Consent -->
-            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                <label style="display: flex; align-items: start; gap: 0.75rem; cursor: pointer;">
-                    <input type="checkbox" id="recurringConsent" required style="margin-top: 0.25rem; width: 18px; height: 18px; cursor: pointer;">
-                    <span style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
-                        I authorize Stripe to charge <strong id="recurringAmount" style="color: var(--secondary);"></strong> monthly for ongoing maintenance and services. Powered by Stripe. I can cancel anytime.
+            <div style="background: rgba(63, 185, 80, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-6);">
+                <label style="display: flex; align-items: start; gap: var(--space-3); cursor: pointer;">
+                    <input type="checkbox" id="recurringConsent" required style="margin-top: var(--space-1); width: 18px; height: 18px; cursor: pointer; accent-color: var(--color-success);">
+                    <span style="font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.5;">
+                        I authorize Stripe to charge <strong id="recurringAmount" style="color: #a371f7;"></strong> monthly for ongoing maintenance and services. Powered by Stripe. I can cancel anytime.
                     </span>
                 </label>
             </div>
 
             <!-- Action Buttons -->
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button type="button" id="cancelPaymentBtn" style="flex: 1; padding: 1rem; border: 1px solid rgba(107, 114, 128, 0.5); border-radius: 12px; background: transparent; color: var(--text-secondary); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+            <div style="display: flex; gap: var(--space-4); margin-top: var(--space-8);">
+                <button type="button" id="cancelPaymentBtn" class="btn btn-secondary" style="flex: 1; padding: var(--space-4);">
                     Cancel
                 </button>
-                <button type="button" id="confirmPaymentBtn" style="flex: 2; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);">
+                <button type="button" id="confirmPaymentBtn" class="btn btn-primary" style="flex: 2; padding: var(--space-4);">
                     💳 Pay with Stripe
                 </button>
             </div>
 
             <!-- Stripe Badge -->
-            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
+            <div style="text-align: center; margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--color-border-light);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); color: var(--color-text-secondary); font-size: var(--text-sm);">
                     <span>🔒 Secured by</span>
                     <span style="font-weight: 600; color: #635bff;">Stripe</span>
                 </div>
@@ -1408,6 +1122,15 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer style="background: var(--color-bg-tertiary); border-top: 1px solid var(--color-border-light); padding: var(--space-8) var(--space-6); text-align: center; margin-top: var(--space-16);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+                © 2025-2026 Ryans Web Services, LLC. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
@@ -1416,6 +1139,77 @@
     <script src="js/main.js"></script>
     <script src="js/stripe-payment.js"></script>
     <script src="js/profile.js"></script>
-    <script src="js/thanksgiving.js"></script>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active from all tabs
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                // Add active to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                // Show selected tab content
+                const tabId = 'tab-' + this.dataset.tab;
+                document.getElementById(tabId).style.display = 'block';
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', () => {
+                mobileToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Settings menu toggle
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsMenu = document.getElementById('settingsMenu');
+        
+        if (settingsButton && settingsMenu) {
+            settingsButton.addEventListener('click', () => {
+                settingsMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!settingsButton.contains(e.target) && !settingsMenu.contains(e.target)) {
+                    settingsMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // Theme toggle (placeholder - actual implementation in main.js)
+        const themeToggle = document.getElementById('themeToggleSwitch');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                themeToggle.classList.toggle('active');
+                document.body.classList.toggle('light-mode');
+            });
+        }
+    </script>
 </body>
 </html>

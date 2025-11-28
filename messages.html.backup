@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f1219">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Messages | Ryan's Web Services</title>
+    <meta name="description" content="View and manage your messages with Ryan's Web Services.">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <link rel="stylesheet" href="stylesheets/auth.css">
+    <link rel="stylesheet" href="stylesheets/messages.css">
+    <link rel="stylesheet" href="stylesheets/thanksgiving.css">
+    <style>
+        /* iOS Safari fix for white background */
+        html, body {
+            background-color: #0f1219;
+        }
+    </style>
+</head>
+<body class="messages-page">
+    <!-- Navigation -->
+    <header>
+        <nav class="container-nav">
+            <a href="/" class="logo"><img src="images/logo.png" alt="Ryans Web Services" class="logo-img"> Ryans Web Services, LLC</a>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="resources/">Resources</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li>
+                    <a href="login.html" id="loginBtn" class="login-btn" style="display: inline-block;">Login</a>
+                    <a href="signup.html" id="signupBtn" class="login-btn" style="display: none; margin-left: 0.5rem; background: linear-gradient(135deg, #10b981, #059669);">Sign Up</a>
+                    <div id="userMenu" class="user-menu" style="display: none;">
+                        <button id="userButton" class="user-button">
+                            <div id="userAvatar" class="user-avatar">JD</div>
+                            <span id="userName">John Doe</span>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown">
+                            <a href="profile.html" class="user-dropdown-item">👤 Profile</a>
+                            <a href="messages.html" class="user-dropdown-item">💬 Messages</a>
+                            <a href="profile.html" class="user-dropdown-item">⚙️ Settings</a>
+                            <div id="logoutBtn" class="user-dropdown-item">🚪 Logout</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="messages-container">
+            <div class="messages-header">
+                <h1>Messages</h1>
+                <p>Chat with Ryan's Web Services support team</p>
+            </div>
+
+            <!-- Messages Layout -->
+            <div class="messages-layout" id="messagesLayout">
+                <!-- Conversations Panel -->
+                <div class="conversations-panel">
+                    <div class="conversations-header">
+                        <div class="conversations-search">
+                            <span class="conversations-search-icon">🔍</span>
+                            <input type="text" id="conversationSearch" placeholder="Search conversations...">
+                        </div>
+                    </div>
+                    <div class="conversations-list" id="conversationsList">
+                        <!-- Conversations will be loaded here -->
+                        <div class="conversation-item active" data-id="support">
+                            <div class="conversation-avatar admin">RW</div>
+                            <div class="conversation-info">
+                                <div class="conversation-info-top">
+                                    <span class="conversation-name">Ryan's Web Services</span>
+                                    <span class="conversation-time">Support</span>
+                                </div>
+                                <p class="conversation-preview">Send us a message and we'll get back to you!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Panel -->
+                <div class="chat-panel" id="chatPanel">
+                    <div class="chat-panel-header">
+                        <div class="chat-panel-header-info">
+                            <div class="chat-panel-avatar">RW</div>
+                            <div class="chat-panel-header-text">
+                                <h3>Ryan's Web Services</h3>
+                                <p id="chatStatus">Online</p>
+                            </div>
+                        </div>
+                        <div class="chat-panel-actions">
+                            <button class="chat-panel-btn" id="clearChatBtn">Clear</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-panel-messages" id="chatPanelMessages">
+                        <!-- Messages will be loaded here -->
+                        <div class="no-messages" id="noMessagesState">
+                            <div class="no-messages-icon">💬</div>
+                            <h4>Start a Conversation</h4>
+                            <p>Send a message to get help with your project, ask questions, or discuss your website needs!</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-panel-input">
+                        <input type="text" id="chatPanelInput" placeholder="Type your message...">
+                        <button class="chat-panel-send-btn" id="chatPanelSendBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Required State -->
+            <div class="no-conversation-selected" id="loginRequiredState" style="display: none; height: 500px; background: rgba(26, 31, 46, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 16px;">
+                <div class="no-conversation-icon">🔐</div>
+                <h3>Login Required</h3>
+                <p>Please login to view and send messages.</p>
+                <a href="login.html" class="chat-login-btn" style="margin-top: 1.5rem; display: inline-block; text-decoration: none;">Login to Continue</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: rgba(10, 15, 25, 0.9); border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 2rem; margin-top: 2rem;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <div style="font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--primary-light), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Ryan's Web Services</div>
+                <div style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem;">© 2025–2026 Ryans Web Services, LLC. All Rights Reserved.</div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="https://www.facebook.com/ryanswebservices" target="_blank" rel="noopener" style="color: var(--text-secondary); transition: color 0.3s;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/ryanswebservices" target="_blank" rel="noopener" style="color: var(--text-secondary); transition: color 0.3s;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Messages Page Logic
+        class MessagesPage {
+            constructor() {
+                this.currentUser = null;
+                this.currentConversation = null;
+                this.messages = [];
+                this.init();
+            }
+
+            async init() {
+                // Wait for Supabase
+                if (typeof supabase === 'undefined') {
+                    setTimeout(() => this.init(), 100);
+                    return;
+                }
+
+                // Check auth state
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    this.currentUser = {
+                        id: session.user.id,
+                        email: session.user.email,
+                        name: session.user.user_metadata.full_name || session.user.email.split('@')[0]
+                    };
+                    this.showMessagesUI();
+                    await this.loadConversations();
+                    this.setupRealtimeSubscription();
+                } else {
+                    this.showLoginRequired();
+                }
+
+                // Listen for auth changes
+                supabase.auth.onAuthStateChange(async (event, session) => {
+                    if (event === 'SIGNED_IN' && session) {
+                        this.currentUser = {
+                            id: session.user.id,
+                            email: session.user.email,
+                            name: session.user.user_metadata.full_name || session.user.email.split('@')[0]
+                        };
+                        this.showMessagesUI();
+                        await this.loadConversations();
+                    } else if (event === 'SIGNED_OUT') {
+                        this.currentUser = null;
+                        this.showLoginRequired();
+                    }
+                });
+
+                this.setupEventListeners();
+            }
+
+            showMessagesUI() {
+                document.getElementById('messagesLayout').style.display = 'grid';
+                document.getElementById('loginRequiredState').style.display = 'none';
+            }
+
+            showLoginRequired() {
+                document.getElementById('messagesLayout').style.display = 'none';
+                document.getElementById('loginRequiredState').style.display = 'flex';
+            }
+
+            setupEventListeners() {
+                // Send message
+                const input = document.getElementById('chatPanelInput');
+                const sendBtn = document.getElementById('chatPanelSendBtn');
+
+                if (sendBtn) {
+                    sendBtn.addEventListener('click', () => this.sendMessage());
+                }
+
+                if (input) {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.sendMessage();
+                        }
+                    });
+                }
+
+                // Search conversations
+                const searchInput = document.getElementById('conversationSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => this.filterConversations(e.target.value));
+                }
+
+                // Clear chat
+                const clearBtn = document.getElementById('clearChatBtn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => this.clearChat());
+                }
+            }
+
+            async loadConversations() {
+                if (!this.currentUser) return;
+
+                try {
+                    const { data: conversations, error } = await supabase
+                        .from('conversations')
+                        .select('*')
+                        .eq('user_id', this.currentUser.id)
+                        .order('updated_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    if (conversations && conversations.length > 0) {
+                        this.renderConversations(conversations);
+                        // Load first conversation's messages
+                        this.selectConversation(conversations[0].id);
+                    } else {
+                        // Show default support conversation
+                        this.currentConversation = 'support';
+                        this.renderDefaultConversation();
+                    }
+                } catch (err) {
+                    console.error('Error loading conversations:', err);
+                    this.renderDefaultConversation();
+                }
+            }
+
+            renderConversations(conversations) {
+                const container = document.getElementById('conversationsList');
+                if (!container) return;
+
+                container.innerHTML = conversations.map((conv, index) => `
+                    <div class="conversation-item ${index === 0 ? 'active' : ''}" data-id="${conv.id}">
+                        <div class="conversation-avatar admin">RW</div>
+                        <div class="conversation-info">
+                            <div class="conversation-info-top">
+                                <span class="conversation-name">Ryan's Web Services</span>
+                                <span class="conversation-time">${this.formatTime(conv.updated_at)}</span>
+                            </div>
+                            <p class="conversation-preview">${conv.last_message || 'Start a conversation'}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add click handlers
+                container.querySelectorAll('.conversation-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        container.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+                        this.selectConversation(item.dataset.id);
+                    });
+                });
+            }
+
+            renderDefaultConversation() {
+                const container = document.getElementById('conversationsList');
+                if (!container) return;
+
+                container.innerHTML = `
+                    <div class="conversation-item active" data-id="support">
+                        <div class="conversation-avatar admin">RW</div>
+                        <div class="conversation-info">
+                            <div class="conversation-info-top">
+                                <span class="conversation-name">Ryan's Web Services</span>
+                                <span class="conversation-time">Support</span>
+                            </div>
+                            <p class="conversation-preview">Send us a message and we'll get back to you!</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            async selectConversation(conversationId) {
+                this.currentConversation = conversationId;
+
+                if (conversationId === 'support') {
+                    this.messages = [];
+                    this.renderMessages();
+                    return;
+                }
+
+                try {
+                    const { data: messages, error } = await supabase
+                        .from('messages')
+                        .select('*')
+                        .eq('conversation_id', conversationId)
+                        .order('created_at', { ascending: true });
+
+                    if (error) throw error;
+
+                    this.messages = messages || [];
+                    this.renderMessages();
+
+                    // Mark as read
+                    await supabase
+                        .from('messages')
+                        .update({ read: true })
+                        .eq('conversation_id', conversationId)
+                        .neq('sender_id', this.currentUser.id);
+                } catch (err) {
+                    console.error('Error loading messages:', err);
+                }
+            }
+
+            renderMessages() {
+                const container = document.getElementById('chatPanelMessages');
+                const noMessages = document.getElementById('noMessagesState');
+                
+                if (!container) return;
+
+                if (this.messages.length === 0) {
+                    if (noMessages) noMessages.style.display = 'flex';
+                    container.innerHTML = '';
+                    container.appendChild(noMessages);
+                    return;
+                }
+
+                if (noMessages) noMessages.style.display = 'none';
+
+                let lastDate = null;
+                let html = '';
+
+                this.messages.forEach(msg => {
+                    const msgDate = new Date(msg.created_at).toDateString();
+                    
+                    // Add date divider if new day
+                    if (msgDate !== lastDate) {
+                        html += `
+                            <div class="message-date-divider">
+                                <span>${this.formatDate(msg.created_at)}</span>
+                            </div>
+                        `;
+                        lastDate = msgDate;
+                    }
+
+                    html += `
+                        <div class="message-bubble ${msg.sender_id === this.currentUser?.id ? 'sent' : 'received'}">
+                            <div class="message-bubble-content">${this.escapeHtml(msg.content)}</div>
+                            <div class="message-bubble-meta">
+                                <span class="message-bubble-time">${this.formatMessageTime(msg.created_at)}</span>
+                                ${msg.sender_id === this.currentUser?.id ? `<span class="message-bubble-status">${msg.read ? '✓✓' : '✓'}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                container.scrollTop = container.scrollHeight;
+            }
+
+            async sendMessage() {
+                const input = document.getElementById('chatPanelInput');
+                if (!input || !input.value.trim() || !this.currentUser) return;
+
+                const content = input.value.trim();
+                input.value = '';
+
+                try {
+                    let conversationId = this.currentConversation;
+
+                    // Create conversation if needed
+                    if (conversationId === 'support' || !conversationId) {
+                        const { data: newConv, error: convError } = await supabase
+                            .from('conversations')
+                            .insert({
+                                user_id: this.currentUser.id,
+                                user_email: this.currentUser.email,
+                                user_name: this.currentUser.name,
+                                subject: 'Support conversation',
+                                updated_at: new Date().toISOString()
+                            })
+                            .select()
+                            .single();
+
+                        if (convError) throw convError;
+                        conversationId = newConv.id;
+                        this.currentConversation = conversationId;
+                    }
+
+                    // Send message
+                    const { data: message, error } = await supabase
+                        .from('messages')
+                        .insert({
+                            conversation_id: conversationId,
+                            sender_id: this.currentUser.id,
+                            sender_name: this.currentUser.name,
+                            sender_email: this.currentUser.email,
+                            content: content,
+                            read: false
+                        })
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+
+                    // Update conversation
+                    await supabase
+                        .from('conversations')
+                        .update({ 
+                            updated_at: new Date().toISOString(),
+                            last_message: content.substring(0, 100)
+                        })
+                        .eq('id', conversationId);
+
+                    // Realtime subscription will handle displaying the message
+                    // Just scroll to bottom
+                    const container = document.getElementById('chatMessages');
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    }
+                    
+                    // Reload conversations list
+                    await this.loadConversations();
+                } catch (err) {
+                    console.error('Error sending message:', err);
+                    alert('Failed to send message. Please try again.');
+                }
+            }
+
+            setupRealtimeSubscription() {
+                if (!this.currentUser) return;
+
+                supabase
+                    .channel('page-messages')
+                    .on('postgres_changes', {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'messages'
+                    }, (payload) => {
+                        const newMessage = payload.new;
+                        if (newMessage.conversation_id === this.currentConversation) {
+                            // Avoid duplicates
+                            if (!this.messages.find(m => m.id === newMessage.id)) {
+                                this.messages.push(newMessage);
+                                this.renderMessages();
+                            }
+                        }
+                    })
+                    .subscribe();
+            }
+
+            filterConversations(query) {
+                const items = document.querySelectorAll('.conversation-item');
+                const lowerQuery = query.toLowerCase();
+                
+                items.forEach(item => {
+                    const name = item.querySelector('.conversation-name')?.textContent.toLowerCase() || '';
+                    const preview = item.querySelector('.conversation-preview')?.textContent.toLowerCase() || '';
+                    
+                    if (name.includes(lowerQuery) || preview.includes(lowerQuery)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            clearChat() {
+                if (confirm('Are you sure you want to clear this chat? This cannot be undone.')) {
+                    // For now, just clear the view
+                    this.messages = [];
+                    this.renderMessages();
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            formatTime(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diff = now - date;
+                
+                if (diff < 86400000) {
+                    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                }
+                if (diff < 604800000) {
+                    return date.toLocaleDateString('en-US', { weekday: 'short' });
+                }
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (date.toDateString() === now.toDateString()) return 'Today';
+                if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+                return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+            }
+
+            formatMessageTime(dateString) {
+                return new Date(dateString).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new MessagesPage();
+        });
+    </script>
+    <script src="js/analytics.js"></script>
+    <script src="js/thanksgiving.js"></script>
+</body>
+</html>

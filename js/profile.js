@@ -196,6 +196,16 @@ class ProfileManager {
         const container = document.getElementById('requestsContainer');
         if (!container) return;
 
+        // Debug: Log all requests and their package_details
+        console.log('=== DEBUG: All service requests ===');
+        requests.forEach((req, i) => {
+            console.log(`Request ${i}:`, req.service_name);
+            console.log('  package_details:', JSON.stringify(req.package_details, null, 2));
+            console.log('  maintenance_plan:', req.package_details?.maintenance_plan);
+            console.log('  google_workspace:', req.package_details?.google_workspace);
+        });
+        console.log('=== END DEBUG ===');
+
         const statusColors = {
             'pending': '#fbbf24',
             'in_progress': '#3b82f6',
@@ -221,10 +231,18 @@ class ProfileManager {
             const statusLabel = statusLabels[request.status] || request.status;
             const date = new Date(request.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             
-            // Calculate monthly cost
-            const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost || 0;
+            // Calculate monthly cost (handle both old and new data formats)
+            // Old format: maintenancePrice is stored directly
+            // New format: maintenance_plan.monthly_cost
+            const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost 
+                || request.package_details?.maintenancePrice 
+                || 0;
             const workspaceCost = request.package_details?.google_workspace?.monthly_cost || 0;
-            const monthlyTotal = maintenanceCost + workspaceCost;
+            
+            // Calculate addon costs (these are monthly recurring costs)
+            const addonsCost = request.package_details?.addons?.reduce((sum, addon) => sum + (addon.price || 0), 0) || 0;
+            
+            const monthlyTotal = maintenanceCost + workspaceCost + addonsCost;
 
             const statusIcon = {
                 'pending': '⏳',
@@ -297,7 +315,7 @@ class ProfileManager {
                                                 <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Maintenance Plan</h4>
                                             </div>
                                             <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
-                                                <div><strong>Plan:</strong> ${request.package_details.maintenance_plan?.name || request.package_details.maintenance_plan?.type || 'N/A'}</div>
+                                                <div><strong>Plan:</strong> ${request.package_details.maintenance_plan?.name || request.package_details.maintenance_plan?.type || (request.package_details.maintenance === 'basic' ? 'Basic Care' : request.package_details.maintenance === 'full' ? 'Full Care' : request.package_details.maintenance === 'premium' ? 'Premium Care' : request.package_details.maintenance || 'N/A')}</div>
                                                 <div><strong>Monthly Cost:</strong> $${maintenanceCost.toFixed(2)}/month</div>
                                                 <div style="font-size: 0.85rem; opacity: 0.7;"><em>Includes 1 Google Workspace user</em></div>
                                             </div>
@@ -315,6 +333,38 @@ class ProfileManager {
                                                 <div><strong>Additional Users:</strong> ${request.package_details.google_workspace?.additional_users || 0}</div>
                                                 <div><strong>Unit Price:</strong> $${(request.package_details.google_workspace?.unit_price || 0).toFixed(2)}/user/month</div>
                                                 <div><strong>Monthly Cost:</strong> $${workspaceCost.toFixed(2)}/month</div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    ${request.package_details.addons && request.package_details.addons.length > 0 ? `
+                                        <div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">✨</div>
+                                                <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Add-on Features</h4>
+                                            </div>
+                                            <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
+                                                ${request.package_details.addons.map(addon => {
+                                                    const addonNames = {
+                                                        'google-workspace': '📧 Google Workspace',
+                                                        'live-chat': '💬 Live Chat Widget',
+                                                        'database': '🗄️ Database Integration',
+                                                        'booking': '📅 Booking System',
+                                                        'ecommerce': '🛒 E-commerce',
+                                                        'blog': '📝 Blog System',
+                                                        'seo': '🔍 SEO Optimization',
+                                                        'analytics': '📊 Advanced Analytics'
+                                                    };
+                                                    const displayName = addonNames[addon.name] || addon.name;
+                                                    return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: rgba(99, 102, 241, 0.05); border-radius: 8px;">
+                                                        <span>${displayName}</span>
+                                                        <span style="color: #10b981; font-weight: 600;">+$${addon.price}</span>
+                                                    </div>`;
+                                                }).join('')}
+                                                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(99, 102, 241, 0.2); display: flex; justify-content: space-between;">
+                                                    <strong>Total Add-ons:</strong>
+                                                    <span style="color: #10b981; font-weight: 600;">+$${request.package_details.addonsPrice || request.package_details.addons.reduce((sum, a) => sum + a.price, 0)}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     ` : ''}

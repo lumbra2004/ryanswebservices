@@ -5,11 +5,11 @@
 
 :root {
     /* Premium Thanksgiving Color System */
-    --tg-gold: #D4AF37;
+    --tg-gold: var(--primary);
     --tg-gold-light: #F4D03F;
-    --tg-gold-dark: #A67C00;
-    --tg-gold-shimmer: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-    --tg-copper: #B87333;
+    --tg-gold-dark: var(--primary-dark);
+    --tg-gold-shimmer: linear-gradient(135deg, var(--primary), var(--primary-light), var(--secondary), #FBF5B7, #AA771C);
+    --tg-copper: var(--secondary);
     --tg-copper-light: #DA8A47;
     --tg-burgundy: #722F37;
     --tg-burgundy-deep: #4A1C24;
