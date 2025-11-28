@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Ads Conversion Tracking -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17751846529"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-17751846529');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
@@ -717,12 +726,20 @@
                 const redirectUrl = redirect === 'pricing' ? 'pricing.html' : 'index.html';
 
                 if (data.session) {
-                    // Auto-login successful
+                    // Auto-login successful - Fire Google Ads conversion
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-17751846529/ewA-CK-cvMgbEIHd3pBC'
+                    });
+                    
                     successDiv.textContent = 'Account created! Redirecting...';
                     successDiv.style.display = 'block';
                     setTimeout(() => window.location.href = redirectUrl, 1500);
                 } else {
-                    // Email confirmation required
+                    // Email confirmation required - Still count as conversion
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-17751846529/ewA-CK-cvMgbEIHd3pBC'
+                    });
+                    
                     successDiv.textContent = 'Account created! Please check your email (' + email + ') to verify your account.';
                     successDiv.style.display = 'block';
                     setTimeout(() => window.location.href = 'login.html' + (redirect ? '?redirect=' + redirect : ''), 3000);
