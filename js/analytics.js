@@ -7,10 +7,13 @@
     // Wrap everything in try-catch to prevent any errors from breaking the page
     try {
         const SUPABASE_URL = 'https://ujludleswiuqlvosbpyg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwMTY0ODgsImV4cCI6MjA2MDU5MjQ4OH0.A0NCJYJnKMwT_GRyXrZplb1q_shvMHnNeVNsh9hcPrQ';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMTU0NDIsImV4cCI6MjA3OTU5MTQ0Mn0.VNvo4tjz_HafmQsvVkCBRiq8WmLrlhkPavNaB_3Exig';
+        
+        console.log('[Analytics] Script loaded');
         
         // Don't track admin pages or if DNT is enabled
         if (window.location.pathname.includes('admin') || navigator.doNotTrack === '1') {
+            console.log('[Analytics] Skipping - admin page or DNT enabled');
             return;
         }
         
@@ -133,6 +136,7 @@
     
     // Send visit data to Supabase
     async function recordVisit() {
+        console.log('[Analytics] Recording visit...');
         const sessionId = getSessionId();
         const fingerprint = getFingerprint();
         const deviceInfo = parseUserAgent();
@@ -162,6 +166,8 @@
             p_metadata: JSON.stringify({ fingerprint: fingerprint })
         };
         
+        console.log('[Analytics] Visit data:', visitData);
+        
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/record_page_visit`, {
                 method: 'POST',
@@ -173,13 +179,19 @@
                 body: JSON.stringify(visitData)
             });
             
+            console.log('[Analytics] Response status:', response.status);
+            
             if (response.ok) {
                 visitId = await response.json();
+                console.log('[Analytics] Visit recorded, ID:', visitId);
                 // Fetch geolocation data
                 fetchGeolocation();
+            } else {
+                const errorText = await response.text();
+                console.error('[Analytics] Error response:', errorText);
             }
         } catch (error) {
-            console.debug('Analytics tracking error:', error);
+            console.error('[Analytics] Tracking error:', error);
         }
     }
     
