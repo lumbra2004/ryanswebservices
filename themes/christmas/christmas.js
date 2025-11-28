@@ -463,12 +463,29 @@
             #xmas-countdown .countdown-value { font-size: 24px; }
             #xmas-countdown .countdown-label { font-size: 9px; }
             .xmas-holly { font-size: 24px; }
+            
+            /* Hide holiday deal button on mobile - too intrusive */
+            .xmas-coupon-btn {
+                display: none !important;
+            }
+            
+            /* Push page content down to make room for lights below the badge */
+            body {
+                padding-top: 60px !important;
+            }
+            
+            /* Smaller bulbs on mobile */
+            .xmas-bulb {
+                width: 8px !important;
+                height: 12px !important;
+            }
         }
         
         /* Toast */
         .xmas-toast {
             position: fixed;
             bottom: 30px;
+            bottom: calc(30px + env(safe-area-inset-bottom, 0px));
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, #1e5631 0%, #145a32 100%);
@@ -478,7 +495,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 30px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
             z-index: 100001;
             animation: slideUp 0.6s ease forwards;
             font-family: system-ui, -apple-system, sans-serif;
@@ -525,9 +542,12 @@
         }
         
         @media (max-width: 600px) {
-            .xmas-toast { left: 15px; right: 15px; transform: none; }
-            #xmas-lights { top: 68px; height: 60px; }
-            .xmas-bulb { width: 10px; height: 14px; }
+            .xmas-toast { 
+                left: 15px; 
+                right: 15px; 
+                transform: none;
+                bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+            }
         }
     `;
     document.head.appendChild(styles);
