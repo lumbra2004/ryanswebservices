@@ -459,6 +459,13 @@
                     formStatus.innerHTML = '<p style="color: #10b981; font-weight: 500;">✓ Message sent successfully! We\'ll get back to you within 24 hours.</p>';
                     contactForm.reset();
                     
+                    // Google Ads Conversion - Contact Form Submission
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'conversion', {
+                            'send_to': 'AW-17751846529/dxWZCKj0zMgbEIHd3pBC'
+                        });
+                    }
+                    
                     // Optionally redirect to thank you page
                     // window.location.href = 'thank-you.html';
                     
