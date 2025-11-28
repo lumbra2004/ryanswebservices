@@ -479,6 +479,22 @@
                 width: 8px !important;
                 height: 12px !important;
             }
+            
+            /* Make mobile nav menu cover the lights */
+            .nav-links.active,
+            .nav-menu.active,
+            #navMenu.active,
+            ul.nav-menu.active,
+            ul#navMenu.active {
+                z-index: 999999 !important;
+            }
+            
+            /* Keep mobile toggle button above everything so X is clickable */
+            .mobile-toggle,
+            .mobile-menu-toggle,
+            #mobileToggle {
+                z-index: 9999999 !important;
+            }
         }
         
         /* Toast */
@@ -940,6 +956,42 @@
                 }
             }, 10000);
         }, 1500);
+    }
+
+    // ============================================
+    // HIDE LIGHTS WHEN MOBILE MENU OPENS
+    // ============================================
+    if (CONFIG.lights) {
+        function setupMobileMenuObserver() {
+            const navMenu = document.getElementById('navMenu');
+            if (navMenu) {
+                // Use MutationObserver to watch for class changes
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.attributeName === 'class') {
+                            const lights = document.getElementById('xmas-lights');
+                            if (lights) {
+                                if (navMenu.classList.contains('active')) {
+                                    lights.style.opacity = '0';
+                                    lights.style.pointerEvents = 'none';
+                                } else {
+                                    lights.style.opacity = '1';
+                                    lights.style.pointerEvents = '';
+                                }
+                            }
+                        }
+                    });
+                });
+                observer.observe(navMenu, { attributes: true, attributeFilter: ['class'] });
+            }
+        }
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupMobileMenuObserver);
+        } else {
+            setupMobileMenuObserver();
+        }
     }
 
     console.log('❄ Christmas Theme loaded - Happy Holidays!');
