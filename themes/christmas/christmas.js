@@ -66,7 +66,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 1;
             overflow: hidden;
         }
         
@@ -77,8 +77,26 @@
             font-size: 0.8em;
             text-shadow: 0 0 3px rgba(255,255,255,0.5);
             pointer-events: none;
-            z-index: 99999;
+            z-index: 1;
             animation: fall linear infinite, sway ease-in-out infinite;
+        }
+        
+        /* Ensure page content appears above snowflakes */
+        .hero, .hero-content,
+        section, .section,
+        .card, .pricing-card, .feature-card, .service-card, .testimonial-card,
+        .container,
+        footer, .footer,
+        .modal, .popup,
+        form, .form-group, input, textarea, select,
+        .stats, .stat-item,
+        .features, .services, .testimonials, .pricing,
+        main, article, aside,
+        .contact-form, .contact-card,
+        .faq, .faq-item,
+        .grid, .row {
+            position: relative;
+            z-index: 2;
         }
         
         /* String Lights Container */
