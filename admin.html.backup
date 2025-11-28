@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Dashboard | Ryan's Webservice</title>
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <link rel="stylesheet" href="stylesheets/messages.css">
+    <link rel="stylesheet" href="stylesheets/thanksgiving.css">
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+        }
+
+        /* Sidebar Styles */
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.25rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-header .admin-email {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 100px);
+        }
+
+        .nav-section {
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .nav-section:last-child {
+            margin-top: auto;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            padding: 0 0.75rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 12px;
+            margin: 0.25rem 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: white;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-item .icon {
+            font-size: 1.25rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Main Content Area */
+        .admin-main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .admin-topbar {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 50;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .global-search {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .global-search input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .global-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .global-search input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .global-search .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .global-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(26, 31, 46, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+
+        .global-search-results.active {
+            display: block;
+        }
+
+        .search-result-group {
+            padding: 0.5rem;
+        }
+
+        .search-result-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748b;
+            padding: 0.5rem 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .search-result-item .result-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-result-item .result-info {
+            flex: 1;
+        }
+
+        .search-result-item .result-title {
+            font-weight: 500;
+            color: white;
+        }
+
+        .search-result-item .result-subtitle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .topbar-btn {
+            padding: 0.625rem 1rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .topbar-btn.reload {
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .topbar-btn.reload:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .topbar-btn.logout {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .topbar-btn.logout:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .admin-content {
+            padding: 2rem;
+        }
+
+        /* Section Pages */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        /* Stats Grid */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 102, 255, 0.15);
+        }
+
+        .admin-card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .admin-card .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .admin-card .card-icon.blue { background: rgba(59, 130, 246, 0.1); }
+        .admin-card .card-icon.green { background: rgba(16, 185, 129, 0.1); }
+        .admin-card .card-icon.purple { background: rgba(139, 92, 246, 0.1); }
+        .admin-card .card-icon.orange { background: rgba(249, 115, 22, 0.1); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: rgba(0, 102, 255, 0.05);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.125rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-content {
+            padding: 1.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn.delete {
+            background: #ef4444;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0f1419 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 102, 255, 0.4);
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls input,
+        .filter-controls select {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            min-width: 200px;
+            font-size: 0.95rem;
+        }
+
+        .filter-controls input:focus,
+        .filter-controls select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .filter-controls input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-controls select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Status select dropdowns */
+        .status-select {
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.2s;
+        }
+
+        .status-select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .status-select:hover {
+            opacity: 0.9;
+        }
+
+        .status-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Badge styling */
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        /* Force dark background on all select options */
+        select option {
+            background-color: #1a1f2e !important;
+            color: white !important;
+        }
+
+        select {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: white !important;
+        }
+
+        @media (max-width: 768px) {
+            .admin-content {
+                padding: 1rem;
+            }
+
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .table-content {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .topbar-actions {
+                display: none;
+            }
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls input,
+        .filter-controls select {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            min-width: 200px;
+            font-size: 0.9rem;
+        }
+
+        .filter-controls input:focus,
+        .filter-controls select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .filter-controls input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-controls select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Status Selects */
+        .status-select {
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.2s;
+        }
+
+        .status-select option {
+            background: #1a1f2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Badge styling */
+        .badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Force dark background on all select options */
+        select option {
+            background-color: #1a1f2e !important;
+            color: white !important;
+        }
+
+        select {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: white !important;
+        }
+
+        /* Payment Tracker Styles */
+        .payment-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-summary-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .payment-summary-card .amount {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-summary-card .label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .payment-summary-card.revenue .amount {
+            color: #10b981;
+        }
+
+        .payment-summary-card.pending .amount {
+            color: #fbbf24;
+        }
+
+        .payment-summary-card.monthly .amount {
+            color: #8b5cf6;
+        }
+
+        .payment-summary-card.subscriptions .amount {
+            color: #3b82f6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Order Details Styles */
+        .order-detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .order-detail-section h4 {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .order-detail-row .label {
+            color: #94a3b8;
+        }
+
+        .order-detail-row .value {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .order-detail-row .value.success {
+            color: #10b981;
+        }
+
+        .order-detail-row .value.warning {
+            color: #fbbf24;
+        }
+
+        .order-detail-row .value.error {
+            color: #ef4444;
+        }
+
+        /* Promo Code Table Styles */
+        .promo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .promo-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .promo-badge.inactive {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .promo-badge.expired {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Action buttons in tables */
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .table-btn.view {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .table-btn.view:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .table-btn.refund {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .table-btn.refund:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .table-btn.toggle {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+
+        .table-btn.toggle:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Form styles for modals */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Quote-specific styles */
+        .quote-code-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quote-code {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .quote-pricing {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .quote-description {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .redemption-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .redemption-item:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h1>🔐 Admin Login</h1>
+            <div id="loginError" class="error-message"></div>
+            <form id="adminLoginForm">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="adminEmail" style="display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.9rem;">Email</label>
+                    <input type="email" id="adminEmail" required autocomplete="username" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 1rem;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="adminPassword" style="display: block; margin-bottom: 0.5rem; color: #94a3b8; font-size: 0.9rem;">Password</label>
+                    <input type="password" id="adminPassword" required autocomplete="current-password" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font-size: 1rem;">
+                </div>
+                <button type="submit" class="login-btn" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Login to Admin Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Layout -->
+    <div id="adminDashboard" class="admin-layout" style="display: none;">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <h1>⚙️ Admin Panel</h1>
+                <div class="admin-email" id="sidebarUserEmail"></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Dashboard</div>
+                    <div class="nav-item active" data-section="overview">
+                        <span class="icon">📊</span>
+                        <span>Overview</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <div class="nav-item" data-section="analytics">
+                        <span class="icon">📊</span>
+                        <span>Visitor Analytics</span>
+                    </div>
+                    <div class="nav-item" data-section="users">
+                        <span class="icon">👥</span>
+                        <span>Users</span>
+                    </div>
+                    <div class="nav-item" data-section="requests">
+                        <span class="icon">📋</span>
+                        <span>Service Requests</span>
+                    </div>
+                    <div class="nav-item" data-section="quotes">
+                        <span class="icon">🎫</span>
+                        <span>Custom Quotes</span>
+                    </div>
+                    <div class="nav-item" data-section="payments">
+                        <span class="icon">💳</span>
+                        <span>Payments & Invoices</span>
+                    </div>
+                    <div class="nav-item" data-section="files">
+                        <span class="icon">📁</span>
+                        <span>Files</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Communication</div>
+                    <div class="nav-item" data-section="messages">
+                        <span class="icon">💬</span>
+                        <span>Messages</span>
+                        <span class="badge" id="navMessagesBadge" style="display: none;">0</span>
+                    </div>
+                    <div class="nav-item" data-section="contacts">
+                        <span class="icon">📬</span>
+                        <span>Contact Forms</span>
+                        <span class="badge" id="navContactsBadge" style="display: none;">0</span>
+                    </div>
+                    <div class="nav-item" data-section="blog">
+                        <span class="icon">📝</span>
+                        <span>Blog & Updates</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item" onclick="adminPanel.handleLogout()" style="color: #f87171;">
+                        <span class="icon">🚪</span>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Top Bar -->
+            <div class="admin-topbar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+                
+                <div class="global-search">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Search users, businesses, emails, requests...">
+                    <div class="global-search-results" id="globalSearchResults"></div>
+                </div>
+                
+                <div class="topbar-actions">
+                    <button id="reloadBtn" class="topbar-btn reload">🔄 Reload</button>
+                    <button id="logoutBtn" class="topbar-btn logout">Logout</button>
+                </div>
+            </div>
+
+            <div class="admin-content">
+                <!-- Overview Section -->
+                <section class="admin-section active" id="section-overview">
+                    <div class="section-header">
+                        <h2>📊 Dashboard Overview</h2>
+                        <p>Quick snapshot of your business metrics</p>
+                    </div>
+                    
+                    <!-- Stats Grid -->
+                    <div class="admin-grid">
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon blue">👥</div>
+                            </div>
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon green">💰</div>
+                            </div>
+                            <div class="stat-number" id="totalRevenue">$0</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon purple">📋</div>
+                            </div>
+                            <div class="stat-number" id="totalRequests">0</div>
+                            <div class="stat-label">Service Requests</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon orange">📁</div>
+                            </div>
+                            <div class="stat-number" id="totalFiles">0</div>
+                            <div class="stat-label">Files Stored</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>🕐 Recent Activity</h2>
+                        </div>
+                        <div class="table-content" id="recentActivityContainer">
+                            <div class="loading">Loading recent activity...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section class="admin-section" id="section-analytics">
+                    <div class="section-header">
+                        <h2>📊 Visitor Analytics</h2>
+                        <p>Track website visitors, locations, and engagement</p>
+                    </div>
+                    
+                    <!-- Date Range Filter -->
+                    <div class="filter-bar" style="margin-bottom: 1.5rem;">
+                        <div class="filter-group">
+                            <label>Time Period:</label>
+                            <select id="analyticsDateRange" onchange="adminPanel.loadAnalytics()">
+                                <option value="1">Today</option>
+                                <option value="7" selected>Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="adminPanel.loadAnalytics()">
+                            🔄 Refresh
+                        </button>
+                        <button class="btn-secondary" onclick="adminPanel.exportAnalytics()">
+                            📥 Export CSV
+                        </button>
+                    </div>
+                    
+                    <!-- Analytics Stats -->
+                    <div class="admin-grid">
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon blue">👁️</div>
+                            </div>
+                            <div class="stat-number" id="totalPageViews">0</div>
+                            <div class="stat-label">Page Views</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon green">👤</div>
+                            </div>
+                            <div class="stat-number" id="uniqueVisitors">0</div>
+                            <div class="stat-label">Unique Visitors</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon purple">⏱️</div>
+                            </div>
+                            <div class="stat-number" id="avgTimeOnSite">0s</div>
+                            <div class="stat-label">Avg. Time on Site</div>
+                        </div>
+                        <div class="admin-card">
+                            <div class="card-header">
+                                <div class="card-icon orange">📈</div>
+                            </div>
+                            <div class="stat-number" id="bounceRate">0%</div>
+                            <div class="stat-label">Bounce Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Charts Row -->
+                    <div class="analytics-charts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <!-- Top Pages -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>📄 Top Pages</h3>
+                            </div>
+                            <div class="table-content" id="topPagesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Top Locations -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>🌍 Top Locations</h3>
+                            </div>
+                            <div class="table-content" id="topLocationsContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Traffic Sources -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>🔗 Traffic Sources</h3>
+                            </div>
+                            <div class="table-content" id="trafficSourcesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Devices -->
+                        <div class="data-table">
+                            <div class="table-header">
+                                <h3>📱 Devices & Browsers</h3>
+                            </div>
+                            <div class="table-content" id="devicesContainer">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Visitors Table -->
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3>👥 Recent Visitors</h3>
+                            <div class="table-actions">
+                                <input type="text" id="visitorSearch" placeholder="Search visitors..." 
+                                    onkeyup="adminPanel.filterVisitors()" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table" id="visitorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Page</th>
+                                        <th>Location</th>
+                                        <th>Device</th>
+                                        <th>Browser</th>
+                                        <th>Referrer</th>
+                                        <th>Duration</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="visitorsTableBody">
+                                    <tr><td colspan="8" class="loading">Loading visitor data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination" id="visitorsPagination"></div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section class="admin-section" id="section-users">
+                    <div class="section-header">
+                        <h2>👥 User Management</h2>
+                        <p>Manage all registered users</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Users</h2>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="userSearch" placeholder="🔍 Search by name, email, business...">
+                                <select id="userFilter">
+                                    <option value="all">All Users</option>
+                                    <option value="verified">Verified Only</option>
+                                    <option value="unverified">Unverified Only</option>
+                                    <option value="admin">Admins</option>
+                                </select>
+                            </div>
+                            <div id="usersTableContainer">
+                                <div class="loading">Loading users...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Service Requests Section -->
+                <section class="admin-section" id="section-requests">
+                    <div class="section-header">
+                        <h2>📋 Service Requests</h2>
+                        <p>Manage client service requests</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Requests</h2>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="requestSearch" placeholder="🔍 Search by service, user, business...">
+                                <select id="requestStatusFilter">
+                                    <option value="all">All Requests</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="ready_to_purchase">Ready to Purchase</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div id="requestsTableContainer">
+                                <div class="loading">Loading requests...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Custom Quotes Section -->
+                <section class="admin-section" id="section-quotes">
+                    <div class="section-header">
+                        <h2>🎫 Custom Quotes</h2>
+                        <p>Generate personalized quote codes for clients</p>
+                    </div>
+                    
+                    <!-- Quick Create + Stats Row -->
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <!-- Quick Create Card -->
+                        <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                    ✨
+                                </div>
+                                <div>
+                                    <h3 style="margin: 0; font-size: 1.1rem; color: #fff;">New Quote</h3>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Create custom pricing</p>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem; line-height: 1.5;">
+                                Generate a unique code with custom upfront & monthly pricing for a specific client.
+                            </p>
+                            <button class="action-btn" id="createQuoteBtn" style="width: 100%; background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 0.875rem; border-radius: 10px; font-weight: 600;">
+                                ➕ Create Quote Code
+                            </button>
+                        </div>
+                        
+                        <!-- Stats Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                            <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; text-align: center;">
+                                <div style="font-size: 1.75rem; font-weight: 700; color: #60a5fa;" id="pendingQuotes">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">Pending</div>
+                            </div>
+                            <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; text-align: center;">
+                                <div style="font-size: 1.75rem; font-weight: 700; color: #fbbf24;" id="viewedQuotes">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">Viewed</div>
+                            </div>
+                            <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; text-align: center;">
+                                <div style="font-size: 1.75rem; font-weight: 700; color: #34d399;" id="redeemedQuotes">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">Redeemed</div>
+                            </div>
+                            <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; text-align: center;">
+                                <div style="font-size: 1.75rem; font-weight: 700; color: #a78bfa;" id="quotesValue">$0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">Total Value</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quotes Table -->
+                    <div class="data-table">
+                        <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <h2 style="margin: 0;">All Quote Codes</h2>
+                            <div class="filter-controls" style="display: flex; gap: 0.75rem; margin: 0;">
+                                <input type="text" id="quoteSearch" placeholder="🔍 Search codes, clients..." style="padding: 0.625rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); min-width: 200px;">
+                                <select id="quoteStatusFilter" style="padding: 0.625rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
+                                    <option value="all">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="viewed">Viewed</option>
+                                    <option value="redeemed">Redeemed</option>
+                                    <option value="expired">Expired</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-content" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="admin-table" id="quotesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Client</th>
+                                            <th>Upfront</th>
+                                            <th>Monthly</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Expires</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quotesTableBody">
+                                        <tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎫</div>
+                                            <div>No quotes yet. Create your first quote code!</div>
+                                        </td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payments & Invoices Section -->
+                <section class="admin-section" id="section-payments">
+                    <div class="section-header">
+                        <h2>💳 Payments & Invoices</h2>
+                        <p>Track all payments, subscriptions, and promo codes</p>
+                    </div>
+                    
+                    <!-- Payment Summary -->
+                    <div class="payment-summary-grid">
+                        <div class="payment-summary-card revenue">
+                            <div class="amount" id="totalPaidRevenue">$0</div>
+                            <div class="label">Total Paid Revenue</div>
+                        </div>
+                        <div class="payment-summary-card pending">
+                            <div class="amount" id="pendingPayments">$0</div>
+                            <div class="label">Pending Payments</div>
+                        </div>
+                        <div class="payment-summary-card monthly">
+                            <div class="amount" id="monthlyRecurring">$0</div>
+                            <div class="label">Monthly Recurring</div>
+                        </div>
+                        <div class="payment-summary-card subscriptions">
+                            <div class="amount" id="activeSubscriptions">0</div>
+                            <div class="label">Active Subscriptions</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Promo Codes Section -->
+                    <div class="data-table" style="margin-bottom: 2rem;">
+                        <div class="table-header">
+                            <h2>🎟️ Promo Codes</h2>
+                            <button class="action-btn" id="createPromoBtn" style="background: linear-gradient(135deg, #10b981, #059669);">+ Create Promo Code</button>
+                        </div>
+                        <div class="table-content">
+                            <div id="promoCodesContainer">
+                                <div class="loading">Loading promo codes...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>💰 All Orders & Invoices</h2>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="paymentSearch" placeholder="🔍 Search by customer, service, business...">
+                                <select id="paymentStatusFilter">
+                                    <option value="all">All Orders</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="ready_to_purchase">Awaiting Payment</option>
+                                    <option value="pending">Quote Pending</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                            </div>
+                            <div id="paymentsTableContainer">
+                                <div class="loading">Loading orders...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>🔄 Active Subscriptions</h2>
+                        </div>
+                        <div class="table-content">
+                            <div id="subscriptionsTableContainer">
+                                <div class="loading">Loading subscriptions...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Files Section -->
+                <section class="admin-section" id="section-files">
+                    <div class="section-header">
+                        <h2>📁 File Management</h2>
+                        <p>Manage user documents and contracts</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Files</h2>
+                            <button id="uploadFileBtn" class="action-btn" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">+ Upload File</button>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="fileSearch" placeholder="🔍 Search files...">
+                            </div>
+                            <div id="filesTableContainer">
+                                <div class="loading">Loading files...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contacts Section -->
+                <section class="admin-section" id="section-contacts">
+                    <div class="section-header">
+                        <h2>📬 Contact Submissions</h2>
+                        <p>Review and respond to contact form submissions</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Submissions</h2>
+                            <span class="badge" id="newContactsBadge" style="background: #ef4444; display: none;">0 New</span>
+                        </div>
+                        <div class="table-content">
+                            <div class="filter-controls">
+                                <input type="text" id="contactSearch" placeholder="🔍 Search contacts...">
+                                <select id="contactStatusFilter">
+                                    <option value="all">All Submissions</option>
+                                    <option value="new">New</option>
+                                    <option value="read">Read</option>
+                                    <option value="replied">Replied</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
+                            <div id="contactsTableContainer">
+                                <div class="loading">Loading contact submissions...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section class="admin-section" id="section-messages">
+                    <div class="section-header">
+                        <h2>💬 Messages</h2>
+                        <p>View and respond to user messages</p>
+                    </div>
+                    
+                    <div class="admin-messages-grid">
+                        <!-- Conversations List -->
+                        <div class="admin-conversations-list">
+                            <div class="admin-conversations-header">
+                                <h4>Conversations</h4>
+                                <div class="admin-conversations-search">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" id="adminConversationSearch" placeholder="Search users...">
+                                </div>
+                            </div>
+                            <div class="admin-conversations-items" id="adminConversationsList">
+                                <div class="loading" style="padding: 2rem; text-align: center; color: #94a3b8;">Loading conversations...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Panel -->
+                        <div class="admin-chat-panel">
+                            <div class="admin-no-conversation" id="adminNoConversation">
+                                <div class="admin-no-conversation-icon">💬</div>
+                                <h4>Select a Conversation</h4>
+                                <p>Choose a conversation from the list to view and respond to messages.</p>
+                            </div>
+                            
+                            <div id="adminChatView" style="display: none; flex-direction: column; height: 100%;">
+                                <div class="admin-chat-header">
+                                    <div class="admin-chat-header-info">
+                                        <div class="admin-conversation-avatar" id="adminChatAvatar">U</div>
+                                        <div>
+                                            <h4 id="adminChatUserName">User Name</h4>
+                                            <p id="adminChatUserEmail">user@email.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="admin-chat-messages" id="adminChatMessages">
+                                    <!-- Messages will be loaded here -->
+                                </div>
+                                
+                                <div class="admin-chat-input">
+                                    <input type="text" id="adminMessageInput" placeholder="Type your reply...">
+                                    <button class="admin-chat-send-btn" id="adminSendBtn">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Blog Section -->
+                <section class="admin-section" id="section-blog">
+                    <div class="section-header">
+                        <h2>📝 Blog & Updates</h2>
+                        <p>Create and manage blog posts and updates</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h2>All Posts</h2>
+                            <button class="action-btn" id="createPostBtn" style="background: linear-gradient(135deg, #10b981, #059669);">+ Create Post</button>
+                        </div>
+                        <div class="table-content">
+                            <div id="blogPostsContainer">
+                                <div class="loading">Loading blog posts...</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload File Modal -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div id="uploadModalContent" style="background: rgba(26, 31, 46, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; width: 90%; max-width: 500px;">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📁 Upload File for User</h2>
+            <form id="uploadFileForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">Select User</label>
+                    <select id="userSelect" required style="width: 100%; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; font-size: 0.95rem;">
+                        <option value="" style="background: #1a1f2e; color: white;">Loading users...</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">File Name</label>
+                    <input type="text" id="fileName" required style="width: 100%; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; font-size: 0.95rem;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">Upload File</label>
+                    <input type="file" id="fileUpload" required style="width: 100%; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; font-size: 0.95rem;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">Description (Optional)</label>
+                    <textarea id="fileDescription" rows="3" style="width: 100%; padding: 0.875rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; font-size: 0.95rem; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="action-btn" style="flex: 1; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 0.875rem; font-size: 0.95rem;">Upload</button>
+                    <button type="button" id="closeUploadModal" class="action-btn" style="flex: 1; background: #4b5563; padding: 0.875rem; font-size: 0.95rem;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
+
+    <!-- Upload File Modal -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div id="uploadModalContent" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 2rem; width: 90%; max-width: 500px;">
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Upload File for User</h2>
+            <form id="uploadFileForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Select User</label>
+                    <select id="userSelect" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                        <option value="" style="background: #1a1f2e; color: white;">Loading users...</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">File Name</label>
+                    <input type="text" id="fileName" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Upload File</label>
+                    <input type="file" id="fileUpload" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">Description (Optional)</label>
+                    <textarea id="fileDescription" rows="3" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white;"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="action-btn" style="flex: 1; background: var(--primary); padding: 0.75rem;">Upload</button>
+                    <button type="button" id="closeUploadModal" class="action-btn" style="flex: 1; background: #6b7280; padding: 0.75rem;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>📦 Order Details</h3>
+                <button class="modal-close" onclick="adminPanel.closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="orderDetailsContent">
+                <div class="loading">Loading order details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeOrderModal()">Close</button>
+                <button class="action-btn refund-btn" id="modalRefundBtn" style="display: none; background: #ef4444;">Issue Refund</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promo Code Creation Modal -->
+    <div id="promoCodeModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>🎟️ Create Promo Code</h3>
+                <button class="modal-close" onclick="adminPanel.closePromoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="promoCodeForm">
+                    <div class="form-group">
+                        <label>Promo Code</label>
+                        <input type="text" id="promoCode" placeholder="e.g., SAVE20" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="promoDescription" placeholder="e.g., 20% off for new customers">
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Discount Type</label>
+                            <select id="promoDiscountType" required>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount ($)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Discount Value</label>
+                            <input type="number" id="promoDiscountValue" placeholder="e.g., 20" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Max Uses (optional)</label>
+                            <input type="number" id="promoMaxUses" placeholder="Leave empty for unlimited" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Min Purchase ($)</label>
+                            <input type="number" id="promoMinPurchase" placeholder="0" min="0" step="0.01" value="0">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valid From</label>
+                            <input type="date" id="promoValidFrom">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Valid Until</label>
+                            <input type="date" id="promoValidUntil">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closePromoModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.createPromoCode()" style="background: linear-gradient(135deg, #10b981, #059669);">Create Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refund Modal -->
+    <div id="refundModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>💸 Issue Refund</h3>
+                <button class="modal-close" onclick="adminPanel.closeRefundModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="refundDetails">
+                    <p><strong>Customer:</strong> <span id="refundCustomer"></span></p>
+                    <p><strong>Service:</strong> <span id="refundService"></span></p>
+                    <p><strong>Original Amount:</strong> <span id="refundOriginalAmount"></span></p>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Refund Type</label>
+                    <select id="refundType" onchange="adminPanel.toggleRefundAmount()">
+                        <option value="full">Full Refund</option>
+                        <option value="partial">Partial Refund</option>
+                    </select>
+                </div>
+                <div class="form-group" id="partialAmountGroup" style="display: none;">
+                    <label>Refund Amount ($)</label>
+                    <input type="number" id="refundAmount" placeholder="Enter amount" min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <select id="refundReason">
+                        <option value="requested_by_customer">Requested by customer</option>
+                        <option value="duplicate">Duplicate charge</option>
+                        <option value="fraudulent">Fraudulent charge</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeRefundModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.processRefund()" style="background: #ef4444;">Process Refund</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Post Modal -->
+    <div id="blogPostModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 id="blogModalTitle">📝 Create Blog Post</h3>
+                <button class="modal-close" onclick="adminPanel.closeBlogModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="blogPostForm">
+                    <input type="hidden" id="blogPostId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="blogTitle" placeholder="Enter post title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (URL-friendly name)</label>
+                        <input type="text" id="blogSlug" placeholder="auto-generated-from-title">
+                        <small style="color: #94a3b8;">Leave empty to auto-generate from title</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="blogCategory">
+                            <option value="">Select category</option>
+                            <option value="News">News</option>
+                            <option value="Tips">Tips & Tricks</option>
+                            <option value="Updates">Updates</option>
+                            <option value="Tutorial">Tutorial</option>
+                            <option value="Case Study">Case Study</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Excerpt (Short description)</label>
+                        <textarea id="blogExcerpt" rows="2" placeholder="Brief summary shown in post list..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Image URL</label>
+                        <input type="url" id="blogFeaturedImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Content * (HTML supported)</label>
+                        <textarea id="blogContent" rows="15" placeholder="Write your post content here. HTML is supported for formatting." required style="font-family: monospace;"></textarea>
+                        <small style="color: #94a3b8;">Supported tags: &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;a&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;img&gt;, &lt;code&gt;, &lt;pre&gt;</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="blogPublished" style="width: auto;">
+                            Publish immediately
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeBlogModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.saveBlogPost()" style="background: linear-gradient(135deg, #10b981, #059669);">Save Post</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visitor Details Modal -->
+    <div class="modal-overlay" id="visitorModal" style="display: none;">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>👤 Visitor Details</h3>
+                <button class="modal-close" onclick="adminPanel.closeVisitorModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="visitorModalContent">
+                <div class="loading">Loading visitor details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeVisitorModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Quote Modal -->
+    <div class="modal" id="quoteModal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="quoteModalTitle">🎫 Create Custom Quote</h3>
+                <button class="modal-close" onclick="adminPanel.closeQuoteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Generated Code Display (shown after save) -->
+                <div id="generatedCodeDisplay" style="display: none; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1.25rem; border-radius: 12px; text-align: center; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.75rem; color: #a5b4fc; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Quote Code</div>
+                    <div id="generatedCode" style="font-size: 1.5rem; font-weight: 700; font-family: monospace; color: #fff; letter-spacing: 2px;"></div>
+                    <button type="button" onclick="adminPanel.copyQuoteCode(document.getElementById('generatedCode').textContent)" class="action-btn secondary" style="margin-top: 0.75rem; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                        📋 Copy Code
+                    </button>
+                </div>
+                
+                <form id="quoteForm">
+                    <!-- Client Info Section -->
+                    <div class="order-detail-section">
+                        <h4>👤 Client Information</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="quoteClientName" placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="quoteClientEmail" placeholder="john@example.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="quoteClientPhone" placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+                    
+                    <!-- Pricing Section -->
+                    <div class="order-detail-section">
+                        <h4>💰 Pricing</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Upfront Cost *</label>
+                                <div style="position: relative;">
+                                    <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;">$</span>
+                                    <input type="number" id="quoteUpfrontCost" placeholder="500" min="0" step="0.01" style="padding-left: 24px;" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Monthly Fee</label>
+                                <div style="position: relative;">
+                                    <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;">$</span>
+                                    <input type="number" id="quoteMonthlyFee" placeholder="50" min="0" step="0.01" style="padding-left: 24px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Details Section -->
+                    <div class="order-detail-section">
+                        <h4>📋 Service Details</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Service Type</label>
+                                <select id="quoteServiceType">
+                                    <option value="website">Website Design</option>
+                                    <option value="maintenance">Maintenance Plan</option>
+                                    <option value="google_workspace">Google Workspace</option>
+                                    <option value="custom">Custom Project</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Timeline</label>
+                                <input type="text" id="quoteTimeline" placeholder="2-3 weeks">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="quoteServiceDescription" rows="2" placeholder="Custom responsive website with 5 pages..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Deliverables</label>
+                            <textarea id="quoteDeliverables" rows="2" placeholder="• Custom design&#10;• Mobile responsive&#10;• Contact form"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes Section -->
+                    <div class="order-detail-section">
+                        <h4>📝 Notes</h4>
+                        <div class="form-group">
+                            <label>Client Notes <span style="color: #60a5fa; font-size: 0.75rem;">(visible to client)</span></label>
+                            <textarea id="quoteClientNotes" rows="2" placeholder="Thank you for your interest!"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Internal Notes <span style="color: #fbbf24; font-size: 0.75rem;">(only you)</span></label>
+                            <textarea id="quoteInternalNotes" rows="2" placeholder="Discussed scope on call..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Options Section -->
+                    <div class="order-detail-section">
+                        <h4>⚙️ Options</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Contract URL</label>
+                                <input type="url" id="quoteContractUrl" placeholder="https://...">
+                            </div>
+                            <div class="form-group">
+                                <label>Valid Until</label>
+                                <input type="date" id="quoteValidUntil">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0;">
+                                <input type="checkbox" id="quoteRequiresContract" checked style="width: 16px; height: 16px;">
+                                Requires signed contract
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeQuoteModal()">Cancel</button>
+                <button class="action-btn" onclick="adminPanel.saveQuote()">💾 Save Quote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quote View Modal -->
+    <div class="modal-overlay" id="quoteViewModal" style="display: none;">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>🎫 Quote Details</h3>
+                <button class="modal-close" onclick="adminPanel.closeQuoteViewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="quoteViewContent">
+                <div class="loading">Loading quote details...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="adminPanel.closeQuoteViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/thanksgiving.js"></script>
+</body>
+</html>

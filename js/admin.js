@@ -99,7 +99,7 @@ class AdminPanel {
         }
 
         // Sidebar navigation
-        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+        document.querySelectorAll('.sidebar-link[data-section]').forEach(item => {
             item.addEventListener('click', () => {
                 const section = item.dataset.section;
                 this.switchSection(section);
@@ -135,7 +135,7 @@ class AdminPanel {
 
     switchSection(sectionName) {
         // Update nav items
-        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+        document.querySelectorAll('.sidebar-link[data-section]').forEach(item => {
             item.classList.toggle('active', item.dataset.section === sectionName);
         });
         
@@ -386,12 +386,19 @@ class AdminPanel {
 
     showDashboard() {
         document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
+        document.getElementById('adminDashboard').style.display = 'flex';
         
-        const emailSpan = document.getElementById('sidebarUserEmail');
-        if (emailSpan) {
+        // Update sidebar user info
+        const userNameEl = document.getElementById('sidebarUserName');
+        const userAvatarEl = document.getElementById('sidebarUserAvatar');
+        
+        if (userNameEl) {
             const roleBadge = this.userRole === 'owner' ? '👑' : '🛡️';
-            emailSpan.textContent = `${roleBadge} ${this.currentUser.email}`;
+            userNameEl.textContent = `${roleBadge} ${this.currentUser.email?.split('@')[0] || 'Admin'}`;
+        }
+        
+        if (userAvatarEl && this.currentUser.email) {
+            userAvatarEl.textContent = this.currentUser.email.charAt(0).toUpperCase();
         }
 
         // Setup event listeners for dashboard elements now that they're visible
@@ -1250,6 +1257,8 @@ class AdminPanel {
 
     renderUsers(filteredUsers = null) {
         const container = document.getElementById('usersTableContainer');
+        if (!container) return;
+        
         const usersToRender = filteredUsers || this.users;
 
         if (usersToRender.length === 0) {
@@ -1293,6 +1302,8 @@ class AdminPanel {
 
     renderOrders(filteredOrders = null) {
         const container = document.getElementById('ordersTableContainer');
+        if (!container) return;
+        
         const ordersToRender = filteredOrders || this.orders;
 
         if (ordersToRender.length === 0) {
@@ -1335,6 +1346,8 @@ class AdminPanel {
 
     renderFiles(filteredFiles = null) {
         const container = document.getElementById('filesTableContainer');
+        if (!container) return;
+        
         let filesToRender = filteredFiles || this.files;
 
         if (filesToRender.length === 0) {

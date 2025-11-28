@@ -11,16 +11,14 @@
     </script>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Helpful Resources | Ryan's Web Services</title>
-    <meta name="description" content="Helpful resources, tips, and guides for small business owners from Ryan's Web Services.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Ryan's Web Services</title>
+    <meta name="description" content="Web design tips, small business advice, and digital marketing insights from Ryan's Web Services.">
     
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="../favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon_io/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../stylesheets/main.css">
+    <link rel="stylesheet" href="stylesheets/main.css">
     
     <style>
         .blog-grid {
@@ -129,7 +127,7 @@
     <header>
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="../images/logo.png" alt="Ryans Web Services" class="logo-img">
+                <img src="images/logo.png" alt="Ryans Web Services" class="logo-img">
                 Ryans Web Services, LLC
             </a>
             
@@ -140,44 +138,57 @@
             </button>
             
             <ul class="nav-menu" id="navMenu">
-                <li><a href="../index.html" class="nav-link">Home</a></li>
-                <li><a href="../pricing.html" class="nav-link">Pricing</a></li>
-                <li><a href="../resources/" class="nav-link active">Resources</a></li>
-                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
-                <li id="authNavItem"><a href="../login.html" class="nav-link nav-cta">Get Started</a></li>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="blog.html" class="nav-link active">Blog</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <li id="authNavItem"><a href="login.html" class="nav-link nav-cta">Get Started</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Resources Hero -->
+    <!-- Blog Hero -->
     <section class="hero" style="min-height: auto; padding: 10rem 1.5rem 4rem;">
         <div class="hero-content">
-            <span class="hero-badge">For Our Clients</span>
-            <h1>Helpful <span class="highlight">Resources</span></h1>
+            <span class="hero-badge">Resources</span>
+            <h1>Tips & <span class="highlight">Insights</span></h1>
             <p class="hero-description">
-                Guides and tips to help you get the most out of your online presence and grow your business.
+                Helpful articles about web design, digital marketing, and growing your small business online.
             </p>
         </div>
     </section>
 
-    <!-- Resource Articles -->
+    <!-- Blog Posts -->
     <section>
         <div class="blog-grid">
             <article class="blog-card">
-                <img src="../stock-images/blog-design.jpg" alt="How It Works" class="blog-image" loading="lazy">
+                <img src="stock-images/blog-seo.jpg" alt="Google Business Profile" class="blog-image" loading="lazy">
                 <div class="blog-content">
                     <div class="blog-meta">
-                        <span class="blog-category">Getting Started</span>
-                        <span>Nov 28, 2025</span>
+                        <span class="blog-category">Google</span>
+                        <span>Nov 25, 2025</span>
                     </div>
-                    <h3>How It Works: From First Contact to Launch</h3>
-                    <p>A complete guide to our process. Learn what to expect at every step—from reaching out to getting your site live.</p>
-                    <a href="how-it-works.html" class="blog-link">Read More →</a>
+                    <h3>Setting Up Your Google Business Profile the Right Way</h3>
+                    <p>Your Google Business Profile is often the first thing customers see. Learn how to optimize it with the right photos, hours, and info to show up in local searches.</p>
+                    <a href="#" class="blog-link">Read More →</a>
                 </div>
             </article>
             
             <article class="blog-card">
-                <img src="../stock-images/blog-mobile.jpg" alt="Professional Email" class="blog-image" loading="lazy">
+                <img src="stock-images/blog-design.jpg" alt="What to Prepare" class="blog-image" loading="lazy">
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-category">Getting Started</span>
+                        <span>Nov 20, 2025</span>
+                    </div>
+                    <h3>What to Prepare Before Your Website is Built</h3>
+                    <p>Not sure what you need to provide for your new website? Here's a simple checklist of content, photos, and info to gather before we start building.</p>
+                    <a href="#" class="blog-link">Read More →</a>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <img src="stock-images/blog-mobile.jpg" alt="Professional Email" class="blog-image" loading="lazy">
                 <div class="blog-content">
                     <div class="blog-meta">
                         <span class="blog-category">Email</span>
@@ -185,7 +196,46 @@
                     </div>
                     <h3>Why You Need a Professional Business Email</h3>
                     <p>Still using @gmail.com for your business? Learn why a professional email like you@yourbusiness.com builds trust and how easy it is to set up.</p>
-                    <a href="professional-email.html" class="blog-link">Read More →</a>
+                    <a href="#" class="blog-link">Read More →</a>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <img src="stock-images/blog-content.jpg" alt="Customer Reviews" class="blog-image" loading="lazy">
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-category">Reviews</span>
+                        <span>Nov 10, 2025</span>
+                    </div>
+                    <h3>How to Get More Customer Reviews (And Why They Matter)</h3>
+                    <p>Reviews can make or break a small business. Discover simple, non-pushy ways to encourage happy customers to leave reviews on Google and Facebook.</p>
+                    <a href="#" class="blog-link">Read More →</a>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <img src="stock-images/blog-speed.jpg" alt="Social Media Tips" class="blog-image" loading="lazy">
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-category">Social Media</span>
+                        <span>Nov 5, 2025</span>
+                    </div>
+                    <h3>Simple Social Media Tips for Busy Business Owners</h3>
+                    <p>Don't have time to post every day? Learn how to maintain a social media presence that works for your schedule without burning out.</p>
+                    <a href="#" class="blog-link">Read More →</a>
+                </div>
+            </article>
+            
+            <article class="blog-card">
+                <img src="stock-images/blog-local.jpg" alt="Taking Product Photos" class="blog-image" loading="lazy">
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-category">Photos</span>
+                        <span>Oct 28, 2025</span>
+                    </div>
+                    <h3>Taking Great Photos of Your Business With Just Your Phone</h3>
+                    <p>You don't need expensive equipment. Learn simple tips for taking professional-looking photos of your products, services, and workspace using your smartphone.</p>
+                    <a href="#" class="blog-link">Read More →</a>
                 </div>
             </article>
         </div>
@@ -193,11 +243,14 @@
 
     <!-- Newsletter CTA -->
     <section class="stats-section" style="text-align: center;">
-        <h2 class="section-title" style="margin-bottom: 1rem;">Need Help?</h2>
+        <h2 class="section-title" style="margin-bottom: 1rem;">Stay Updated</h2>
         <p class="section-description" style="margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-            Have questions about your website or online presence? I'm here to help.
+            Get the latest web design tips and small business insights delivered to your inbox.
         </p>
-        <a href="../index.html#contact" class="hero-cta" style="display: inline-flex;">Contact Us</a>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; max-width: 500px; margin: 0 auto;">
+            <input type="email" placeholder="Enter your email" class="form-input" style="flex: 1; min-width: 250px;">
+            <button class="btn btn-primary">Subscribe</button>
+        </div>
     </section>
 
     <!-- Footer -->
@@ -205,10 +258,10 @@
         <div class="footer-content">
             <div class="footer-logo">Ryans Web Services</div>
             <ul class="footer-links">
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pricing.html">Pricing</a></li>
-                <li><a href="../resources/">Resources</a></li>
-                <li><a href="../index.html#contact">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
             </ul>
             <p class="footer-copyright">© 2025-2026 Ryans Web Services, LLC. All rights reserved.</p>
         </div>
@@ -242,8 +295,8 @@
     </script>
     
     <!-- Auth Scripts -->
-    <script src="../js/config.js"></script>
-    <script src="../js/analytics.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/analytics.js"></script>
     <script>
         // Check auth state and update nav
         async function updateAuthNav() {
@@ -278,14 +331,14 @@
                                 </svg>
                             </button>
                             <div class="user-dropdown">
-                                <a href="../profile.html" class="user-dropdown-item">
+                                <a href="profile.html" class="user-dropdown-item">
                                     <span>👤</span> Profile
                                 </a>
-                                <a href="../dashboard.html" class="user-dropdown-item">
+                                <a href="dashboard.html" class="user-dropdown-item">
                                     <span>📊</span> Dashboard
                                 </a>
-                                ${isAdmin ? '<a href="../admin.html" class="user-dropdown-item"><span>⚙️</span> Admin Panel</a>' : ''}
-                                <a href="../messages.html" class="user-dropdown-item">
+                                ${isAdmin ? '<a href="admin.html" class="user-dropdown-item"><span>⚙️</span> Admin Panel</a>' : ''}
+                                <a href="messages.html" class="user-dropdown-item">
                                     <span>💬</span> Messages
                                 </a>
                                 <div style="height: 1px; background: var(--border-secondary); margin: 0.5rem 0;"></div>
@@ -297,7 +350,7 @@
                     `;
                 } else {
                     // User not logged in - show Get Started
-                    authNavItem.innerHTML = '<a href="../login.html" class="nav-link nav-cta">Get Started</a>';
+                    authNavItem.innerHTML = '<a href="login.html" class="nav-link nav-cta">Get Started</a>';
                 }
             } catch (error) {
                 console.error('Auth check error:', error);
