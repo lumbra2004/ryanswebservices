@@ -321,10 +321,112 @@
             text-decoration: none;
             font-weight: 500;
             transition: opacity 0.2s;
+            cursor: pointer;
         }
 
         .forgot-link:hover {
             opacity: 0.8;
+        }
+
+        /* Forgot Password Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--color-border);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            color: var(--color-text-primary);
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--color-text-primary);
+        }
+
+        .modal-body p {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-body .submit-btn {
+            margin-top: 0.5rem;
+        }
+
+        .modal-message {
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .modal-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            display: block;
+        }
+
+        .modal-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            display: block;
         }
 
         /* Submit button */
@@ -531,6 +633,27 @@
         </div>
     </div>
 
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" name="resetEmail" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="submit-btn" id="resetBtn">Send Reset Link</button>
+                </form>
+                <div class="modal-message" id="resetMessage"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/analytics.js"></script>
@@ -541,6 +664,65 @@
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
             this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Forgot Password Modal
+        const forgotLink = document.querySelector('.forgot-link');
+        const modal = document.getElementById('forgotPasswordModal');
+        const closeModal = document.getElementById('closeModal');
+        const forgotForm = document.getElementById('forgotPasswordForm');
+        const resetMessage = document.getElementById('resetMessage');
+
+        forgotLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.getElementById('resetEmail').value = document.getElementById('email').value || '';
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            resetMessage.className = 'modal-message';
+            resetMessage.textContent = '';
+            forgotForm.reset();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                resetMessage.className = 'modal-message';
+                resetMessage.textContent = '';
+                forgotForm.reset();
+            }
+        });
+
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resetBtn = document.getElementById('resetBtn');
+            const email = document.getElementById('resetEmail').value;
+
+            resetBtn.disabled = true;
+            resetBtn.textContent = 'Sending...';
+            resetMessage.className = 'modal-message';
+            resetMessage.textContent = '';
+
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/reset-password.html'
+                });
+
+                if (error) throw error;
+
+                resetMessage.className = 'modal-message success';
+                resetMessage.textContent = 'Password reset link sent! Check your email inbox.';
+                forgotForm.reset();
+
+            } catch (error) {
+                resetMessage.className = 'modal-message error';
+                resetMessage.textContent = error.message || 'Failed to send reset email. Please try again.';
+            } finally {
+                resetBtn.disabled = false;
+                resetBtn.textContent = 'Send Reset Link';
+            }
         });
 
         // Google login
