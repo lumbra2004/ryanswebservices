@@ -1046,11 +1046,6 @@
                 <div class="addon-price">$10 <span>/month</span></div>
                 <p class="addon-desc">Detailed insights and reporting</p>
             </div>
-            <div class="addon-card" data-addon="live-chat" data-price="20" onclick="toggleAddon(this)">
-                <h4 class="addon-title">Live Chat Widget</h4>
-                <div class="addon-price">$20 <span>/month</span></div>
-                <p class="addon-desc">Real-time customer support</p>
-            </div>
         </div>
         <button class="continue-btn enabled" onclick="scrollToSection('faq')">Continue →</button>
         <button class="skip-btn" onclick="scrollToSection('faq')">Skip add-ons</button>
@@ -1329,8 +1324,7 @@
                     const nameMap = {
                         'google-workspace': 'Google Workspace',
                         'database': 'Database',
-                        'analytics': 'Analytics',
-                        'live-chat': 'Live Chat'
+                        'analytics': 'Analytics'
                     };
                     let name = nameMap[a.name] || a.name;
                     // Show quantity for Google Workspace
@@ -1622,13 +1616,45 @@
             });
         });
 
-        // Header scroll effect
+        // Header scroll effect with hide/show
         const header = document.querySelector('.header');
+        let lastScrollTop = 0;
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
+            const scrollTop = window.scrollY;
+            
+            // Add scrolled class for background change
+            if (scrollTop > 50) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
+            }
+            
+            // Hide/show header on scroll
+            if (Math.abs(scrollTop - lastScrollTop) > 5) {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling down
+                    header.style.transform = 'translateY(-100%)';
+                    header.style.opacity = '0';
+                    header.style.pointerEvents = 'none';
+                    // Also hide lights
+                    const lights = document.getElementById('xmas-lights');
+                    if (lights) {
+                        lights.style.transform = 'translateY(-150px)';
+                        lights.style.opacity = '0';
+                    }
+                } else {
+                    // Scrolling up
+                    header.style.transform = 'translateY(0)';
+                    header.style.opacity = '1';
+                    header.style.pointerEvents = 'auto';
+                    // Show lights
+                    const lights = document.getElementById('xmas-lights');
+                    if (lights) {
+                        lights.style.transform = 'translateY(0)';
+                        lights.style.opacity = '1';
+                    }
+                }
+                lastScrollTop = scrollTop;
             }
         });
 
@@ -1743,5 +1769,7 @@
         // Run auth check on page load
         updateAuthNav();
     </script>
+    <script src="/js/main.js"></script>
+    <script src="/themes/christmas/christmas.js"></script>
 </body>
 </html>

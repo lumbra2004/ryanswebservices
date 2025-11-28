@@ -69,9 +69,12 @@ window.addEventListener('resize', function() {
 // Header hide/show on scroll
 let lastScrollTop = 0;
 let scrollThreshold = 5; // Minimum scroll distance to trigger
-const header = document.querySelector('header');
 
 window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    const lights = document.getElementById('xmas-lights');
+    if (!header) return;
+    
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     
     // Only hide/show if scrolled past threshold
@@ -82,9 +85,25 @@ window.addEventListener('scroll', function() {
     if (scrollTop > lastScrollTop && scrollTop > 100) {
         // Scrolling down & past 100px
         header.classList.add('header-hidden');
+        header.style.transform = 'translateY(-100%)';
+        header.style.opacity = '0';
+        header.style.pointerEvents = 'none';
+        // Hide lights with header
+        if (lights) {
+            lights.style.transform = 'translateY(-150px)';
+            lights.style.opacity = '0';
+        }
     } else {
         // Scrolling up
         header.classList.remove('header-hidden');
+        header.style.transform = 'translateY(0)';
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+        // Show lights with header
+        if (lights) {
+            lights.style.transform = 'translateY(0)';
+            lights.style.opacity = '1';
+        }
     }
     
     lastScrollTop = scrollTop;

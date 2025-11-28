@@ -194,12 +194,18 @@ header {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border-light);
-    transition: all var(--transition-base);
+    transition: all var(--transition-base), transform 0.4s ease, opacity 0.4s ease;
 }
 
 header.scrolled {
     background: rgba(10, 10, 15, 0.95);
     box-shadow: var(--shadow-lg);
+}
+
+header.header-hidden {
+    transform: translateY(-100%) !important;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .nav-container {

@@ -275,7 +275,9 @@ body.light-mode header.scrolled {
 }
 
 header.header-hidden {
-    transform: translateY(-100%);
+    transform: translateY(-100%) !important;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .container-nav {
