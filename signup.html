@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sign Up - Ryan's Webservice</title>
@@ -572,6 +573,7 @@
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;">By creating an account, you agree to our <a href="privacy.html" style="color: var(--color-primary);">Privacy Policy</a></p>
                 </form>
 
                 <!-- Footer -->
@@ -709,16 +711,21 @@
 
                 if (error) throw error;
 
+                // Check for redirect parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                const redirectUrl = redirect === 'pricing' ? 'pricing.html' : 'index.html';
+
                 if (data.session) {
                     // Auto-login successful
                     successDiv.textContent = 'Account created! Redirecting...';
                     successDiv.style.display = 'block';
-                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    setTimeout(() => window.location.href = redirectUrl, 1500);
                 } else {
                     // Email confirmation required
                     successDiv.textContent = 'Account created! Please check your email (' + email + ') to verify your account.';
                     successDiv.style.display = 'block';
-                    setTimeout(() => window.location.href = 'login.html', 3000);
+                    setTimeout(() => window.location.href = 'login.html' + (redirect ? '?redirect=' + redirect : ''), 3000);
                 }
 
             } catch (error) {

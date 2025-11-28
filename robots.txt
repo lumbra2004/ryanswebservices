@@ -1,0 +1,28 @@
+# Robots.txt for ryanswebservices.com
+User-agent: *
+
+# Allow all public pages
+Allow: /
+
+# Allow favicon and images for Google search results
+Allow: /favicon_io/
+Allow: /images/
+
+# Disallow private/auth pages
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /profile.html
+Disallow: /dashboard.html
+Disallow: /messages.html
+Disallow: /admin.html
+
+# Disallow system files
+Disallow: /js/
+Disallow: /css/
+Disallow: /*.json$
+Disallow: /*.sql$
+Disallow: /*.md$
+Disallow: /*.backup$
+
+# Sitemap location
+Sitemap: https://ryanswebservices.com/sitemap.xml

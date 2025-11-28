@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Login - Ryan's Webservice</title>
@@ -560,8 +561,15 @@
 
                 if (error) throw error;
 
-                // Redirect to home or dashboard
-                window.location.href = 'index.html';
+                // Check for redirect parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                
+                if (redirect === 'pricing') {
+                    window.location.href = 'pricing.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
 
             } catch (error) {
                 errorDiv.textContent = error.message || 'Invalid email or password';
