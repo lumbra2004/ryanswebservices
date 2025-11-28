@@ -14,25 +14,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0f1a">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
     <title>Ryan's Web Services | Professional Web Design for Small Businesses</title>
     <meta name="description" content="Professional web design services for small businesses. Custom websites, SEO optimization, and mobile-responsive design at affordable prices. Get started today!">
-    <meta name="keywords" content="web design, small business website, custom website, SEO, mobile responsive, affordable web design">
+    <meta name="keywords" content="web design, small business website, custom website, SEO, mobile responsive, affordable web design, Texas web designer, website development">
     <meta name="author" content="Ryan's Web Services">
     <link rel="canonical" href="https://ryanswebservices.com/">
     
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ryanswebservices.com/">
-    <meta property="og:title" content="Ryan's Web Services | Professional Web Design">
-    <meta property="og:description" content="Professional web design services for small businesses. Custom websites at affordable prices.">
+    <meta property="og:title" content="Ryan's Web Services | Professional Web Design for Small Businesses">
+    <meta property="og:description" content="Professional web design services for small businesses. Custom websites, SEO optimization, and mobile-responsive design at affordable prices.">
     <meta property="og:image" content="https://ryanswebservices.com/images/social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Ryan's Web Services">
+    <meta property="og:locale" content="en_US">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ryan's Web Services | Professional Web Design">
     <meta name="twitter:description" content="Professional web design services for small businesses.">
+    <meta name="twitter:image" content="https://ryanswebservices.com/images/social-preview.png">
     
-    <!-- Structured Data -->
+    <!-- Structured Data - LocalBusiness -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -40,9 +48,60 @@
         "name": "Ryan's Web Services, LLC",
         "description": "Professional web design and development services for small businesses",
         "url": "https://ryanswebservices.com",
+        "logo": "https://ryanswebservices.com/images/logo.png",
+        "image": "https://ryanswebservices.com/images/social-preview.png",
         "priceRange": "$",
-        "areaServed": "United States",
-        "serviceType": ["Web Design", "Web Development", "SEO Optimization"]
+        "areaServed": {
+            "@type": "Country",
+            "name": "United States"
+        },
+        "serviceType": ["Web Design", "Web Development", "SEO Optimization", "Website Maintenance"],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Web Design Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Starter Website Package",
+                        "description": "Professional 1-3 page website for small businesses"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Professional Website Package",
+                        "description": "Complete 4-7 page website with advanced features"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Premium Website Package",
+                        "description": "Full-featured 8-15 page website with custom functionality"
+                    }
+                }
+            ]
+        },
+        "sameAs": []
+    }
+    </script>
+    
+    <!-- Structured Data - WebSite (for sitelinks search box) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Ryan's Web Services",
+        "url": "https://ryanswebservices.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://ryanswebservices.com/?s={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
     }
     </script>
     
