@@ -72,8 +72,10 @@ let scrollThreshold = 5; // Minimum scroll distance to trigger
 
 window.addEventListener('scroll', function() {
     const header = document.querySelector('header');
-    const lights = document.getElementById('xmas-lights');
     if (!header) return;
+    
+    // Always get fresh reference to lights (they may be recreated on resize)
+    const lights = document.getElementById('xmas-lights');
     
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     

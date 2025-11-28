@@ -653,7 +653,12 @@
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                lightsContainer.remove();
+                // Always find and remove existing lights by ID (not by reference)
+                const existingLights = document.getElementById('xmas-lights');
+                if (existingLights) {
+                    existingLights.remove();
+                }
+                
                 if (CONFIG.lights) {
                     const newWidth = window.innerWidth;
                     const newLightsContainer = document.createElement('div');
@@ -698,6 +703,13 @@
                     });
                     
                     document.body.appendChild(newLightsContainer);
+                    
+                    // Sync lights visibility with header state after recreating
+                    const header = document.querySelector('header') || document.querySelector('.header');
+                    if (header && (header.style.transform === 'translateY(-100%)' || header.classList.contains('header-hidden'))) {
+                        newLightsContainer.style.transform = 'translateY(-150px)';
+                        newLightsContainer.style.opacity = '0';
+                    }
                 }
             }, 250);
         });
