@@ -451,16 +451,11 @@ header.header-hidden {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(212, 168, 83, 0.04) 0%, transparent 70%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212, 168, 83, 0.02) 0%, transparent 60%);
     pointer-events: none;
-    animation: pulse 8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    opacity: 0.6;
 }
 
 .hero-badge {
@@ -500,10 +495,7 @@ header.header-hidden {
 }
 
 .hero h1 .highlight {
-    background: var(--gradient-accent);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-accent);
 }
 
 .hero-description {
@@ -654,15 +646,19 @@ section {
 }
 
 .feature-icon {
-    width: 56px;
-    height: 56px;
-    background: var(--color-accent-subtle);
-    border-radius: var(--radius-lg);
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--text-2xl);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-accent);
     margin-bottom: var(--space-5);
+    font-family: var(--font-mono);
 }
 
 .feature-card h3 {
@@ -704,10 +700,7 @@ section {
 .stat-value {
     font-size: var(--text-4xl);
     font-weight: 800;
-    background: var(--gradient-accent);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-accent);
     margin-bottom: var(--space-2);
 }
 
@@ -1204,5 +1197,17 @@ footer {
     
     .pricing-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
