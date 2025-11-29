@@ -725,7 +725,7 @@ class AdminPanel {
                 title: `New request: ${r.service_name}`,
                 subtitle: r.profiles?.full_name || r.profiles?.email || 'Unknown user',
                 date: new Date(r.created_at),
-                color: '#8b5cf6'
+                color: '#c9973f'
             });
         });
         
@@ -749,7 +749,7 @@ class AdminPanel {
                 title: `New user: ${u.full_name || u.email}`,
                 subtitle: u.business_name || 'No business',
                 date: new Date(u.created_at),
-                color: '#3b82f6'
+                color: '#d4a853'
             });
         });
         
@@ -918,7 +918,7 @@ class AdminPanel {
 
         const statusColors = {
             'pending': '#fbbf24',
-            'in_progress': '#3b82f6',
+            'in_progress': '#d4a853',
             'active': '#10b981',
             'ready_to_purchase': '#10b981',
             'paid': '#22c55e',
@@ -1383,7 +1383,7 @@ class AdminPanel {
                             <td>${file.description || '-'}</td>
                             <td>
                                 ${isContract ? 
-                                    `<span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; border: 1px solid rgba(59, 130, 246, 0.3);">📄 Contract</span><br><small style="color: var(--text-secondary); font-size: 0.75rem;">${linkedRequest.service_name}</small>` : 
+                                    `<span style="background: rgba(212, 168, 83, 0.1); color: #d4a853; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; border: 1px solid rgba(212, 168, 83, 0.3);">📄 Contract</span><br><small style="color: var(--text-secondary); font-size: 0.75rem;">${linkedRequest.service_name}</small>` : 
                                     '<span style="opacity: 0.6;">Document</span>'
                                 }
                             </td>
@@ -1530,7 +1530,7 @@ class AdminPanel {
 
         const statusColors = {
             'new': '#ef4444',
-            'read': '#3b82f6',
+            'read': '#d4a853',
             'replied': '#10b981',
             'archived': '#6b7280'
         };
@@ -1698,7 +1698,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
     getStatusColor(status) {
         const colors = {
             pending: '#fbbf24',
-            processing: '#60a5fa',
+            processing: '#e5bc6a',
             completed: '#34d399',
             cancelled: '#f87171'
         };
@@ -2135,7 +2135,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                     ${monthlyCost > 0 ? `
                     <div class="order-detail-row">
                         <span class="label">Monthly Recurring</span>
-                        <span class="value" style="color: #8b5cf6;">$${monthlyCost}/mo</span>
+                        <span class="value" style="color: #c9973f;">$${monthlyCost}/mo</span>
                     </div>
                     ` : ''}
                     ${order.promo_code ? `
@@ -2446,7 +2446,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                         
                         return `
                             <tr>
-                                <td><code style="background: rgba(139, 92, 246, 0.1); padding: 0.25rem 0.5rem; border-radius: 4px; color: #a78bfa;">${code.code}</code></td>
+                                <td><code style="background: rgba(201, 151, 63, 0.1); padding: 0.25rem 0.5rem; border-radius: 4px; color: #e5bc6a;">${code.code}</code></td>
                                 <td>${discountDisplay}</td>
                                 <td>${code.times_used || 0}${code.max_uses ? `/${code.max_uses}` : ''}</td>
                                 <td>${validUntil ? validUntil.toLocaleDateString() : 'No expiry'}</td>
@@ -2933,7 +2933,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
                         <span style="font-size: 0.875rem; color: var(--text-secondary);">${count}</span>
                     </div>
                     <div style="height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden;">
-                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 3px;"></div>
+                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #d4a853, #c9973f); border-radius: 3px;"></div>
                     </div>
                 </div>
             `;
@@ -3437,7 +3437,7 @@ ${contact.admin_notes ? `\nAdmin Notes:\n${contact.admin_notes}` : ''}
             <tr>
                 <td>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">${quote.code}</code>
+                        <code style="background: rgba(212, 168, 83, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">${quote.code}</code>
                         <button style="background: none; border: none; cursor: pointer; padding: 0.25rem;" onclick="adminPanel.copyQuoteCode('${quote.code}')" title="Copy Code">
                             📋
                         </button>

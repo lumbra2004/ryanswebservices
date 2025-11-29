@@ -208,7 +208,7 @@ class ProfileManager {
 
         const statusColors = {
             'pending': '#fbbf24',
-            'in_progress': '#3b82f6',
+            'in_progress': '#d4a853',
             'active': '#10b981',
             'ready_to_purchase': '#10b981',
             'paid': '#22c55e',
@@ -254,13 +254,13 @@ class ProfileManager {
             }[request.status] || '📋';
 
             html += `
-                <div style="border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div style="border: 1px solid rgba(212, 168, 83, 0.2); border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, rgba(212, 168, 83, 0.03) 0%, rgba(201, 151, 63, 0.03) 100%); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Card Header -->
-                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(99, 102, 241, 0.2);">
+                    <div style="background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(212, 168, 83, 0.2);">
                         <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
                             <div style="flex: 1; min-width: 200px;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">${statusIcon}</div>
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(212, 168, 83, 0.3);">${statusIcon}</div>
                                     <div>
                                         <h3 style="margin: 0; font-size: 1.2rem; font-weight: 600;">${request.service_name}</h3>
                                         <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.25rem;">${date}</div>
@@ -279,26 +279,26 @@ class ProfileManager {
                     <!-- Card Body -->
                     <div style="padding: 1.5rem;">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                            <div style="background: rgba(212, 168, 83, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(212, 168, 83, 0.1);">
                                 <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 0.5rem;">💵 One-Time Cost</div>
                                 <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">$${parseFloat(request.total_amount).toFixed(2)}</div>
                             </div>
                             ${monthlyTotal > 0 ? `
-                                <div style="background: rgba(139, 92, 246, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.1);">
+                                <div style="background: rgba(201, 151, 63, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(201, 151, 63, 0.1);">
                                     <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 0.5rem;">🔄 Monthly Cost</div>
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: #a78bfa;">$${monthlyTotal.toFixed(2)}<span style="font-size: 1rem; opacity: 0.7;">/mo</span></div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #e5bc6a;">$${monthlyTotal.toFixed(2)}<span style="font-size: 1rem; opacity: 0.7;">/mo</span></div>
                                 </div>
                             ` : ''}
                         </div>
                         
                         <!-- Expandable Details -->
-                        <div id="details-${index}" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(99, 102, 241, 0.2);">
+                        <div id="details-${index}" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212, 168, 83, 0.2);">
                             ${request.package_details ? `
                                 <div style="display: grid; gap: 1.25rem;">
                                     ${request.package_details.package || request.package_details.details ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📦</div>
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📦</div>
                                                 <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Package Details</h4>
                                             </div>
                                             <div style="padding-left: 32px; opacity: 0.9;">
@@ -311,7 +311,7 @@ class ProfileManager {
                                     ${maintenanceCost > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">🔧</div>
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">🔧</div>
                                                 <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Maintenance Plan</h4>
                                             </div>
                                             <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
@@ -325,7 +325,7 @@ class ProfileManager {
                                     ${workspaceCost > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📧</div>
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">📧</div>
                                                 <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Google Workspace</h4>
                                             </div>
                                             <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
@@ -340,7 +340,7 @@ class ProfileManager {
                                     ${request.package_details.addons && request.package_details.addons.length > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">✨</div>
+                                                <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">✨</div>
                                                 <h4 style="margin: 0; font-weight: 600; font-size: 0.95rem;">Add-on Features</h4>
                                             </div>
                                             <div style="padding-left: 32px; opacity: 0.9; display: grid; gap: 0.5rem;">
@@ -356,12 +356,12 @@ class ProfileManager {
                                                         'analytics': '📊 Advanced Analytics'
                                                     };
                                                     const displayName = addonNames[addon.name] || addon.name;
-                                                    return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: rgba(99, 102, 241, 0.05); border-radius: 8px;">
+                                                    return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: rgba(212, 168, 83, 0.05); border-radius: 8px;">
                                                         <span>${displayName}</span>
                                                         <span style="color: #10b981; font-weight: 600;">+$${addon.price}</span>
                                                     </div>`;
                                                 }).join('')}
-                                                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(99, 102, 241, 0.2); display: flex; justify-content: space-between;">
+                                                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(212, 168, 83, 0.2); display: flex; justify-content: space-between;">
                                                     <strong>Total Add-ons:</strong>
                                                     <span style="color: #10b981; font-weight: 600;">+$${request.package_details.addonsPrice || request.package_details.addons.reduce((sum, a) => sum + a.price, 0)}</span>
                                                 </div>
@@ -374,11 +374,11 @@ class ProfileManager {
                         
                         <!-- Action Buttons -->
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                            <button class="expand-btn" data-index="${index}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;"onmouseover="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'; this.style.transform='translateY(0)'">
+                            <button class="expand-btn" data-index="${index}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;"onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%)'; this.style.transform='translateY(0)'">
                                 <span class="expand-text">📋 Show Details</span>
                             </button>
                             ${request.contract_file_id ? `
-                                <button class="btn-view-contract" data-file-id="${request.contract_file_id}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)'; this.style.transform='translateY(0)'">📄 View Contract</button>
+                                <button class="btn-view-contract" data-file-id="${request.contract_file_id}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%)'; this.style.transform='translateY(0)'">📄 View Contract</button>
                             ` : ''}
                             ${request.status === 'ready_to_purchase' ? `
                                 <button class="btn-pay-now" data-request-id="${request.id}" data-service-name="${request.service_name}" data-onetime="${request.total_amount}" data-monthly="${monthlyTotal}" style="flex: 1; min-width: 140px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, #10b981 0%, #22c55e 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)'">💳 Pay Now</button>
@@ -631,14 +631,14 @@ class ProfileManager {
                 });
                 
                 return `
-                <div class="invoice-item" style="padding: 0; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px; margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div class="invoice-item" style="padding: 0; border: 1px solid rgba(212, 168, 83, 0.2); border-radius: 16px; margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.05) 0%, rgba(201, 151, 63, 0.05) 100%); overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header with gradient -->
-                    <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(99, 102, 241, 0.2);">
+                    <div style="background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%); padding: 1.5rem; border-bottom: 1px solid rgba(212, 168, 83, 0.2);">
                         <div style="display: flex; justify-content: space-between; align-items: start;">
                             <div style="flex: 1;">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">💼</div>
-                                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${request.service_name}</h3>
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(212, 168, 83, 0.3);">💼</div>
+                                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; background: linear-gradient(135deg, #d4a853 0%, #e5bc6a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${request.service_name}</h3>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 52px;">
                                     <span style="font-size: 0.85rem; opacity: 0.7;">✓</span>
@@ -654,7 +654,7 @@ class ProfileManager {
                                 </div>
                                 ${monthlyCost > 0 ? `
                                     <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(16, 185, 129, 0.2);">
-                                        <span style="color: #818cf8; font-weight: 600;">+ $${parseFloat(monthlyCost).toFixed(2)}</span>
+                                        <span style="color: #d4a853; font-weight: 600;">+ $${parseFloat(monthlyCost).toFixed(2)}</span>
                                         <span style="opacity: 0.7;">/month</span>
                                     </div>
                                 ` : ''}
@@ -666,9 +666,9 @@ class ProfileManager {
                     <div style="padding: 1.5rem;">
                         <!-- Renewal Info Section -->
                         ${request.stripe_subscription_id ? `
-                            <div id="renewal-info-${request.id}" style="margin-bottom: 1.25rem; padding: 1rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%); border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                            <div id="renewal-info-${request.id}" style="margin-bottom: 1.25rem; padding: 1rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.08) 0%, rgba(201, 151, 63, 0.08) 100%); border-radius: 12px; border: 1px solid rgba(212, 168, 83, 0.2);">
                                 <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.7;">
-                                    <div style="width: 20px; height: 20px; border: 2px solid rgba(99, 102, 241, 0.3); border-top-color: #818cf8; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                    <div style="width: 20px; height: 20px; border: 2px solid rgba(212, 168, 83, 0.3); border-top-color: #d4a853; border-radius: 50%; animation: spin 1s linear infinite;"></div>
                                     <span style="font-size: 0.9rem;">Loading renewal information...</span>
                                 </div>
                             </div>
@@ -678,12 +678,12 @@ class ProfileManager {
                         <div style="display: grid; grid-template-columns: ${request.stripe_subscription_id ? '1fr 1fr' : '1fr'}; gap: 1rem; margin-bottom: 1.25rem;">
                             <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
                                 <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 0.5rem;">👤 Customer ID</div>
-                                <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #818cf8; word-break: break-all;">${request.stripe_customer_id}</div>
+                                <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #d4a853; word-break: break-all;">${request.stripe_customer_id}</div>
                             </div>
                             ${request.stripe_subscription_id ? `
                                 <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
                                     <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; margin-bottom: 0.5rem;">🔄 Subscription ID</div>
-                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #a78bfa; word-break: break-all;">${request.stripe_subscription_id}</div>
+                                    <div style="font-family: 'Courier New', monospace; font-size: 0.85rem; color: #e5bc6a; word-break: break-all;">${request.stripe_subscription_id}</div>
                                 </div>
                             ` : ''}
                         </div>
@@ -692,9 +692,9 @@ class ProfileManager {
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
                             <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
                                target="_blank" 
-                               style="flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); color: #a78bfa; border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);"
-                               onmouseover="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(99, 102, 241, 0.2)'"
-                               onmouseout="this.style.background='linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(99, 102, 241, 0.1)'">
+                               style="flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 4px rgba(212, 168, 83, 0.1);"
+                               onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.25) 0%, rgba(201, 151, 63, 0.25) 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(212, 168, 83, 0.2)'"
+                               onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(212, 168, 83, 0.1)'">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
                                 </svg>
@@ -766,13 +766,13 @@ class ProfileManager {
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
                         <div style="flex: 1;">
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);">🔄</div>
-                                <div style="font-weight: 600; font-size: 0.95rem; color: #a78bfa;">Next Renewal</div>
+                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #d4a853 0%, #c9973f 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 2px 8px rgba(212, 168, 83, 0.3);">🔄</div>
+                                <div style="font-weight: 600; font-size: 0.95rem; color: #e5bc6a;">Next Renewal</div>
                             </div>
                             <div style="margin-left: 40px; font-size: 0.95rem; opacity: 0.9;">${renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                         </div>
-                        <div style="text-align: center; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%); padding: 0.75rem 1.25rem; border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3); min-width: 100px;">
-                            <div style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;">${daysUntilRenewal}</div>
+                        <div style="text-align: center; background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%); padding: 0.75rem 1.25rem; border-radius: 12px; border: 1px solid rgba(212, 168, 83, 0.3); min-width: 100px;">
+                            <div style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #d4a853 0%, #e5bc6a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;">${daysUntilRenewal}</div>
                             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 0.25rem;">days left</div>
                         </div>
                     </div>
@@ -812,7 +812,7 @@ class ProfileManager {
                     <h2 style="margin: 0 0 1rem 0; color: #ef4444;">⚠️ Cancel Subscription</h2>
                     <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
                         <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem;">Your service will remain active until:</p>
-                        <p style="margin: 0; font-size: 1.2rem; font-weight: bold; color: #818cf8;">${formattedDate}</p>
+                        <p style="margin: 0; font-size: 1.2rem; font-weight: bold; color: #d4a853;">${formattedDate}</p>
                     </div>
                     <p style="margin: 0 0 1.5rem 0; opacity: 0.9;">After this date, your subscription will end and you will no longer be charged. You can reactivate anytime before then.</p>
                     <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
@@ -1044,15 +1044,15 @@ class ProfileManager {
         tabBtns.forEach(btn => {
             const isActive = btn.dataset.tab === tabName;
             if (isActive) {
-                btn.style.background = 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)';
+                btn.style.background = 'linear-gradient(135deg, #d4a853 0%, #c9973f 100%)';
                 btn.style.color = 'white';
-                btn.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
+                btn.style.boxShadow = '0 4px 12px rgba(212, 168, 83, 0.3)';
                 btn.style.border = 'none';
             } else {
-                btn.style.background = 'rgba(99, 102, 241, 0.1)';
-                btn.style.color = '#a78bfa';
+                btn.style.background = 'rgba(212, 168, 83, 0.1)';
+                btn.style.color = '#e5bc6a';
                 btn.style.boxShadow = 'none';
-                btn.style.border = '1px solid rgba(99, 102, 241, 0.2)';
+                btn.style.border = '1px solid rgba(212, 168, 83, 0.2)';
             }
         });
 
@@ -1412,7 +1412,7 @@ class ProfileManager {
                                     
                                     <!-- Actions -->
                                     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                                        <button onclick="profileManager.viewDocument('${doc.file_url}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)'; this.style.transform='translateY(0)'">
+                                        <button onclick="profileManager.viewDocument('${doc.file_url}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%)'; this.style.transform='translateY(0)'">
                                             👁️ View Document
                                         </button>
                                         <button onclick="profileManager.signDocument('${doc.id}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 600; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(251, 191, 36, 0.3)'">
@@ -1897,7 +1897,7 @@ class ProfileManager {
                     <h3 style="margin: 0; color: #22c55e;">Quote Found!</h3>
                 </div>
                 
-                ${quote.service_type ? `<div style="margin-bottom: 0.75rem;"><span style="background: rgba(99, 102, 241, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">${serviceTypeLabels[quote.service_type] || quote.service_type}</span></div>` : ''}
+                ${quote.service_type ? `<div style="margin-bottom: 0.75rem;"><span style="background: rgba(212, 168, 83, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">${serviceTypeLabels[quote.service_type] || quote.service_type}</span></div>` : ''}
                 
                 ${quote.service_description ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;">${this.escapeHtml(quote.service_description)}</p>` : ''}
                 
@@ -1916,7 +1916,7 @@ class ProfileManager {
                 </div>
                 
                 ${quote.client_notes ? `
-                    <div style="background: rgba(99, 102, 241, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                    <div style="background: rgba(212, 168, 83, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                         <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">📝 Notes from Ryan</h4>
                         <p style="margin: 0; color: var(--text-secondary);">${this.escapeHtml(quote.client_notes)}</p>
                     </div>

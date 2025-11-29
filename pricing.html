@@ -35,12 +35,12 @@
     <style>
         /* Variable mappings for compatibility */
         :root {
-            --primary: #58a6ff;
+            --primary: #d4a853;
             --bg-card: #161b22;
             --text-primary: #e6edf3;
             --text-secondary: #8b949e;
             --border-primary: rgba(255, 255, 255, 0.1);
-            --gradient-primary: linear-gradient(135deg, #58a6ff 0%, #a371f7 100%);
+            --gradient-primary: linear-gradient(135deg, #d4a853 0%, #e5bc6a 100%);
         }
 
         * {
@@ -148,7 +148,7 @@
 
         /* Hero Section */
         #hero {
-            background: radial-gradient(ellipse at center, rgba(88, 166, 255, 0.1) 0%, transparent 70%);
+            background: radial-gradient(ellipse at center, rgba(212, 168, 83, 0.1) 0%, transparent 70%);
         }
 
         #hero h1 {
@@ -184,7 +184,7 @@
 
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(212, 168, 83, 0.3);
         }
 
         /* Pricing Cards */
@@ -223,7 +223,7 @@
         .pricing-card:hover {
             transform: translateY(-8px);
             border-color: var(--primary);
-            box-shadow: 0 20px 60px rgba(88, 166, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(212, 168, 83, 0.15);
         }
 
         .pricing-card:hover::before {
@@ -232,7 +232,7 @@
 
         .pricing-card.selected {
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
             transform: scale(1.02);
         }
 
@@ -257,7 +257,7 @@
         }
 
         .pricing-card.recommended {
-            border-color: rgba(88, 166, 255, 0.3);
+            border-color: rgba(212, 168, 83, 0.3);
         }
 
         .recommended-badge {
@@ -357,7 +357,7 @@
 
         .maintenance-card.selected {
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
         }
 
         .maintenance-card.selected::after {
@@ -395,7 +395,7 @@
 
         .addon-card.selected {
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(163, 113, 247, 0.1) 100%);
         }
 
         .addon-card.selected::after {
@@ -461,7 +461,7 @@
 
         .continue-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(212, 168, 83, 0.3);
         }
 
         /* Skip Button */
@@ -505,7 +505,7 @@
         }
 
         .faq-question:hover {
-            background: rgba(88, 166, 255, 0.05);
+            background: rgba(212, 168, 83, 0.05);
         }
 
         .faq-question::after {
@@ -601,7 +601,7 @@
 
         .submit-request-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(212, 168, 83, 0.3);
         }
 
         /* Modal */
@@ -741,7 +741,7 @@
 
         .modal-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.3);
         }
 
         .modal-submit:disabled {
@@ -875,7 +875,7 @@
 
         .validation-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.3);
         }
     </style>
 </head>
@@ -1026,12 +1026,12 @@
                 <h4 class="addon-title">Google Workspace</h4>
                 <div class="addon-price">$7 <span>/user/month</span></div>
                 <p class="addon-desc">Professional email & productivity suite</p>
-                <div class="addon-quantity" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(99, 102, 241, 0.2);" onclick="event.stopPropagation()">
+                <div class="addon-quantity" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(212, 168, 83, 0.2);" onclick="event.stopPropagation()">
                     <label style="font-size: 0.85rem; opacity: 0.8; display: block; margin-bottom: 0.5rem;">How many users?</label>
                     <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
-                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(-1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.1); color: #a78bfa; font-size: 1.2rem; cursor: pointer;">−</button>
-                        <input type="number" id="workspace-qty" value="1" min="1" max="100" style="width: 60px; text-align: center; padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); background: rgba(15, 15, 35, 0.8); color: white; font-size: 1rem;" onchange="updateWorkspaceFromInput()">
-                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); background: rgba(99, 102, 241, 0.1); color: #a78bfa; font-size: 1.2rem; cursor: pointer;">+</button>
+                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(-1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(212, 168, 83, 0.1); color: #e5bc6a; font-size: 1.2rem; cursor: pointer;">−</button>
+                        <input type="number" id="workspace-qty" value="1" min="1" max="100" style="width: 60px; text-align: center; padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(15, 15, 35, 0.8); color: white; font-size: 1rem;" onchange="updateWorkspaceFromInput()">
+                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(212, 168, 83, 0.1); color: #e5bc6a; font-size: 1.2rem; cursor: pointer;">+</button>
                     </div>
                     <div id="workspace-total" style="margin-top: 0.5rem; font-weight: 600; color: #10b981;">$7/month</div>
                 </div>
@@ -1448,7 +1448,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
                         Creating an account lets you track your request status, communicate with us directly, and manage your projects all in one place.
                     </p>
-                    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: rgba(212, 168, 83, 0.1); border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
                         <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0;">
                             <strong style="color: var(--text-primary);">Your selections will be saved!</strong><br>
                             After signing in, you'll be returned here to complete your request.

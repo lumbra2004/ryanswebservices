@@ -5,87 +5,86 @@
 
 :root {
     /* ========================================================================
-       COLOR SYSTEM - Sophisticated & Professional
-       Inspired by enterprise design systems (Stripe, Linear, Vercel)
+       COLOR SYSTEM - Clean & Professional
        ======================================================================== */
     
-    /* Primary Brand Colors - Deep Navy & Electric Blue */
-    --color-primary-50: #eff6ff;
-    --color-primary-100: #dbeafe;
-    --color-primary-200: #bfdbfe;
-    --color-primary-300: #93c5fd;
-    --color-primary-400: #60a5fa;
-    --color-primary-500: #3b82f6;
-    --color-primary-600: #2563eb;
-    --color-primary-700: #1d4ed8;
-    --color-primary-800: #1e40af;
-    --color-primary-900: #1e3a8a;
+    /* Primary Brand Colors - Warm Gold/Amber */
+    --color-primary-50: #fefce8;
+    --color-primary-100: #fef9c3;
+    --color-primary-200: #fef08a;
+    --color-primary-300: #fde047;
+    --color-primary-400: #facc15;
+    --color-primary-500: #d4a853;
+    --color-primary-600: #c9973f;
+    --color-primary-700: #a16207;
+    --color-primary-800: #854d0e;
+    --color-primary-900: #713f12;
     
     /* Accent Colors - Warm Gold for CTAs */
-    --color-accent-50: #fffbeb;
+    --color-accent-50: #fefce8;
     --color-accent-100: #fef3c7;
     --color-accent-200: #fde68a;
     --color-accent-300: #fcd34d;
-    --color-accent-400: #fbbf24;
-    --color-accent-500: #f59e0b;
-    --color-accent-600: #d97706;
+    --color-accent-400: #e5bc6a;
+    --color-accent-500: #d4a853;
+    --color-accent-600: #c9973f;
     --color-accent-700: #b45309;
     --color-accent-800: #92400e;
     --color-accent-900: #78350f;
     
-    /* Neutral Grays - Sophisticated slate tones */
-    --color-gray-50: #f8fafc;
-    --color-gray-100: #f1f5f9;
-    --color-gray-200: #e2e8f0;
-    --color-gray-300: #cbd5e1;
-    --color-gray-400: #94a3b8;
-    --color-gray-500: #64748b;
-    --color-gray-600: #475569;
-    --color-gray-700: #334155;
-    --color-gray-800: #1e293b;
-    --color-gray-900: #0f172a;
-    --color-gray-950: #020617;
+    /* Neutral Grays - True neutral tones */
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f5f5f5;
+    --color-gray-200: #e5e5e5;
+    --color-gray-300: #d4d4d4;
+    --color-gray-400: #a3a3a3;
+    --color-gray-500: #737373;
+    --color-gray-600: #525252;
+    --color-gray-700: #404040;
+    --color-gray-800: #262626;
+    --color-gray-900: #171717;
+    --color-gray-950: #0c0c0c;
     
     /* Semantic Colors */
     --color-success-50: #f0fdf4;
-    --color-success-500: #22c55e;
-    --color-success-600: #16a34a;
+    --color-success-500: #4ade80;
+    --color-success-600: #22c55e;
     
-    --color-warning-50: #fffbeb;
-    --color-warning-500: #f59e0b;
-    --color-warning-600: #d97706;
+    --color-warning-50: #fefce8;
+    --color-warning-500: #fbbf24;
+    --color-warning-600: #eab308;
     
     --color-error-50: #fef2f2;
-    --color-error-500: #ef4444;
-    --color-error-600: #dc2626;
+    --color-error-500: #f87171;
+    --color-error-600: #ef4444;
     
-    --color-info-50: #eff6ff;
-    --color-info-500: #3b82f6;
-    --color-info-600: #2563eb;
+    --color-info-50: #f0f9ff;
+    --color-info-500: #38bdf8;
+    --color-info-600: #0ea5e9;
     
     /* ========================================================================
        DARK THEME (Default)
        ======================================================================== */
     
     /* Background Hierarchy */
-    --bg-base: #030712;
-    --bg-surface: #0f172a;
-    --bg-elevated: #1e293b;
-    --bg-overlay: rgba(0, 0, 0, 0.8);
-    --bg-hover: rgba(255, 255, 255, 0.05);
-    --bg-active: rgba(255, 255, 255, 0.1);
+    --bg-base: #0c0c0c;
+    --bg-surface: #141414;
+    --bg-elevated: #1a1a1a;
+    --bg-overlay: rgba(0, 0, 0, 0.85);
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-active: rgba(255, 255, 255, 0.08);
     
     /* Text Hierarchy */
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-tertiary: #64748b;
-    --text-disabled: #475569;
-    --text-inverse: #0f172a;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
+    --text-disabled: #525252;
+    --text-inverse: #171717;
     
     /* Border Colors */
     --border-default: rgba(255, 255, 255, 0.08);
     --border-subtle: rgba(255, 255, 255, 0.04);
-    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-strong: rgba(255, 255, 255, 0.12);
     --border-focus: var(--color-primary-500);
     
     /* Interactive Elements */
@@ -189,9 +188,9 @@
     --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.4);
     
     /* Glow Effects */
-    --shadow-glow-primary: 0 0 40px rgba(59, 130, 246, 0.3);
+    --shadow-glow-primary: 0 0 40px rgba(212, 168, 83, 0.3);
     --shadow-glow-accent: 0 0 40px rgba(245, 158, 11, 0.3);
-    --shadow-glow-soft: 0 0 60px rgba(59, 130, 246, 0.15);
+    --shadow-glow-soft: 0 0 60px rgba(212, 168, 83, 0.15);
     
     /* ========================================================================
        TRANSITIONS & ANIMATIONS
@@ -286,7 +285,7 @@ body.light-mode {
     --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
     --shadow-2xl: 0 24px 48px rgba(0, 0, 0, 0.15), 0 12px 24px rgba(0, 0, 0, 0.1);
     
-    --shadow-glow-primary: 0 0 40px rgba(59, 130, 246, 0.2);
+    --shadow-glow-primary: 0 0 40px rgba(212, 168, 83, 0.2);
     --shadow-glow-accent: 0 0 40px rgba(245, 158, 11, 0.2);
-    --shadow-glow-soft: 0 0 60px rgba(59, 130, 246, 0.1);
+    --shadow-glow-soft: 0 0 60px rgba(212, 168, 83, 0.1);
 }

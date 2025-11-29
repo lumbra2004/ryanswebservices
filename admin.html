@@ -159,7 +159,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-header">
-                                <div class="stat-card-icon purple">📋</div>
+                                <div class="stat-card-icon blue">📋</div>
                             </div>
                             <div class="stat-card-value" id="totalRequests">0</div>
                             <div class="stat-card-label">Service Requests</div>
@@ -225,7 +225,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-header">
-                                <div class="stat-card-icon purple">⏱️</div>
+                                <div class="stat-card-icon blue">⏱️</div>
                             </div>
                             <div class="stat-card-value" id="avgTimeOnSite">0s</div>
                             <div class="stat-card-label">Avg. Time on Site</div>
@@ -354,7 +354,7 @@
                     </div>
                     
                     <div style="display: grid; grid-template-columns: 280px 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div class="data-card" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); border-color: rgba(99, 102, 241, 0.3);">
+                        <div class="data-card" style="background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(201, 151, 63, 0.1)); border-color: rgba(212, 168, 83, 0.3);">
                             <div class="data-card-body" style="text-align: center;">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✨</div>
                                 <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">New Quote</h3>
@@ -365,7 +365,7 @@
                         
                         <div class="stats-grid" style="margin: 0;">
                             <div class="stat-card">
-                                <div class="stat-card-value" style="color: #60a5fa;" id="pendingQuotes">0</div>
+                                <div class="stat-card-value" style="color: #e5bc6a;" id="pendingQuotes">0</div>
                                 <div class="stat-card-label">Pending</div>
                             </div>
                             <div class="stat-card">
@@ -377,7 +377,7 @@
                                 <div class="stat-card-label">Redeemed</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-card-value" style="color: #a78bfa;" id="quotesValue">$0</div>
+                                <div class="stat-card-value" style="color: #e5bc6a;" id="quotesValue">$0</div>
                                 <div class="stat-card-label">Total Value</div>
                             </div>
                         </div>
@@ -441,11 +441,11 @@
                             <div class="stat-card-label">Pending</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-value" style="color: #a78bfa;" id="monthlyRecurring">$0</div>
+                            <div class="stat-card-value" style="color: #e5bc6a;" id="monthlyRecurring">$0</div>
                             <div class="stat-card-label">Monthly Recurring</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-value" style="color: #60a5fa;" id="activeSubscriptions">0</div>
+                            <div class="stat-card-value" style="color: #e5bc6a;" id="activeSubscriptions">0</div>
                             <div class="stat-card-label">Active Subscriptions</div>
                         </div>
                     </div>
@@ -826,7 +826,7 @@
                 <button class="modal-close" onclick="adminPanel.closeQuoteModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="generatedCodeDisplay" style="display: none; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1rem; border-radius: 12px; text-align: center; margin-bottom: 1rem;">
+                <div id="generatedCodeDisplay" style="display: none; background: linear-gradient(135deg, rgba(212, 168, 83, 0.15), rgba(201, 151, 63, 0.15)); border: 1px solid rgba(212, 168, 83, 0.3); padding: 1rem; border-radius: 12px; text-align: center; margin-bottom: 1rem;">
                     <div style="font-size: 0.7rem; color: #a5b4fc; text-transform: uppercase; letter-spacing: 1px;">Quote Code</div>
                     <div id="generatedCode" style="font-size: 1.5rem; font-weight: 700; font-family: monospace; letter-spacing: 2px;"></div>
                     <button type="button" class="btn btn-ghost btn-sm" style="margin-top: 0.5rem;" onclick="adminPanel.copyQuoteCode(document.getElementById('generatedCode').textContent)">📋 Copy</button>

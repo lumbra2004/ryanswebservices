@@ -87,8 +87,8 @@
     justify-content: center;
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: linear-gradient(135deg, rgba(212, 168, 83, 0.15), rgba(212, 168, 83, 0.05));
+    border: 1px solid rgba(212, 168, 83, 0.2);
     border-radius: var(--radius-lg);
     font-size: 1.75rem;
     margin-bottom: var(--space-5);
@@ -288,8 +288,8 @@
 .privacy-notice {
     margin-top: var(--space-8);
     padding: var(--space-4);
-    background: rgba(59, 130, 246, 0.05);
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    background: rgba(212, 168, 83, 0.05);
+    border: 1px solid rgba(212, 168, 83, 0.1);
     border-radius: var(--radius-lg);
     font-size: var(--text-xs);
     color: var(--text-tertiary);
@@ -319,7 +319,7 @@
 
 .pricing-card.featured {
     border-color: var(--color-primary-500);
-    background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(212, 168, 83, 0.05) 0%, transparent 100%);
 }
 
 .pricing-card.featured::before {

@@ -515,72 +515,210 @@
             }
         }
         
-        /* Toast */
+        /* Toast - Centered Modal Style */
         .xmas-toast {
             position: fixed;
-            bottom: 30px;
-            bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #1e5631 0%, #145a32 100%);
-            border: 2px solid #2ecc71;
-            border-radius: 16px;
-            padding: 20px 30px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at top, #1a2a1a 0%, #0d1810 50%, #050a07 100%);
+            border: none;
+            border-radius: 24px;
+            padding: 40px 50px;
             display: flex;
+            flex-direction: column;
             align-items: center;
+            text-align: center;
             gap: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            box-shadow: 
+                0 25px 80px rgba(0,0,0,0.7),
+                0 0 0 1px rgba(255,255,255,0.1),
+                0 0 60px rgba(192, 57, 43, 0.15),
+                0 0 60px rgba(39, 174, 96, 0.15);
             z-index: 100001;
-            animation: slideUp 0.6s ease forwards;
+            animation: toastAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            min-width: 320px;
+            max-width: 400px;
         }
         
-        .xmas-toast-snowflake {
-            font-size: 32px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        @keyframes toastAppear {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% { 
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        /* Backdrop overlay */
+        .xmas-toast-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 100000;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Decorative top border with glow */
+        .xmas-toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                #c0392b 0%, 
+                #e74c3c 25%, 
+                #f1c40f 50%, 
+                #27ae60 75%, 
+                #2ecc71 100%
+            );
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5), 0 0 40px rgba(46, 204, 113, 0.3);
+        }
+        
+        /* Decorative corner ornaments */
+        .xmas-toast::after {
+            content: '❄';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 16px;
+            opacity: 0.3;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .xmas-toast-icon {
+            font-size: 56px;
+            margin-bottom: 4px;
+            animation: gentleFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+        }
+        
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        .xmas-toast-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
         
         .xmas-toast h4 {
             color: #fff;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 700;
-            margin: 0 0 4px 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .xmas-toast p {
-            color: rgba(255,255,255,0.8);
-            font-size: 14px;
+            color: rgba(255,255,255,0.75);
+            font-size: 15px;
             margin: 0;
+            line-height: 1.5;
+        }
+        
+        .xmas-toast p::before {
+            content: none;
+        }
+        
+        /* Decorative divider */
+        .xmas-toast-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            margin: 4px 0;
+        }
+        
+        /* Ornament decorations */
+        .xmas-toast-ornaments {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 20px;
+            opacity: 0.8;
         }
         
         .xmas-toast-close {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 24px;
-            height: 24px;
-            border: none;
-            background: rgba(255,255,255,0.1);
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
             border-radius: 50%;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
+            font-size: 18px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
         
         .xmas-toast-close:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(192, 57, 43, 0.4);
+            border-color: rgba(192, 57, 43, 0.6);
             color: #fff;
+            transform: scale(1.1);
+        }
+        
+        .xmas-toast-close:active {
+            transform: scale(0.95);
         }
         
         @media (max-width: 600px) {
             .xmas-toast { 
-                left: 15px; 
-                right: 15px; 
-                transform: none;
-                bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+                left: 20px;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                min-width: auto;
+                max-width: none;
+                padding: 32px 40px;
+            }
+            .xmas-toast-icon {
+                font-size: 48px;
+            }
+            .xmas-toast h4 {
+                font-size: 20px;
+            }
+            .xmas-toast p {
+                font-size: 14px;
+            }
+        }
+        
+        @keyframes slideDown {
+            to { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
             }
         }
     `;
@@ -946,33 +1084,46 @@
     // ============================================
     // GREETING TOAST
     // ============================================
-    if (CONFIG.greeting && !sessionStorage.getItem('xmasGreeting6')) {
+    if (CONFIG.greeting && !sessionStorage.getItem('xmasGreeting8')) {
         setTimeout(() => {
+            // Create backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'xmas-toast-backdrop';
+            
             const toast = document.createElement('div');
             toast.className = 'xmas-toast';
             toast.innerHTML = `
-                <div class="xmas-toast-snowflake">❄</div>
-                <div>
+                <div class="xmas-toast-icon">🎄</div>
+                <div class="xmas-toast-content">
                     <h4>Happy Holidays!</h4>
-                    <p>Wishing you joy & success — Ryans Web Services</p>
+                    <div class="xmas-toast-divider"></div>
+                    <p>Wishing you joy & success this holiday season</p>
                 </div>
+                <div class="xmas-toast-ornaments">🎁 ⭐ ❄️</div>
                 <button class="xmas-toast-close">×</button>
             `;
             
-            toast.querySelector('.xmas-toast-close').onclick = () => {
-                toast.style.animation = 'slideDown 0.4s ease forwards';
-                setTimeout(() => toast.remove(), 400);
+            const closeToast = () => {
+                toast.style.animation = 'slideDown 0.3s ease forwards';
+                backdrop.style.animation = 'fadeIn 0.3s ease reverse forwards';
+                setTimeout(() => {
+                    toast.remove();
+                    backdrop.remove();
+                }, 300);
             };
             
+            toast.querySelector('.xmas-toast-close').onclick = closeToast;
+            backdrop.onclick = closeToast;
+            
+            document.body.appendChild(backdrop);
             document.body.appendChild(toast);
-            sessionStorage.setItem('xmasGreeting6', '1');
+            sessionStorage.setItem('xmasGreeting8', '1');
             
             setTimeout(() => {
                 if (toast.parentElement) {
-                    toast.style.animation = 'slideDown 0.5s ease forwards';
-                    setTimeout(() => toast.remove(), 500);
+                    closeToast();
                 }
-            }, 10000);
+            }, 8000);
         }, 1500);
     }
 
