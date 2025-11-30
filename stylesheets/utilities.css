@@ -1,10 +1,6 @@
-/* ==========================================================================
-   UTILITIES - Helper classes for common patterns
-   ========================================================================== */
 
-/* ========================================================================
-   DISPLAY
-   ======================================================================== */
+
+
 
 .hidden { display: none !important; }
 .block { display: block; }
@@ -14,9 +10,7 @@
 .inline-flex { display: inline-flex; }
 .grid { display: grid; }
 
-/* ========================================================================
-   FLEXBOX
-   ======================================================================== */
+
 
 .flex-row { flex-direction: row; }
 .flex-col { flex-direction: column; }
@@ -38,9 +32,7 @@
 .flex-auto { flex: 1 1 auto; }
 .flex-none { flex: none; }
 
-/* ========================================================================
-   GAP
-   ======================================================================== */
+
 
 .gap-1 { gap: var(--space-1); }
 .gap-2 { gap: var(--space-2); }
@@ -51,11 +43,9 @@
 .gap-8 { gap: var(--space-8); }
 .gap-10 { gap: var(--space-10); }
 
-/* ========================================================================
-   SPACING (MARGIN & PADDING)
-   ======================================================================== */
 
-/* Margin */
+
+
 .m-0 { margin: 0; }
 .m-auto { margin: auto; }
 .mx-auto { margin-left: auto; margin-right: auto; }
@@ -74,7 +64,7 @@
 .mb-8 { margin-bottom: var(--space-8); }
 .mb-12 { margin-bottom: var(--space-12); }
 
-/* Padding */
+
 .p-0 { padding: 0; }
 .p-4 { padding: var(--space-4); }
 .p-6 { padding: var(--space-6); }
@@ -88,9 +78,7 @@
 .py-16 { padding-top: var(--space-16); padding-bottom: var(--space-16); }
 .py-20 { padding-top: var(--space-20); padding-bottom: var(--space-20); }
 
-/* ========================================================================
-   TEXT
-   ======================================================================== */
+
 
 .text-left { text-align: left; }
 .text-center { text-align: center; }
@@ -129,9 +117,7 @@
     white-space: nowrap;
 }
 
-/* ========================================================================
-   WIDTH & HEIGHT
-   ======================================================================== */
+
 
 .w-full { width: 100%; }
 .w-auto { width: auto; }
@@ -144,9 +130,7 @@
 .h-screen { height: 100vh; }
 .min-h-screen { min-height: 100vh; }
 
-/* ========================================================================
-   POSITION
-   ======================================================================== */
+
 
 .relative { position: relative; }
 .absolute { position: absolute; }
@@ -159,9 +143,7 @@
 .bottom-0 { bottom: 0; }
 .left-0 { left: 0; }
 
-/* ========================================================================
-   Z-INDEX
-   ======================================================================== */
+
 
 .z-0 { z-index: 0; }
 .z-10 { z-index: 10; }
@@ -169,18 +151,14 @@
 .z-50 { z-index: 50; }
 .z-modal { z-index: var(--z-modal); }
 
-/* ========================================================================
-   OVERFLOW
-   ======================================================================== */
+
 
 .overflow-hidden { overflow: hidden; }
 .overflow-auto { overflow: auto; }
 .overflow-x-hidden { overflow-x: hidden; }
 .overflow-y-auto { overflow-y: auto; }
 
-/* ========================================================================
-   BORDER & ROUNDED
-   ======================================================================== */
+
 
 .rounded { border-radius: var(--radius-default); }
 .rounded-md { border-radius: var(--radius-md); }
@@ -192,50 +170,38 @@
 .border { border: 1px solid var(--border-default); }
 .border-0 { border: none; }
 
-/* ========================================================================
-   BACKGROUND
-   ======================================================================== */
+
 
 .bg-base { background: var(--bg-base); }
 .bg-surface { background: var(--bg-surface); }
 .bg-elevated { background: var(--bg-elevated); }
 .bg-transparent { background: transparent; }
 
-/* ========================================================================
-   OPACITY
-   ======================================================================== */
+
 
 .opacity-0 { opacity: 0; }
 .opacity-50 { opacity: 0.5; }
 .opacity-75 { opacity: 0.75; }
 .opacity-100 { opacity: 1; }
 
-/* ========================================================================
-   CURSOR
-   ======================================================================== */
+
 
 .cursor-pointer { cursor: pointer; }
 .cursor-default { cursor: default; }
 .cursor-not-allowed { cursor: not-allowed; }
 
-/* ========================================================================
-   POINTER EVENTS
-   ======================================================================== */
+
 
 .pointer-events-none { pointer-events: none; }
 .pointer-events-auto { pointer-events: auto; }
 
-/* ========================================================================
-   TRANSITIONS
-   ======================================================================== */
+
 
 .transition { transition: var(--transition-all); }
 .transition-colors { transition: var(--transition-colors); }
 .transition-transform { transition: var(--transition-transform); }
 
-/* ========================================================================
-   RESPONSIVE UTILITIES
-   ======================================================================== */
+
 
 @media (max-width: 768px) {
     .md\:hidden { display: none !important; }

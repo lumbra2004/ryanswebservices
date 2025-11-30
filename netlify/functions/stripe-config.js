@@ -1,4 +1,4 @@
-// Netlify Function: Get Stripe Config
+
 exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',

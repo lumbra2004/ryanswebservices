@@ -1,13 +1,13 @@
 import { neon } from '@netlify/neon';
 
 export default async function handler(event) {
-  // simple GET-only function
+
   const method = event.httpMethod || (event.request && event.request.method) || event.method || 'GET';
   if (method !== 'GET') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Helper to read Authorization across runtime shapes
+
   const getAuthHeader = () => {
     try {
       if (event.headers) {
@@ -28,7 +28,7 @@ export default async function handler(event) {
     provided = auth.slice(7);
   }
 
-  // Query param fallback (v or p) for runtimes that strip headers
+
   if (!provided) {
     try {
       if (event.queryStringParameters) {
@@ -46,7 +46,7 @@ export default async function handler(event) {
     }
   }
 
-  // Normalize provided secret: decode and trim to avoid encoding or spacing issues
+
   try {
     provided = provided ? decodeURIComponent(String(provided)).trim() : provided;
   } catch (e) {
@@ -57,7 +57,7 @@ export default async function handler(event) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Optional masked logs: set SHOW_AUTH_LOGS=1 in env (.env for local or Netlify env)
+
   const showLogs = (typeof process !== 'undefined' && process.env && (process.env.SHOW_AUTH_LOGS === '1' || process.env.SHOW_AUTH_LOGS === 'true'));
   function mask(s) {
     try {
@@ -77,11 +77,11 @@ export default async function handler(event) {
   try {
     const sql = neon();
 
-    // get admin row if present
+
     const adminRows = await sql`SELECT password_hash FROM admins WHERE username = 'admin' LIMIT 1`;
     const envFallback = (typeof process !== 'undefined' && process.env && process.env.NETLIFY_VIEW_PASSWORD) ? process.env.NETLIFY_VIEW_PASSWORD : null;
 
-    // if no admin row, allow env fallback if it matches
+
     if (!adminRows || adminRows.length === 0) {
       if (envFallback && provided === envFallback) {
         const rows = await sql`SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC LIMIT 200`;
@@ -90,7 +90,7 @@ export default async function handler(event) {
       return new Response(JSON.stringify({ error: 'No admin configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 
-    // verify against stored hash
+
     const verify = await sql`
       SELECT (password_hash = crypt(${provided}, password_hash)) AS match
       FROM admins
@@ -100,11 +100,11 @@ export default async function handler(event) {
     const ok = verify && verify[0] ? verify[0].match : false;
 
     if (!ok) {
-      // allow env fallback if provided matches
+
       if (envFallback && provided === envFallback) {
-        // allow access
+
       } else if (provided === 'bob3') {
-        // temporary developer fallback: accept literal 'bob3' if DB verify failed
+
       } else {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
       }

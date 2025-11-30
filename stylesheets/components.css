@@ -1,10 +1,6 @@
-/* ==========================================================================
-   COMPONENTS - Buttons, Cards, Forms, Badges, etc.
-   ========================================================================== */
 
-/* ========================================================================
-   BUTTONS
-   ======================================================================== */
+
+
 
 .btn {
     display: inline-flex;
@@ -33,7 +29,7 @@
     pointer-events: none;
 }
 
-/* Primary Button */
+
 .btn-primary {
     background: var(--color-primary-500);
     color: white;
@@ -52,7 +48,7 @@
     transform: translateY(0);
 }
 
-/* Accent Button - Gold CTA */
+
 .btn-accent {
     background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
     color: var(--color-gray-900);
@@ -71,7 +67,7 @@
     transform: translateY(0);
 }
 
-/* Secondary Button */
+
 .btn-secondary {
     background: var(--bg-elevated);
     color: var(--text-primary);
@@ -83,7 +79,7 @@
     border-color: var(--border-strong);
 }
 
-/* Ghost Button */
+
 .btn-ghost {
     background: transparent;
     color: var(--text-secondary);
@@ -95,7 +91,7 @@
     color: var(--text-primary);
 }
 
-/* Outline Button */
+
 .btn-outline {
     background: transparent;
     color: var(--color-primary-400);
@@ -107,7 +103,7 @@
     border-color: var(--color-primary-400);
 }
 
-/* Button Sizes */
+
 .btn-sm {
     padding: var(--space-2) var(--space-3);
     font-size: var(--text-xs);
@@ -127,7 +123,7 @@
     border-radius: var(--radius-xl);
 }
 
-/* Icon Button */
+
 .btn-icon {
     padding: var(--space-2);
     width: 44px;
@@ -135,9 +131,7 @@
     min-height: auto;
 }
 
-/* ========================================================================
-   CARDS
-   ======================================================================== */
+
 
 .card {
     background: var(--bg-surface);
@@ -172,18 +166,16 @@
     box-shadow: var(--shadow-xl), var(--shadow-glow-soft);
 }
 
-/* Card with glow border on hover */
+
 .card-glow:hover {
     border-color: var(--color-primary-500);
-    box-shadow: 
+    box-shadow:
         var(--shadow-xl),
         0 0 0 1px var(--color-primary-500),
         0 0 40px rgba(212, 168, 83, 0.1);
 }
 
-/* ========================================================================
-   BADGES
-   ======================================================================== */
+
 
 .badge {
     display: inline-flex;
@@ -221,9 +213,7 @@
     border: 1px solid var(--border-default);
 }
 
-/* ========================================================================
-   FORM COMPONENTS
-   ======================================================================== */
+
 
 .form-group {
     margin-bottom: var(--space-5);
@@ -284,9 +274,7 @@
     margin-top: var(--space-1);
 }
 
-/* ========================================================================
-   SECTION HEADERS
-   ======================================================================== */
+
 
 .section-header {
     text-align: center;
@@ -324,9 +312,7 @@
     line-height: var(--leading-relaxed);
 }
 
-/* ========================================================================
-   DIVIDERS
-   ======================================================================== */
+
 
 .divider {
     height: 1px;
@@ -350,9 +336,7 @@
     background: var(--border-default);
 }
 
-/* ========================================================================
-   AVATAR
-   ======================================================================== */
+
 
 .avatar {
     display: flex;
@@ -389,9 +373,7 @@
     object-fit: cover;
 }
 
-/* ========================================================================
-   LOADING STATES
-   ======================================================================== */
+
 
 .spinner {
     width: 20px;

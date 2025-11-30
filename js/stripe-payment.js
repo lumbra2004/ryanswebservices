@@ -1,4 +1,4 @@
-// Stripe Payment Integration
+
 
 class StripePaymentHandler {
     constructor() {
@@ -10,11 +10,11 @@ class StripePaymentHandler {
 
     async init() {
         try {
-            // Get publishable key from server (works with both local and Netlify)
+
             const response = await fetch('/api/stripe/config');
             const { publishableKey } = await response.json();
-            
-            // Load Stripe.js
+
+
             this.stripe = Stripe(publishableKey);
         } catch (error) {
             console.error('Error initializing Stripe:', error);
@@ -66,7 +66,7 @@ class StripePaymentHandler {
 
     async processPayment(email, name, onetimeAmount, recurringAmount, metadata) {
         try {
-            // Create combined payment (one-time + subscription)
+
             const response = await fetch('/api/stripe/create-combined-payment', {
                 method: 'POST',
                 headers: {
@@ -82,7 +82,7 @@ class StripePaymentHandler {
             });
 
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.error || 'Payment failed');
             }
@@ -101,5 +101,5 @@ class StripePaymentHandler {
     }
 }
 
-// Make it globally available
+
 window.StripePaymentHandler = StripePaymentHandler;

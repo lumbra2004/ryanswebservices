@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Analytics -->
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4S74TXQDB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -13,732 +13,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0c0c0c">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Messages | Ryans Web Services</title>
     <meta name="description" content="Chat directly with Ryans Web Services support team.">
-    
-    <!-- Favicons -->
+
+
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
-    
-    <!-- Supabase -->
+
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Fonts & Styles -->
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="stylesheets/main.css">
 
     <style>
-        :root {
-            --msg-bg-primary: #0c0c0c;
-            --msg-bg-secondary: #0f1524;
-            --msg-bg-tertiary: #151c2e;
-            --msg-bg-hover: #1a2338;
-            --msg-border: rgba(212, 168, 83, 0.15);
-            --msg-border-active: rgba(212, 168, 83, 0.4);
-            --msg-accent: #d4a853;
-            --msg-accent-light: #e5bc6a;
-            --msg-text-primary: #f1f5f9;
-            --msg-text-secondary: #94a3b8;
-            --msg-text-muted: #64748b;
-            --msg-success: #10b981;
-            --msg-sent-bg: linear-gradient(135deg, #d4a853 0%, #c9973f 100%);
-            --msg-received-bg: #1e293b;
-        }
+        html, body { background: #f5f5f5; min-height: 100vh; margin: 0; }
+        .messages-page-container { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .messages-main { flex: 1; display: flex; overflow: hidden; margin-top: 70px; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            background: var(--msg-bg-primary);
-            min-height: 100vh;
-        }
-
-        /* Messages Page Layout */
-        .messages-page-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            max-height: 100vh;
-            overflow: hidden;
-        }
-
-        .messages-main {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            margin-top: 70px;
-        }
-
-        /* Sidebar - Conversations List */
-        .conversations-sidebar {
-            width: 320px;
-            min-width: 320px;
-            background: var(--msg-bg-secondary);
-            border-right: 1px solid var(--msg-border);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .sidebar-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid var(--msg-border);
-            background: var(--msg-bg-tertiary);
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--msg-text-primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sidebar-header h2::before {
-            content: '💬';
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.75rem;
-            background: var(--msg-bg-primary);
-            border: 1px solid var(--msg-border);
-            border-radius: 12px;
-            color: var(--msg-text-primary);
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--msg-accent);
-            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.1);
-        }
-
-        .search-box input::placeholder {
-            color: var(--msg-text-muted);
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 0.875rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            color: var(--msg-text-muted);
-        }
-
-        .conversations-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
-
-        .conversation-item {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            padding: 0.875rem 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 0.25rem;
-        }
-
-        .conversation-item:hover {
-            background: var(--msg-bg-hover);
-        }
-
-        .conversation-item.active {
-            background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%);
-            border: 1px solid var(--msg-border-active);
-        }
-
-        .conversation-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--msg-accent) 0%, #c9973f 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .conversation-avatar.online::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 12px;
-            height: 12px;
-            background: var(--msg-success);
-            border: 2px solid var(--msg-bg-secondary);
-            border-radius: 50%;
-        }
-
-        .conversation-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .conversation-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.25rem;
-        }
-
-        .conversation-name {
-            font-weight: 600;
-            color: var(--msg-text-primary);
-            font-size: 0.95rem;
-        }
-
-        .conversation-time {
-            font-size: 0.75rem;
-            color: var(--msg-text-muted);
-        }
-
-        .conversation-preview {
-            font-size: 0.85rem;
-            color: var(--msg-text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .unread-badge {
-            background: var(--msg-accent);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 6px;
-        }
+        /* Sidebar */
+        .conversations-sidebar { width: 300px; min-width: 300px; background: #fff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 1rem; border-bottom: 1px solid #e0e0e0; }
+        .sidebar-header h2 { font-size: 1.25rem; font-weight: 600; color: #222; margin-bottom: 0.75rem; }
+        .sidebar-header h2::before { content: '💬 '; }
+        .search-box { position: relative; }
+        .search-box input { width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 0.9rem; }
+        .search-box input:focus { outline: none; border-color: #c9973f; }
+        .search-box svg { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #999; }
+        .conversations-list { flex: 1; overflow-y: auto; padding: 0.5rem; }
+        .conversation-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 4px; cursor: pointer; margin-bottom: 0.25rem; }
+        .conversation-item:hover { background: #f5f5f5; }
+        .conversation-item.active { background: rgba(201, 151, 63, 0.1); border: 1px solid rgba(201, 151, 63, 0.3); }
+        .conversation-avatar { width: 44px; height: 44px; border-radius: 50%; background: #c9973f; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; flex-shrink: 0; position: relative; }
+        .conversation-avatar.online::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #22c55e; border: 2px solid #fff; border-radius: 50%; }
+        .conversation-info { flex: 1; min-width: 0; }
+        .conversation-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; }
+        .conversation-name { font-weight: 600; color: #222; font-size: 0.9rem; }
+        .conversation-time { font-size: 0.75rem; color: #999; }
+        .conversation-preview { font-size: 0.85rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-badge { background: #c9973f; color: #fff; font-size: 0.7rem; font-weight: 600; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
 
         /* Chat Area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--msg-bg-primary);
-            height: 100%;
-        }
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: #f5f5f5; }
+        .chat-header { padding: 0.75rem 1rem; background: #fff; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between; }
+        .chat-header-info { display: flex; align-items: center; gap: 0.75rem; }
+        .chat-header-avatar { width: 40px; height: 40px; border-radius: 50%; background: #c9973f; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; }
+        .chat-header-text h3 { font-size: 1rem; font-weight: 600; color: #222; margin-bottom: 0.1rem; }
+        .chat-header-status { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: #22c55e; }
+        .chat-header-status::before { content: ''; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
+        .chat-header-actions { display: flex; gap: 0.5rem; }
+        .header-action-btn { width: 36px; height: 36px; border-radius: 4px; background: #f5f5f5; border: 1px solid #e0e0e0; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .header-action-btn:hover { background: #e0e0e0; color: #222; }
 
-        .chat-header {
-            padding: 1rem 1.5rem;
-            background: var(--msg-bg-secondary);
-            border-bottom: 1px solid var(--msg-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .chat-header-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--msg-accent) 0%, #c9973f 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: white;
-        }
-
-        .chat-header-text h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--msg-text-primary);
-            margin-bottom: 0.125rem;
-        }
-
-        .chat-header-status {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-            font-size: 0.8rem;
-            color: var(--msg-success);
-        }
-
-        .chat-header-status::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--msg-success);
-            border-radius: 50%;
-        }
-
-        .chat-header-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .header-action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--msg-bg-tertiary);
-            border: 1px solid var(--msg-border);
-            color: var(--msg-text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .header-action-btn:hover {
-            background: var(--msg-bg-hover);
-            color: var(--msg-text-primary);
-            border-color: var(--msg-border-active);
-        }
-
-        /* Messages Container */
-        .messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .message-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.375rem;
-        }
-
-        .message-group.sent {
-            align-items: flex-end;
-        }
-
-        .message-group.received {
-            align-items: flex-start;
-        }
-
-        .message {
-            max-width: 70%;
-            padding: 0.875rem 1.125rem;
-            border-radius: 18px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            position: relative;
-        }
-
-        .message.sent {
-            background: var(--msg-sent-bg);
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
-
-        .message.received {
-            background: var(--msg-received-bg);
-            color: var(--msg-text-primary);
-            border-bottom-left-radius: 6px;
-        }
-
-        .message-time {
-            font-size: 0.7rem;
-            color: var(--msg-text-muted);
-            margin-top: 0.375rem;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .message-group.sent .message-time {
-            justify-content: flex-end;
-        }
-
-        .message-status {
-            color: var(--msg-accent-light);
-        }
+        /* Messages */
+        .messages-container { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .message-group { display: flex; flex-direction: column; gap: 0.25rem; }
+        .message-group.sent { align-items: flex-end; }
+        .message-group.received { align-items: flex-start; }
+        .message { max-width: 70%; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; }
+        .message.sent { background: #c9973f; color: #fff; border-bottom-right-radius: 2px; }
+        .message.received { background: #fff; color: #222; border: 1px solid #e0e0e0; border-bottom-left-radius: 2px; }
+        .message-time { font-size: 0.7rem; color: #999; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem; }
+        .message-group.sent .message-time { justify-content: flex-end; }
+        .message-status { color: #c9973f; }
 
         /* Date Divider */
-        .date-divider {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .date-divider::before,
-        .date-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--msg-border);
-        }
-
-        .date-divider span {
-            font-size: 0.75rem;
-            color: var(--msg-text-muted);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .date-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.75rem 0; }
+        .date-divider::before, .date-divider::after { content: ''; flex: 1; height: 1px; background: #e0e0e0; }
+        .date-divider span { font-size: 0.7rem; color: #999; font-weight: 500; text-transform: uppercase; }
 
         /* Welcome State */
-        .welcome-state {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .welcome-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            border: 2px solid var(--msg-border);
-        }
-
-        .welcome-state h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--msg-text-primary);
-            margin-bottom: 0.75rem;
-        }
-
-        .welcome-state p {
-            color: var(--msg-text-secondary);
-            max-width: 400px;
-            line-height: 1.6;
-        }
+        .welcome-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
+        .welcome-icon { width: 80px; height: 80px; background: rgba(201, 151, 63, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 1rem; border: 1px solid #e0e0e0; }
+        .welcome-state h3 { font-size: 1.25rem; font-weight: 600; color: #222; margin-bottom: 0.5rem; }
+        .welcome-state p { color: #666; max-width: 350px; line-height: 1.5; }
 
         /* Message Input */
-        .message-input-area {
-            padding: 1rem 1.5rem 1.25rem;
-            background: var(--msg-bg-secondary);
-            border-top: 1px solid var(--msg-border);
-        }
+        .message-input-area { padding: 0.75rem 1rem; background: #fff; border-top: 1px solid #e0e0e0; }
+        .message-input-container { display: flex; align-items: flex-end; gap: 0.5rem; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 4px; padding: 0.4rem 0.5rem 0.4rem 1rem; }
+        .message-input-container:focus-within { border-color: #c9973f; }
+        .message-input { flex: 1; background: transparent; border: none; color: #222; font-size: 0.9rem; padding: 0.5rem 0; resize: none; max-height: 100px; line-height: 1.4; font-family: inherit; }
+        .message-input:focus { outline: none; }
+        .input-actions { display: flex; align-items: center; gap: 0.25rem; }
+        .input-action-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; border: none; color: #999; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .input-action-btn:hover { background: #e0e0e0; color: #222; }
+        .send-btn { width: 40px; height: 40px; border-radius: 50%; background: #c9973f; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .send-btn:hover { background: #b8862e; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .message-input-container {
-            display: flex;
-            align-items: flex-end;
-            gap: 0.75rem;
-            background: var(--msg-bg-tertiary);
-            border: 1px solid var(--msg-border);
-            border-radius: 24px;
-            padding: 0.5rem 0.5rem 0.5rem 1.25rem;
-            transition: all 0.2s ease;
-        }
-
-        .message-input-container:focus-within {
-            border-color: var(--msg-accent);
-            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.1);
-        }
-
-        .message-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--msg-text-primary);
-            font-size: 0.95rem;
-            padding: 0.625rem 0;
-            resize: none;
-            max-height: 120px;
-            line-height: 1.5;
-            font-family: inherit;
-        }
-
-        .message-input:focus {
-            outline: none;
-        }
-
-        .message-input::placeholder {
-            color: var(--msg-text-muted);
-        }
-
-        .input-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .input-action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: transparent;
-            border: none;
-            color: var(--msg-text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .input-action-btn:hover {
-            background: var(--msg-bg-hover);
-            color: var(--msg-text-primary);
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--msg-sent-bg);
-            border: none;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(212, 168, 83, 0.3);
-        }
-
-        .send-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Login Required State */
-        .login-required {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-            width: 100%;
-        }
-
-        .login-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            border: 2px solid var(--msg-border);
-        }
-
-        .login-required h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--msg-text-primary);
-            margin-bottom: 0.75rem;
-        }
-
-        .login-required p {
-            color: var(--msg-text-secondary);
-            max-width: 400px;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 2rem;
-            background: var(--msg-sent-bg);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(212, 168, 83, 0.3);
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
-        }
+        /* Login Required */
+        .login-required { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; width: 100%; }
+        .login-icon { width: 80px; height: 80px; background: rgba(201, 151, 63, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 1rem; border: 1px solid #e0e0e0; }
+        .login-required h3 { font-size: 1.25rem; font-weight: 600; color: #222; margin-bottom: 0.5rem; }
+        .login-required p { color: #666; max-width: 350px; line-height: 1.5; margin-bottom: 1.25rem; }
+        .login-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: #c9973f; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 0.95rem; }
+        .login-btn:hover { background: #b8862e; }
 
         /* Typing Indicator */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            background: var(--msg-received-bg);
-            border-radius: 18px;
-            border-bottom-left-radius: 6px;
-            width: fit-content;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            background: var(--msg-text-muted);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
+        .typing-indicator { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.8rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; border-bottom-left-radius: 2px; width: fit-content; }
+        .typing-dots { display: flex; gap: 3px; }
+        .typing-dots span { width: 6px; height: 6px; background: #999; border-radius: 50%; animation: typing 1.4s infinite; }
         .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-3px); opacity: 1; } }
 
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-            30% { transform: translateY(-4px); opacity: 1; }
-        }
-
-        /* Mobile Responsive */
+        /* Mobile */
         @media (max-width: 768px) {
-            .messages-main {
-                flex-direction: column;
-            }
-
-            .conversations-sidebar {
-                width: 100%;
-                min-width: 100%;
-                height: auto;
-                max-height: 35vh;
-                border-right: none;
-                border-bottom: 1px solid var(--msg-border);
-            }
-
-            .conversations-sidebar.hidden {
-                display: none;
-            }
-
-            .chat-area {
-                flex: 1;
-                min-height: 0;
-            }
-
-            .message {
-                max-width: 85%;
-            }
-
-            .chat-header {
-                padding: 0.875rem 1rem;
-            }
-
-            .messages-container {
-                padding: 1rem;
-            }
-
-            .message-input-area {
-                padding: 0.875rem 1rem;
-            }
+            .messages-main { flex-direction: column; }
+            .conversations-sidebar { width: 100%; min-width: 100%; max-height: 35vh; border-right: none; border-bottom: 1px solid #e0e0e0; }
+            .conversations-sidebar.hidden { display: none; }
+            .chat-area { flex: 1; min-height: 0; }
+            .message { max-width: 85%; }
         }
-
-        /* Scrollbar Styling */
-        .conversations-list::-webkit-scrollbar,
-        .messages-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .conversations-list::-webkit-scrollbar-track,
-        .messages-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .conversations-list::-webkit-scrollbar-thumb,
-        .messages-container::-webkit-scrollbar-thumb {
-            background: var(--msg-border);
-            border-radius: 3px;
-        }
-
-        .conversations-list::-webkit-scrollbar-thumb:hover,
-        .messages-container::-webkit-scrollbar-thumb:hover {
-            background: var(--msg-text-muted);
-        }
-
-        /* Mobile back button */
-        .mobile-back-btn {
-            display: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--msg-bg-tertiary);
-            border: 1px solid var(--msg-border);
-            color: var(--msg-text-secondary);
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-back-btn {
-                display: flex;
-            }
-        }
+        .mobile-back-btn { display: none; width: 32px; height: 32px; border-radius: 4px; background: #f5f5f5; border: 1px solid #e0e0e0; color: #666; cursor: pointer; align-items: center; justify-content: center; margin-right: 0.5rem; }
+        @media (max-width: 768px) { .mobile-back-btn { display: flex; } }
     </style>
 </head>
 <body>
     <div class="messages-page-container">
-        <!-- Header -->
+
         <header>
             <nav class="nav-container">
                 <a href="/" class="logo">
                     <img src="images/logo.png" alt="Ryans Web Services" class="logo-img">
                     Ryans Web Services, LLC
                 </a>
-                
+
                 <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
-                
+
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                    <li><a href="/pricing/" class="nav-link">Pricing</a></li>
                     <li><a href="resources/" class="nav-link">Resources</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
                     <li id="authNavItem"><a href="login.html" class="nav-link nav-cta">Get Started</a></li>
@@ -746,9 +161,9 @@
             </nav>
         </header>
 
-        <!-- Main Messages Area -->
+
         <div class="messages-main" id="messagesMain">
-            <!-- Conversations Sidebar -->
+
             <aside class="conversations-sidebar" id="conversationsSidebar">
                 <div class="sidebar-header">
                     <h2>Messages</h2>
@@ -761,7 +176,7 @@
                     </div>
                 </div>
                 <div class="conversations-list" id="conversationsList">
-                    <!-- Default support conversation -->
+
                     <div class="conversation-item active" data-id="support">
                         <div class="conversation-avatar online">RW</div>
                         <div class="conversation-info">
@@ -775,9 +190,9 @@
                 </div>
             </aside>
 
-            <!-- Chat Area -->
+
             <main class="chat-area" id="chatArea">
-                <!-- Chat Header -->
+
                 <div class="chat-header" id="chatHeader">
                     <div class="chat-header-info">
                         <button class="mobile-back-btn" id="mobileBackBtn">
@@ -800,9 +215,9 @@
                     </div>
                 </div>
 
-                <!-- Messages Container -->
+
                 <div class="messages-container" id="messagesContainer">
-                    <!-- Welcome State -->
+
                     <div class="welcome-state" id="welcomeState">
                         <div class="welcome-icon">💬</div>
                         <h3>Start a Conversation</h3>
@@ -810,12 +225,12 @@
                     </div>
                 </div>
 
-                <!-- Message Input -->
+
                 <div class="message-input-area" id="messageInputArea">
                     <div class="message-input-container">
-                        <textarea 
-                            class="message-input" 
-                            id="messageInput" 
+                        <textarea
+                            class="message-input"
+                            id="messageInput"
                             placeholder="Type a message..."
                             rows="1"
                         ></textarea>
@@ -830,7 +245,7 @@
                 </div>
             </main>
 
-            <!-- Login Required State (hidden by default) -->
+
             <div class="login-required" id="loginRequired" style="display: none;">
                 <div class="login-icon">🔐</div>
                 <h3>Login Required</h3>
@@ -845,7 +260,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+
     <script src="js/config.js"></script>
     <script src="js/analytics.js"></script>
     <script src="js/auth.js"></script>
@@ -927,7 +342,7 @@
                         // Auto-resize textarea
                         input.style.height = 'auto';
                         input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-                        
+
                         // Enable/disable send button
                         sendBtn.disabled = !input.value.trim();
                     });
@@ -962,7 +377,7 @@
             setupMobileNav() {
                 const mobileToggle = document.getElementById('mobileToggle');
                 const navMenu = document.getElementById('navMenu');
-                
+
                 if (mobileToggle && navMenu) {
                     mobileToggle.addEventListener('click', () => {
                         navMenu.classList.toggle('active');
@@ -979,7 +394,7 @@
 
                 try {
                     console.log('[User] Loading or creating conversation for user:', this.currentUser.id);
-                    
+
                     // Check if user already has a conversation
                     let { data: conversation, error } = await supabase
                         .from('conversations')
@@ -1063,7 +478,7 @@
 
                 this.messages.forEach((msg) => {
                     const msgDate = new Date(msg.created_at).toLocaleDateString();
-                    
+
                     // Add date divider if new day
                     if (msgDate !== lastDate) {
                         html += `<div class="date-divider"><span>${this.formatDate(msg.created_at)}</span></div>`;
@@ -1071,10 +486,10 @@
                     }
 
                     const isSent = !msg.is_admin; // User messages are sent, admin messages are received
-                    const time = new Date(msg.created_at).toLocaleTimeString('en-US', { 
-                        hour: 'numeric', 
+                    const time = new Date(msg.created_at).toLocaleTimeString('en-US', {
+                        hour: 'numeric',
                         minute: '2-digit',
-                        hour12: true 
+                        hour12: true
                     });
 
                     html += `
@@ -1100,13 +515,13 @@
                     console.log('[User] No content to send');
                     return;
                 }
-                
+
                 if (!this.currentUser) {
                     console.error('[User] No current user - cannot send');
                     alert('Please log in to send messages.');
                     return;
                 }
-                
+
                 if (!this.conversationId) {
                     console.error('[User] No conversation ID - cannot send. Attempting to create...');
                     await this.loadOrCreateConversation();
@@ -1148,7 +563,7 @@
                         is_admin: false
                     };
                     console.log('[User] Message data:', messageData);
-                    
+
                     const { data: message, error } = await supabase
                         .from('messages')
                         .insert(messageData)
@@ -1177,7 +592,7 @@
                             unread_count: 1
                         })
                         .eq('id', this.conversationId);
-                    
+
                     if (convError) {
                         console.error('[User] Error updating conversation:', convError);
                     } else {
@@ -1243,7 +658,7 @@
 
                     // Reload messages (admin messages will remain)
                     await this.loadMessages();
-                    
+
                     // Update conversation last_message
                     const lastAdminMsg = this.messages.length > 0 ? this.messages[this.messages.length - 1].content : null;
                     await supabase
@@ -1271,8 +686,8 @@
                 } else if (date.toDateString() === yesterday.toDateString()) {
                     return 'Yesterday';
                 } else {
-                    return date.toLocaleDateString('en-US', { 
-                        month: 'short', 
+                    return date.toLocaleDateString('en-US', {
+                        month: 'short',
                         day: 'numeric',
                         year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
                     });

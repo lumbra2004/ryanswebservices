@@ -2,51 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Admin Dashboard | Ryans Web Services</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <title>Admin | Ryans Web Services</title>
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="admin-body">
-    <!-- Login Screen -->
+
     <div id="loginScreen" class="admin-login">
         <div class="admin-login-card">
             <div class="admin-login-logo">
-                <h1>🔐 Admin Portal</h1>
+                <h1>Admin Portal</h1>
                 <p>Sign in to access the dashboard</p>
             </div>
             <div id="loginError" class="admin-login-error"></div>
             <form id="adminLoginForm">
                 <div class="form-group">
-                    <label for="adminEmail">Email Address</label>
-                    <input type="email" id="adminEmail" required autocomplete="username" placeholder="admin@example.com">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" required placeholder="admin@example.com">
                 </div>
                 <div class="form-group">
                     <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" required autocomplete="current-password" placeholder="••••••••">
+                    <input type="password" id="adminPassword" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="admin-login-btn">Sign In</button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Dashboard -->
     <div id="adminDashboard" class="admin-wrapper" style="display: none;">
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
-        
-        <!-- Sidebar -->
+
         <aside class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-brand">
-                <h1>⚡ RWS Admin</h1>
+                <h1>RWS Admin</h1>
             </div>
-            
+
             <div class="sidebar-user">
                 <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
                 <div class="sidebar-user-info">
@@ -54,7 +46,7 @@
                     <div class="sidebar-user-role">Administrator</div>
                 </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Dashboard</div>
@@ -63,7 +55,7 @@
                         Overview
                     </button>
                 </div>
-                
+
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Management</div>
                     <button class="sidebar-link" data-section="analytics">
@@ -91,520 +83,211 @@
                         Files
                     </button>
                 </div>
-                
+
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Communication</div>
                     <button class="sidebar-link" data-section="messages">
                         <span class="sidebar-link-icon">💬</span>
                         Messages
-                        <span class="sidebar-link-badge" id="navMessagesBadge" style="display: none;">0</span>
                     </button>
                     <button class="sidebar-link" data-section="contacts">
                         <span class="sidebar-link-icon">📬</span>
                         Contact Forms
-                        <span class="sidebar-link-badge" id="navContactsBadge" style="display: none;">0</span>
                     </button>
-                    <button class="sidebar-link" data-section="blog">
-                        <span class="sidebar-link-icon">📝</span>
-                        Blog Posts
+                    <button class="sidebar-link" data-section="updates">
+                        <span class="sidebar-link-icon">📢</span>
+                        Updates
                     </button>
                 </div>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <button class="sidebar-logout" onclick="adminPanel.handleLogout()">
-                    <span>🚪</span>
                     Sign Out
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="admin-main">
             <header class="admin-header">
                 <button class="admin-menu-toggle" id="mobileMenuBtn">☰</button>
-                
-                <div class="admin-search">
-                    <span class="admin-search-icon">🔍</span>
-                    <input type="text" id="globalSearchInput" placeholder="Search users, requests, payments...">
-                </div>
-                
                 <div class="admin-header-actions">
-                    <button class="admin-header-btn" id="reloadBtn">🔄 Refresh</button>
+                    <button class="admin-btn admin-btn-secondary" id="reloadBtn">Refresh</button>
                 </div>
             </header>
 
             <div class="admin-content">
-                <!-- Overview Section -->
+                <!-- Overview -->
                 <section class="admin-section active" id="section-overview">
-                    <div class="page-header">
-                        <h2>📊 Dashboard Overview</h2>
-                        <p>Your business at a glance</p>
-                    </div>
-                    
+                    <h2>Dashboard Overview</h2>
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon blue">👥</div>
-                            </div>
                             <div class="stat-card-value" id="totalUsers">0</div>
                             <div class="stat-card-label">Total Users</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon green">💰</div>
-                            </div>
                             <div class="stat-card-value" id="totalRevenue">$0</div>
                             <div class="stat-card-label">Total Revenue</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon blue">📋</div>
-                            </div>
                             <div class="stat-card-value" id="totalRequests">0</div>
                             <div class="stat-card-label">Service Requests</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon orange">📁</div>
-                            </div>
                             <div class="stat-card-value" id="totalFiles">0</div>
                             <div class="stat-card-label">Files Stored</div>
                         </div>
                     </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">🕐 Recent Activity</div>
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <div class="admin-card-title">Recent Activity</div>
                         </div>
-                        <div class="data-card-body" id="recentActivityContainer">
-                            <div class="loading">
-                                <div class="loading-spinner"></div>
-                                Loading activity...
-                            </div>
-                        </div>
+                        <div id="recentActivityContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Analytics Section -->
+                <!-- Analytics -->
                 <section class="admin-section" id="section-analytics">
-                    <div class="page-header">
-                        <h2>📈 Visitor Analytics</h2>
-                        <p>Track website traffic and engagement</p>
+                    <h2>Visitor Analytics</h2>
+                    <div style="margin-bottom: 1rem;">
+                        <select class="admin-btn admin-btn-secondary" id="analyticsDateRange" onchange="adminPanel.loadAnalytics()" style="padding: 0.5rem;">
+                            <option value="1">Today</option>
+                            <option value="7" selected>Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                        </select>
                     </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">Time Period</div>
-                            <div class="filter-bar" style="margin: 0;">
-                                <select class="filter-select" id="analyticsDateRange" onchange="adminPanel.loadAnalytics()">
-                                    <option value="1">Today</option>
-                                    <option value="7" selected>Last 7 Days</option>
-                                    <option value="30">Last 30 Days</option>
-                                    <option value="90">Last 90 Days</option>
-                                </select>
-                                <button class="btn btn-ghost btn-sm" onclick="adminPanel.loadAnalytics()">🔄 Refresh</button>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon blue">👁️</div>
-                            </div>
                             <div class="stat-card-value" id="totalPageViews">0</div>
                             <div class="stat-card-label">Page Views</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon green">👤</div>
-                            </div>
                             <div class="stat-card-value" id="uniqueVisitors">0</div>
                             <div class="stat-card-label">Unique Visitors</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon blue">⏱️</div>
-                            </div>
                             <div class="stat-card-value" id="avgTimeOnSite">0s</div>
                             <div class="stat-card-label">Avg. Time on Site</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div class="stat-card-icon orange">📉</div>
-                            </div>
                             <div class="stat-card-value" id="bounceRate">0%</div>
                             <div class="stat-card-label">Bounce Rate</div>
                         </div>
                     </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                        <div class="data-card">
-                            <div class="data-card-header">
-                                <div class="data-card-title">📄 Top Pages</div>
-                            </div>
-                            <div class="data-card-body" id="topPagesContainer">
-                                <div class="loading">Loading...</div>
-                            </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="admin-card">
+                            <div class="admin-card-title">Top Pages</div>
+                            <div id="topPagesContainer">Loading...</div>
                         </div>
-                        <div class="data-card">
-                            <div class="data-card-header">
-                                <div class="data-card-title">🌍 Top Locations</div>
-                            </div>
-                            <div class="data-card-body" id="topLocationsContainer">
-                                <div class="loading">Loading...</div>
-                            </div>
+                        <div class="admin-card">
+                            <div class="admin-card-title">Top Locations</div>
+                            <div id="topLocationsContainer">Loading...</div>
                         </div>
                     </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">👥 Recent Visitors</div>
-                            <input type="text" class="filter-input" id="visitorSearch" placeholder="Search visitors..." onkeyup="adminPanel.filterVisitors()">
-                        </div>
-                        <div class="data-card-body" style="overflow-x: auto;">
-                            <table class="admin-table" id="visitorsTable">
+                    <div class="admin-card">
+                        <div class="admin-card-title">Recent Visitors</div>
+                        <div style="overflow-x: auto;">
+                            <table class="admin-table">
                                 <thead>
                                     <tr>
                                         <th>Time</th>
                                         <th>Page</th>
                                         <th>Location</th>
                                         <th>Device</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="visitorsTableBody">
-                                    <tr><td colspan="5" class="loading">Loading...</td></tr>
+                                    <tr><td colspan="4">Loading...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
 
-                <!-- Users Section -->
+                <!-- Users -->
                 <section class="admin-section" id="section-users">
-                    <div class="page-header">
-                        <h2>👥 User Management</h2>
-                        <p>Manage registered users</p>
-                    </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Users</div>
-                        </div>
-                        <div class="data-card-body">
-                            <div class="filter-bar">
-                                <input type="text" class="filter-input" id="userSearch" placeholder="🔍 Search users...">
-                                <select class="filter-select" id="userFilter">
-                                    <option value="all">All Users</option>
-                                    <option value="verified">Verified Only</option>
-                                    <option value="unverified">Unverified</option>
-                                    <option value="admin">Admins</option>
-                                </select>
-                            </div>
-                            <div id="usersTableContainer">
-                                <div class="loading">
-                                    <div class="loading-spinner"></div>
-                                    Loading users...
-                                </div>
-                            </div>
-                        </div>
+                    <h2>User Management</h2>
+                    <div class="admin-card">
+                        <div id="usersTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Service Requests Section -->
+                <!-- Requests -->
                 <section class="admin-section" id="section-requests">
-                    <div class="page-header">
-                        <h2>📋 Service Requests</h2>
-                        <p>Manage client requests</p>
-                    </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Requests</div>
-                        </div>
-                        <div class="data-card-body">
-                            <div class="filter-bar">
-                                <input type="text" class="filter-input" id="requestSearch" placeholder="🔍 Search requests...">
-                                <select class="filter-select" id="requestStatusFilter">
-                                    <option value="all">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="ready_to_purchase">Ready to Purchase</option>
-                                    <option value="paid">Paid</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            </div>
-                            <div id="requestsTableContainer">
-                                <div class="loading">
-                                    <div class="loading-spinner"></div>
-                                    Loading requests...
-                                </div>
-                            </div>
-                        </div>
+                    <h2>Service Requests</h2>
+                    <div class="admin-card">
+                        <div id="requestsTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Custom Quotes Section -->
+                <!-- Quotes -->
                 <section class="admin-section" id="section-quotes">
-                    <div class="page-header">
-                        <h2>🎫 Custom Quotes</h2>
-                        <p>Create personalized pricing for clients</p>
+                    <h2>Custom Quotes</h2>
+                    <div style="margin-bottom: 1rem;">
+                        <button class="admin-btn admin-btn-primary" id="createQuoteBtn">+ New Quote</button>
                     </div>
-                    
-                    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div class="data-card" style="background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(201, 151, 63, 0.1)); border-color: rgba(212, 168, 83, 0.3);">
-                            <div class="data-card-body" style="text-align: center;">
-                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✨</div>
-                                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">New Quote</h3>
-                                <p style="font-size: 0.8rem; color: var(--admin-text-muted); margin-bottom: 1rem;">Generate custom pricing for a client</p>
-                                <button class="btn btn-primary" id="createQuoteBtn" style="width: 100%;">+ Create Quote</button>
-                            </div>
-                        </div>
-                        
-                        <div class="stats-grid" style="margin: 0;">
-                            <div class="stat-card">
-                                <div class="stat-card-value" style="color: #e5bc6a;" id="pendingQuotes">0</div>
-                                <div class="stat-card-label">Pending</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value" style="color: #fbbf24;" id="viewedQuotes">0</div>
-                                <div class="stat-card-label">Viewed</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value" style="color: #34d399;" id="redeemedQuotes">0</div>
-                                <div class="stat-card-label">Redeemed</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-card-value" style="color: #e5bc6a;" id="quotesValue">$0</div>
-                                <div class="stat-card-label">Total Value</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Quote Codes</div>
-                            <div class="filter-bar" style="margin: 0;">
-                                <input type="text" class="filter-input" id="quoteSearch" placeholder="🔍 Search quotes...">
-                                <select class="filter-select" id="quoteStatusFilter">
-                                    <option value="all">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="viewed">Viewed</option>
-                                    <option value="redeemed">Redeemed</option>
-                                    <option value="expired">Expired</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="data-card-body" style="overflow-x: auto;">
-                            <table class="admin-table" id="quotesTable">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Client</th>
-                                        <th>Upfront</th>
-                                        <th>Monthly</th>
-                                        <th>Status</th>
-                                        <th>Expires</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="quotesTableBody">
-                                    <tr><td colspan="7">
-                                        <div class="empty-state">
-                                            <div class="empty-state-icon">🎫</div>
-                                            <h4>No quotes yet</h4>
-                                            <p>Create your first custom quote</p>
-                                        </div>
-                                    </td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="admin-card">
+                        <div id="quotesTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Payments Section -->
+                <!-- Payments -->
                 <section class="admin-section" id="section-payments">
-                    <div class="page-header">
-                        <h2>💳 Payments & Invoices</h2>
-                        <p>Track revenue and subscriptions</p>
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-value" style="color: #34d399;" id="totalPaidRevenue">$0</div>
-                            <div class="stat-card-label">Total Revenue</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-value" style="color: #fbbf24;" id="pendingPayments">$0</div>
-                            <div class="stat-card-label">Pending</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-value" style="color: #e5bc6a;" id="monthlyRecurring">$0</div>
-                            <div class="stat-card-label">Monthly Recurring</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-value" style="color: #e5bc6a;" id="activeSubscriptions">0</div>
-                            <div class="stat-card-label">Active Subscriptions</div>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">🎟️ Promo Codes</div>
-                            <button class="btn btn-success btn-sm" id="createPromoBtn">+ Create Code</button>
-                        </div>
-                        <div class="data-card-body" id="promoCodesContainer">
-                            <div class="loading">Loading promo codes...</div>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">💰 All Orders</div>
-                        </div>
-                        <div class="data-card-body">
-                            <div class="filter-bar">
-                                <input type="text" class="filter-input" id="paymentSearch" placeholder="🔍 Search orders...">
-                                <select class="filter-select" id="paymentStatusFilter">
-                                    <option value="all">All Orders</option>
-                                    <option value="paid">Paid</option>
-                                    <option value="ready_to_purchase">Awaiting Payment</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="refunded">Refunded</option>
-                                </select>
-                            </div>
-                            <div id="paymentsTableContainer">
-                                <div class="loading">Loading orders...</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">🔄 Active Subscriptions</div>
-                        </div>
-                        <div class="data-card-body" id="subscriptionsTableContainer">
-                            <div class="loading">Loading subscriptions...</div>
-                        </div>
+                    <h2>Payments</h2>
+                    <div class="admin-card">
+                        <div id="paymentsTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Files Section -->
+                <!-- Files -->
                 <section class="admin-section" id="section-files">
-                    <div class="page-header">
-                        <h2>📁 File Management</h2>
-                        <p>Manage user documents</p>
+                    <h2>Files</h2>
+                    <div style="margin-bottom: 1rem;">
+                        <button class="admin-btn admin-btn-primary" id="uploadFileBtn">+ Upload File</button>
                     </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Files</div>
-                            <button class="btn btn-primary btn-sm" id="uploadFileBtn">+ Upload File</button>
-                        </div>
-                        <div class="data-card-body">
-                            <div class="filter-bar">
-                                <input type="text" class="filter-input" id="fileSearch" placeholder="🔍 Search files...">
-                            </div>
-                            <div id="filesTableContainer">
-                                <div class="loading">Loading files...</div>
-                            </div>
-                        </div>
+                    <div class="admin-card">
+                        <div id="filesTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Messages Section -->
+                <!-- Messages -->
                 <section class="admin-section" id="section-messages">
-                    <div class="page-header">
-                        <h2>💬 Messages</h2>
-                        <p>Chat with users</p>
-                    </div>
-                    
-                    <div class="messages-layout">
-                        <div class="conversations-panel">
-                            <div class="conversations-header">
-                                <h4>Conversations</h4>
-                                <div class="conversations-search">
-                                    <span class="conversations-search-icon">🔍</span>
-                                    <input type="text" id="adminConversationSearch" placeholder="Search...">
-                                </div>
-                            </div>
-                            <div class="conversations-list" id="adminConversationsList">
-                                <div class="loading" style="padding: 2rem;">Loading...</div>
-                            </div>
+                    <h2>Messages</h2>
+                    <div class="admin-card" style="display: grid; grid-template-columns: 280px 1fr; min-height: 500px;">
+                        <div style="border-right: 1px solid var(--border); overflow-y: auto;" id="conversationsList">
+                            Loading...
                         </div>
-                        
-                        <div class="chat-panel">
-                            <div class="chat-empty" id="adminNoConversation">
-                                <div class="chat-empty-icon">💬</div>
-                                <h4>Select a Conversation</h4>
-                                <p>Choose from the list to view messages</p>
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
+                                <strong id="adminChatUserName">Select a conversation</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);" id="adminChatUserEmail"></div>
                             </div>
-                            
-                            <div id="adminChatView" style="display: none; flex-direction: column; height: 100%;">
-                                <div class="chat-header">
-                                    <div class="conversation-avatar" id="adminChatAvatar">U</div>
-                                    <div class="chat-header-info">
-                                        <h4 id="adminChatUserName">User</h4>
-                                        <p id="adminChatUserEmail">email@example.com</p>
-                                    </div>
-                                </div>
-                                <div class="chat-messages" id="adminChatMessages"></div>
-                                <div class="chat-input">
-                                    <input type="text" id="adminMessageInput" placeholder="Type a message...">
-                                    <button class="chat-send-btn" id="adminSendBtn">Send</button>
-                                </div>
+                            <div style="flex: 1; overflow-y: auto; padding: 1rem;" id="adminChatMessages"></div>
+                            <div style="padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem;">
+                                <input type="text" id="adminMessageInput" placeholder="Type a message..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                                <button class="admin-btn admin-btn-primary" id="adminSendBtn">Send</button>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Contacts Section -->
+                <!-- Contacts -->
                 <section class="admin-section" id="section-contacts">
-                    <div class="page-header">
-                        <h2>📬 Contact Submissions</h2>
-                        <p>Review contact form messages</p>
-                    </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Submissions</div>
-                            <span class="badge badge-danger" id="newContactsBadge" style="display: none;">0 New</span>
-                        </div>
-                        <div class="data-card-body">
-                            <div class="filter-bar">
-                                <input type="text" class="filter-input" id="contactSearch" placeholder="🔍 Search contacts...">
-                                <select class="filter-select" id="contactStatusFilter">
-                                    <option value="all">All</option>
-                                    <option value="new">New</option>
-                                    <option value="read">Read</option>
-                                    <option value="replied">Replied</option>
-                                    <option value="archived">Archived</option>
-                                </select>
-                            </div>
-                            <div id="contactsTableContainer">
-                                <div class="loading">Loading contacts...</div>
-                            </div>
-                        </div>
+                    <h2>Contact Submissions</h2>
+                    <div class="admin-card">
+                        <div id="contactsTableContainer">Loading...</div>
                     </div>
                 </section>
 
-                <!-- Blog Section -->
-                <section class="admin-section" id="section-blog">
-                    <div class="page-header">
-                        <h2>📝 Blog Posts</h2>
-                        <p>Create and manage content</p>
+                <!-- Updates -->
+                <section class="admin-section" id="section-updates">
+                    <h2>Site Updates</h2>
+                    <div style="margin-bottom: 1rem;">
+                        <button class="admin-btn admin-btn-primary" id="createUpdateBtn">+ New Update</button>
                     </div>
-                    
-                    <div class="data-card">
-                        <div class="data-card-header">
-                            <div class="data-card-title">All Posts</div>
-                            <button class="btn btn-success btn-sm" id="createPostBtn">+ New Post</button>
-                        </div>
-                        <div class="data-card-body" id="blogPostsContainer">
-                            <div class="loading">Loading posts...</div>
-                        </div>
+                    <div class="admin-card">
+                        <div id="updatesContainer">Loading...</div>
                     </div>
                 </section>
             </div>
@@ -613,141 +296,191 @@
 
     <!-- Upload Modal -->
     <div id="uploadModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 500px;">
+        <div class="modal">
             <div class="modal-header">
-                <h3>📁 Upload File</h3>
-                <button class="modal-close" id="closeUploadModal">&times;</button>
+                <h3>Upload File</h3>
+                <button class="modal-close" onclick="document.getElementById('uploadModal').style.display='none'">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="uploadFileForm">
                     <div class="form-group">
                         <label>Select User</label>
-                        <select id="userSelect" required></select>
+                        <select id="userSelect" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;"></select>
                     </div>
                     <div class="form-group">
                         <label>File Name</label>
-                        <input type="text" id="fileName" required placeholder="Document name">
+                        <input type="text" id="fileName" required placeholder="Document name" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
                     </div>
                     <div class="form-group">
-                        <label>Upload File</label>
+                        <label>File</label>
                         <input type="file" id="fileUpload" required>
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea id="fileDescription" rows="2" placeholder="Brief description..."></textarea>
+                        <textarea id="fileDescription" rows="2" placeholder="Brief description..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="document.getElementById('uploadModal').style.display='none'">Cancel</button>
-                <button class="btn btn-primary" type="submit" form="uploadFileForm">Upload</button>
+                <button class="admin-btn admin-btn-secondary" onclick="document.getElementById('uploadModal').style.display='none'">Cancel</button>
+                <button class="admin-btn admin-btn-primary" type="submit" form="uploadFileForm">Upload</button>
             </div>
         </div>
     </div>
 
-    <!-- Order Details Modal -->
-    <div id="orderDetailsModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 600px;">
+    <!-- Quote Modal -->
+    <div id="quoteModal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="max-width: 550px;">
             <div class="modal-header">
-                <h3>📦 Order Details</h3>
-                <button class="modal-close" onclick="adminPanel.closeOrderModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="orderDetailsContent">
-                <div class="loading">Loading...</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeOrderModal()">Close</button>
-                <button class="btn btn-danger" id="modalRefundBtn" style="display: none;">Refund</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Promo Code Modal -->
-    <div id="promoCodeModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3>🎟️ Create Promo Code</h3>
-                <button class="modal-close" onclick="adminPanel.closePromoModal()">&times;</button>
+                <h3 id="quoteModalTitle">Create Quote</h3>
+                <button class="modal-close" onclick="adminPanel.closeQuoteModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="promoCodeForm">
+                <div id="generatedCodeDisplay" style="display: none; background: rgba(201, 151, 63, 0.1); border: 1px solid var(--accent); padding: 1rem; border-radius: 4px; text-align: center; margin-bottom: 1rem;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Quote Code</div>
+                    <div id="generatedCode" style="font-size: 1.5rem; font-weight: 700; font-family: monospace;"></div>
+                    <button class="admin-btn admin-btn-secondary" style="margin-top: 0.5rem; font-size: 0.75rem;" onclick="adminPanel.copyQuoteCode(document.getElementById('generatedCode').textContent)">Copy</button>
+                </div>
+                <form id="quoteForm">
                     <div class="form-group">
-                        <label>Code</label>
-                        <input type="text" id="promoCode" placeholder="SAVE20" required style="text-transform: uppercase;">
+                        <label>Client Name</label>
+                        <input type="text" id="quoteClientName" placeholder="John Doe" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Client Email</label>
+                        <input type="email" id="quoteClientEmail" placeholder="john@example.com" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Client Phone</label>
+                        <input type="tel" id="quoteClientPhone" placeholder="(555) 123-4567" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Upfront Cost *</label>
+                            <input type="number" id="quoteUpfrontCost" placeholder="500" min="0" step="0.01" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Fee</label>
+                            <input type="number" id="quoteMonthlyFee" placeholder="50" min="0" step="0.01" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Service Type</label>
+                        <select id="quoteServiceType" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="website">Website Design</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="custom">Custom Project</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="date" id="quoteValidUntil" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <input type="text" id="promoDescription" placeholder="20% off for new customers">
+                        <textarea id="quoteServiceDescription" rows="2" placeholder="What's included..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;"></textarea>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Discount Type</label>
-                            <select id="promoDiscountType" required>
-                                <option value="percentage">Percentage (%)</option>
-                                <option value="fixed">Fixed Amount ($)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Value</label>
-                            <input type="number" id="promoDiscountValue" placeholder="20" min="0" step="0.01" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Max Uses</label>
-                            <input type="number" id="promoMaxUses" placeholder="Unlimited" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Min Purchase ($)</label>
-                            <input type="number" id="promoMinPurchase" placeholder="0" min="0" value="0">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Valid From</label>
-                            <input type="date" id="promoValidFrom">
-                        </div>
-                        <div class="form-group">
-                            <label>Valid Until</label>
-                            <input type="date" id="promoValidUntil">
-                        </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="quoteInternalNotes" rows="2" placeholder="Internal notes..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closePromoModal()">Cancel</button>
-                <button class="btn btn-success" onclick="adminPanel.createPromoCode()">Create</button>
+                <button class="admin-btn admin-btn-secondary" onclick="adminPanel.closeQuoteModal()">Cancel</button>
+                <button class="admin-btn admin-btn-primary" onclick="adminPanel.saveQuote()">Save Quote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div id="updateModal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="updateModalTitle">Create Update</h3>
+                <button class="modal-close" onclick="adminPanel.closeUpdateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="updateId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="updateTitle" placeholder="What's happening?" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Content *</label>
+                        <div style="border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
+                            <div style="display: flex; gap: 0.25rem; padding: 0.5rem; background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+                                <button type="button" class="editor-btn" onclick="adminPanel.formatText('bold')" title="Bold"><b>B</b></button>
+                                <button type="button" class="editor-btn" onclick="adminPanel.formatText('italic')" title="Italic"><i>I</i></button>
+                                <button type="button" class="editor-btn" onclick="adminPanel.formatText('underline')" title="Underline"><u>U</u></button>
+                                <span style="width: 1px; background: var(--border); margin: 0 0.25rem;"></span>
+                                <button type="button" class="editor-btn" onclick="adminPanel.formatText('link')" title="Add Link">🔗</button>
+                                <button type="button" class="editor-btn" onclick="adminPanel.formatText('list')" title="Bullet List">•</button>
+                            </div>
+                            <div id="updateContent" contenteditable="true" style="min-height: 150px; padding: 0.75rem; outline: none; font-size: 0.95rem; line-height: 1.6;" placeholder="Write your update here..."></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image (optional)</label>
+                        <div style="border: 2px dashed var(--border); border-radius: 4px; padding: 1.5rem; text-align: center; cursor: pointer; transition: 0.2s;" id="imageDropZone" onclick="document.getElementById('updateImage').click()">
+                            <input type="file" id="updateImage" accept="image/*" style="display: none;" onchange="adminPanel.previewUpdateImage(this)">
+                            <div id="imagePreview" style="display: none; margin-bottom: 0.5rem;">
+                                <img id="previewImg" style="max-width: 100%; max-height: 200px; border-radius: 4px;">
+                                <button type="button" class="admin-btn admin-btn-danger" style="margin-top: 0.5rem; font-size: 0.75rem;" onclick="event.stopPropagation(); adminPanel.removeUpdateImage()">Remove Image</button>
+                            </div>
+                            <div id="imagePlaceholder">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div>
+                                <div style="color: var(--text-muted); font-size: 0.875rem;">Click or drag to add an image</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="updateImageUrl">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="updatePublished" checked>
+                            Publish immediately
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="admin-btn admin-btn-secondary" onclick="adminPanel.closeUpdateModal()">Cancel</button>
+                <button class="admin-btn admin-btn-primary" onclick="adminPanel.saveUpdate()">Post Update</button>
             </div>
         </div>
     </div>
 
     <!-- Refund Modal -->
     <div id="refundModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 450px;">
+        <div class="modal" style="max-width: 400px;">
             <div class="modal-header">
-                <h3>💸 Issue Refund</h3>
+                <h3>Issue Refund</h3>
                 <button class="modal-close" onclick="adminPanel.closeRefundModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="refundDetails" style="margin-bottom: 1rem; padding: 1rem; background: var(--admin-surface-2); border-radius: 8px;">
+                <div style="margin-bottom: 1rem; padding: 1rem; background: var(--bg-alt); border-radius: 4px;">
                     <p><strong>Customer:</strong> <span id="refundCustomer"></span></p>
                     <p><strong>Service:</strong> <span id="refundService"></span></p>
                     <p><strong>Amount:</strong> <span id="refundOriginalAmount"></span></p>
                 </div>
                 <div class="form-group">
                     <label>Refund Type</label>
-                    <select id="refundType" onchange="adminPanel.toggleRefundAmount()">
+                    <select id="refundType" onchange="adminPanel.toggleRefundAmount()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
                         <option value="full">Full Refund</option>
                         <option value="partial">Partial Refund</option>
                     </select>
                 </div>
                 <div class="form-group" id="partialAmountGroup" style="display: none;">
                     <label>Refund Amount ($)</label>
-                    <input type="number" id="refundAmount" placeholder="0.00" min="0.01" step="0.01">
+                    <input type="number" id="refundAmount" placeholder="0.00" min="0.01" step="0.01" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
                 </div>
                 <div class="form-group">
                     <label>Reason</label>
-                    <select id="refundReason">
+                    <select id="refundReason" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
                         <option value="requested_by_customer">Requested by customer</option>
                         <option value="duplicate">Duplicate charge</option>
                         <option value="fraudulent">Fraudulent</option>
@@ -755,188 +488,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeRefundModal()">Cancel</button>
-                <button class="btn btn-danger" onclick="adminPanel.processRefund()">Process Refund</button>
+                <button class="admin-btn admin-btn-secondary" onclick="adminPanel.closeRefundModal()">Cancel</button>
+                <button class="admin-btn admin-btn-danger" onclick="adminPanel.processRefund()">Process Refund</button>
             </div>
         </div>
     </div>
 
-    <!-- Blog Post Modal -->
-    <div id="blogPostModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 700px;">
-            <div class="modal-header">
-                <h3 id="blogModalTitle">📝 Create Post</h3>
-                <button class="modal-close" onclick="adminPanel.closeBlogModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="blogPostForm">
-                    <input type="hidden" id="blogPostId">
-                    <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" id="blogTitle" placeholder="Post title" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Slug</label>
-                            <input type="text" id="blogSlug" placeholder="auto-generated">
-                        </div>
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select id="blogCategory">
-                                <option value="">Select...</option>
-                                <option value="News">News</option>
-                                <option value="Tips">Tips</option>
-                                <option value="Updates">Updates</option>
-                                <option value="Tutorial">Tutorial</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Excerpt</label>
-                        <textarea id="blogExcerpt" rows="2" placeholder="Brief summary..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Featured Image URL</label>
-                        <input type="url" id="blogFeaturedImage" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Content * (HTML supported)</label>
-                        <textarea id="blogContent" rows="10" placeholder="Write content..." required style="font-family: monospace;"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="checkbox" id="blogPublished" style="width: auto;">
-                            Publish immediately
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeBlogModal()">Cancel</button>
-                <button class="btn btn-success" onclick="adminPanel.saveBlogPost()">Save Post</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quote Modal -->
-    <div id="quoteModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3 id="quoteModalTitle">🎫 Create Quote</h3>
-                <button class="modal-close" onclick="adminPanel.closeQuoteModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="generatedCodeDisplay" style="display: none; background: linear-gradient(135deg, rgba(212, 168, 83, 0.15), rgba(201, 151, 63, 0.15)); border: 1px solid rgba(212, 168, 83, 0.3); padding: 1rem; border-radius: 12px; text-align: center; margin-bottom: 1rem;">
-                    <div style="font-size: 0.7rem; color: #a5b4fc; text-transform: uppercase; letter-spacing: 1px;">Quote Code</div>
-                    <div id="generatedCode" style="font-size: 1.5rem; font-weight: 700; font-family: monospace; letter-spacing: 2px;"></div>
-                    <button type="button" class="btn btn-ghost btn-sm" style="margin-top: 0.5rem;" onclick="adminPanel.copyQuoteCode(document.getElementById('generatedCode').textContent)">📋 Copy</button>
-                </div>
-                <form id="quoteForm">
-                    <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--admin-border);">
-                        <h4 style="font-size: 0.8rem; color: var(--admin-text-muted); text-transform: uppercase;">👤 Client Info</h4>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" id="quoteClientName" placeholder="John Doe">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="quoteClientEmail" placeholder="john@example.com">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="tel" id="quoteClientPhone" placeholder="(555) 123-4567">
-                    </div>
-                    
-                    <div style="margin: 1rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--admin-border);">
-                        <h4 style="font-size: 0.8rem; color: var(--admin-text-muted); text-transform: uppercase;">💰 Pricing</h4>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Upfront Cost *</label>
-                            <input type="number" id="quoteUpfrontCost" placeholder="500" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Monthly Fee</label>
-                            <input type="number" id="quoteMonthlyFee" placeholder="50" min="0" step="0.01">
-                        </div>
-                    </div>
-                    
-                    <div style="margin: 1rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--admin-border);">
-                        <h4 style="font-size: 0.8rem; color: var(--admin-text-muted); text-transform: uppercase;">📋 Details</h4>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Service Type</label>
-                            <select id="quoteServiceType">
-                                <option value="website">Website Design</option>
-                                <option value="maintenance">Maintenance</option>
-                                <option value="custom">Custom Project</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Valid Until</label>
-                            <input type="date" id="quoteValidUntil">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="quoteServiceDescription" rows="2" placeholder="What's included..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Client Notes</label>
-                        <textarea id="quoteClientNotes" rows="2" placeholder="Message for client..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Internal Notes</label>
-                        <textarea id="quoteInternalNotes" rows="2" placeholder="Private notes..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeQuoteModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="adminPanel.saveQuote()">💾 Save Quote</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quote View Modal -->
-    <div id="quoteViewModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3>🎫 Quote Details</h3>
-                <button class="modal-close" onclick="adminPanel.closeQuoteViewModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="quoteViewContent">
-                <div class="loading">Loading...</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeQuoteViewModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Visitor Modal -->
-    <div id="visitorModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3>👤 Visitor Details</h3>
-                <button class="modal-close" onclick="adminPanel.closeVisitorModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="visitorModalContent">
-                <div class="loading">Loading...</div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="adminPanel.closeVisitorModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/admin.js"></script>
-    <script src="/themes/christmas/christmas.js"></script>
 </body>
 </html>

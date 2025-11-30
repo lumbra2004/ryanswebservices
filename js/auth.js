@@ -1,4 +1,4 @@
-// Authentication System with Supabase
+
 class AuthSystem {
     constructor() {
         this.currentUser = null;
@@ -6,13 +6,8 @@ class AuthSystem {
     }
 
     async init() {
-        console.log('AuthSystem initializing...');
-        
-        // Check if user is logged in with Supabase
         const { data: { session } } = await supabase.auth.getSession();
-        
-        console.log('Session check complete:', session ? 'User logged in' : 'No session');
-        
+
         if (session) {
             this.currentUser = {
                 id: session.user.id,
@@ -20,16 +15,12 @@ class AuthSystem {
                 name: session.user.user_metadata.full_name || session.user.email.split('@')[0],
                 initials: this.getInitials(session.user.user_metadata.full_name || session.user.email)
             };
-            console.log('Current user set:', this.currentUser);
             this.updateUI();
         } else {
-            console.log('No current user, updating UI to logged out state');
             this.updateUI();
         }
 
-        // Listen for auth state changes
         supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth state changed:', event);
             if (event === 'SIGNED_IN' && session) {
                 this.currentUser = {
                     id: session.user.id,
@@ -44,24 +35,24 @@ class AuthSystem {
             }
         });
 
-        // Setup event listeners
+
         this.setupEventListeners();
     }
 
     setupEventListeners() {
-        // Auth modal controls
+
         const authOverlay = document.getElementById('authOverlay');
         const loginBtn = document.getElementById('loginBtn');
         const authClose = document.getElementById('authClose');
-        
+
         if (loginBtn) {
             loginBtn.addEventListener('click', () => this.showAuthModal());
         }
-        
+
         if (authClose) {
             authClose.addEventListener('click', () => this.hideAuthModal());
         }
-        
+
         if (authOverlay) {
             authOverlay.addEventListener('click', (e) => {
                 if (e.target === authOverlay) {
@@ -70,27 +61,27 @@ class AuthSystem {
             });
         }
 
-        // Tab switching
+
         document.querySelectorAll('.auth-tab').forEach(tab => {
             tab.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
         });
 
-        // Form submissions
+
         const loginForm = document.getElementById('loginForm');
         const signupForm = document.getElementById('signupForm');
-        
+
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         }
-        
+
         if (signupForm) {
             signupForm.addEventListener('submit', (e) => this.handleSignup(e));
         }
 
-        // User dropdown
+
         const userButton = document.getElementById('userButton');
         const userDropdown = document.getElementById('userDropdown');
-        
+
         if (userButton) {
             userButton.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -98,20 +89,20 @@ class AuthSystem {
             });
         }
 
-        // Close dropdown when clicking outside
+
         document.addEventListener('click', () => {
             if (userDropdown) {
                 userDropdown.classList.remove('show');
             }
         });
 
-        // Logout button
+
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => this.logout());
         }
 
-        // Social login buttons
+
         document.querySelectorAll('.auth-social-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -120,13 +111,13 @@ class AuthSystem {
             });
         });
 
-        // Password strength meter
+
         const signupPassword = document.getElementById('signupPassword');
         if (signupPassword) {
             signupPassword.addEventListener('input', (e) => this.checkPasswordStrength(e.target.value));
         }
 
-        // Confirm password matching
+
         const confirmPassword = document.getElementById('signupConfirmPassword');
         if (confirmPassword) {
             confirmPassword.addEventListener('input', () => this.checkPasswordMatch());
@@ -139,10 +130,10 @@ class AuthSystem {
             });
         }
 
-        // Password toggle buttons
+
         const togglePassword = document.getElementById('togglePassword');
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-        
+
         if (togglePassword) {
             togglePassword.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -150,7 +141,7 @@ class AuthSystem {
                 this.togglePasswordVisibility(input, togglePassword);
             });
         }
-        
+
         if (toggleConfirmPassword) {
             toggleConfirmPassword.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -161,19 +152,19 @@ class AuthSystem {
     }
 
     switchTab(tab) {
-        // Update tabs
+
         document.querySelectorAll('.auth-tab').forEach(t => {
             t.classList.remove('active');
         });
         document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
 
-        // Update forms
+
         document.querySelectorAll('.auth-form').forEach(f => {
             f.classList.remove('active');
         });
         document.getElementById(`${tab}Form`).classList.add('active');
 
-        // Update header
+
         const header = document.querySelector('.auth-header h2');
         header.textContent = tab === 'login' ? 'Welcome Back' : 'Create Account';
     }
@@ -218,7 +209,7 @@ class AuthSystem {
 
             if (error) throw error;
 
-            // Successful login
+
             this.currentUser = {
                 id: data.user.id,
                 email: data.user.email,
@@ -226,15 +217,15 @@ class AuthSystem {
                 initials: this.getInitials(data.user.user_metadata.full_name || data.user.email)
             };
 
-            // Trigger browser password save by submitting a hidden form
+
             this.triggerPasswordSave(email, password);
 
             this.updateUI();
             this.hideAuthModal();
-            
-            // Show success message
+
+
             this.showNotification('Welcome back, ' + this.currentUser.name + '!');
-            
+
         } catch (error) {
             console.error('Login error:', error);
             this.showError(error.message || 'Invalid email or password');
@@ -251,13 +242,13 @@ class AuthSystem {
         const password = document.getElementById('signupPassword').value;
         const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
-        // Check if passwords match
+
         if (password !== confirmPassword) {
             this.showError('Passwords do not match');
             return;
         }
 
-        // Validate password strength
+
         const strength = this.getPasswordStrength(password);
         if (strength.score < 2) {
             this.showError('Please choose a stronger password that meets all requirements');
@@ -278,10 +269,10 @@ class AuthSystem {
 
             if (error) throw error;
 
-            // Trigger browser password save
+
             this.triggerPasswordSave(email, password);
-            
-            // Auto login after signup (if email confirmation is disabled in Supabase settings)
+
+
             if (data.session) {
                 this.currentUser = {
                     id: data.user.id,
@@ -290,21 +281,21 @@ class AuthSystem {
                     initials: this.getInitials(name)
                 };
 
-                // Show success message for auto-login
+
                 this.showNotification('Account created successfully! Welcome, ' + name + '!');
-                
+
                 this.updateUI();
                 this.hideAuthModal();
             } else {
-                // If email confirmation is enabled, show instruction and keep modal open
+
                 this.showNotification('Account created! Please check your email (' + email + ') to verify your account before logging in.');
-                
-                // Switch to login tab after 3 seconds
+
+
                 setTimeout(() => {
                     this.switchTab('login');
                 }, 3000);
             }
-            
+
         } catch (error) {
             console.error('Signup error:', error);
             this.showError(error.message || 'Failed to create account');
@@ -316,7 +307,7 @@ class AuthSystem {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: provider
             });
-            
+
             if (error) throw error;
         } catch (error) {
             console.error('Social login error:', error);
@@ -328,7 +319,7 @@ class AuthSystem {
         try {
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
-            
+
             this.currentUser = null;
             this.updateUI();
             this.showNotification('Logged out successfully');
@@ -339,21 +330,11 @@ class AuthSystem {
     }
 
     updateUI() {
-        console.log('updateUI called, currentUser:', this.currentUser);
-        
         const loginBtn = document.getElementById('loginBtn');
         const signupBtn = document.getElementById('signupBtn');
         const userMenu = document.getElementById('userMenu');
 
-        console.log('UI Elements found:', {
-            loginBtn: !!loginBtn,
-            signupBtn: !!signupBtn,
-            userMenu: !!userMenu
-        });
-
         if (this.currentUser) {
-            // User is logged in
-            console.log('Updating UI for logged in user');
             if (loginBtn) loginBtn.style.display = 'none';
             if (signupBtn) signupBtn.style.display = 'none';
             if (userMenu) {
@@ -364,8 +345,6 @@ class AuthSystem {
                 if (userAvatarEl) userAvatarEl.textContent = this.currentUser.initials;
             }
         } else {
-            // User is logged out
-            console.log('Updating UI for logged out user');
             if (loginBtn) loginBtn.style.display = 'inline-block';
             if (signupBtn) signupBtn.style.display = 'inline-block';
             if (userMenu) userMenu.style.display = 'none';
@@ -381,7 +360,7 @@ class AuthSystem {
         const bar = document.getElementById('passwordStrengthBar');
         const text = document.getElementById('passwordStrengthText');
 
-        // Update bar
+
         bar.className = 'password-strength-bar';
         if (strength.score === 0) {
             bar.className = 'password-strength-bar';
@@ -393,7 +372,7 @@ class AuthSystem {
             bar.classList.add('strong');
         }
 
-        // Update text
+
         text.className = 'password-strength-text';
         if (strength.score === 0) {
             text.textContent = '';
@@ -408,7 +387,7 @@ class AuthSystem {
             text.classList.add('strong');
         }
 
-        // Update requirements
+
         document.getElementById('req-length').classList.toggle('met', strength.requirements.length);
         document.getElementById('req-uppercase').classList.toggle('met', strength.requirements.uppercase);
         document.getElementById('req-lowercase').classList.toggle('met', strength.requirements.lowercase);
@@ -424,16 +403,16 @@ class AuthSystem {
         };
 
         const metCount = Object.values(requirements).filter(Boolean).length;
-        
+
         let score = 0;
         if (password.length === 0) {
             score = 0;
         } else if (metCount <= 2) {
-            score = 1; // weak
+            score = 1;
         } else if (metCount === 3) {
-            score = 2; // medium
+            score = 2;
         } else {
-            score = 3; // strong
+            score = 3;
         }
 
         return { score, requirements };
@@ -462,8 +441,8 @@ class AuthSystem {
     togglePasswordVisibility(input, button) {
         const type = input.type === 'password' ? 'text' : 'password';
         input.type = type;
-        
-        // Toggle eye icon appearance
+
+
         if (type === 'text') {
             button.style.color = 'var(--primary)';
         } else {
@@ -472,7 +451,7 @@ class AuthSystem {
     }
 
     showNotification(message) {
-        // Create notification element
+
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
@@ -490,7 +469,7 @@ class AuthSystem {
         notification.textContent = message;
         document.body.appendChild(notification);
 
-        // Remove after 3 seconds
+
         setTimeout(() => {
             notification.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => notification.remove(), 300);
@@ -498,7 +477,7 @@ class AuthSystem {
     }
 
     triggerPasswordSave(email, password) {
-        // Create a hidden form to trigger browser's password save prompt
+
         const form = document.createElement('form');
         form.style.display = 'none';
         form.method = 'post';
@@ -520,7 +499,7 @@ class AuthSystem {
         form.appendChild(passwordInput);
         document.body.appendChild(form);
 
-        // Submit and immediately remove
+
         setTimeout(() => {
             form.submit();
             setTimeout(() => {
@@ -530,7 +509,7 @@ class AuthSystem {
     }
 }
 
-// Add animations
+
 const authStyle = document.createElement('style');
 authStyle.textContent = `
     @keyframes slideIn {
@@ -556,14 +535,14 @@ authStyle.textContent = `
 `;
 document.head.appendChild(authStyle);
 
-// Initialize auth system when DOM is ready
+
 document.addEventListener('DOMContentLoaded', () => {
     window.authSystem = new AuthSystem();
 
-    // Mobile menu toggle
+
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navLinks = document.querySelector('.nav-links');
-    
+
     if (mobileMenuToggle && navLinks) {
         mobileMenuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -572,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.toggle('menu-open');
         });
 
-        // Close menu when clicking a link
+
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuToggle.classList.remove('active');
@@ -581,10 +560,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Close menu when clicking overlay
+
         document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('active') && 
-                !navLinks.contains(e.target) && 
+            if (navLinks.classList.contains('active') &&
+                !navLinks.contains(e.target) &&
                 !mobileMenuToggle.contains(e.target)) {
                 mobileMenuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
@@ -592,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Ensure user button works in mobile nav
+
         const userButton = document.getElementById('userButton');
         if (userButton) {
             userButton.addEventListener('click', (e) => {
@@ -601,3 +580,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+console.log('%c✓ auth.js loaded successfully', 'color: #10b981; font-weight: 500');

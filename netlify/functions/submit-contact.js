@@ -1,17 +1,17 @@
 import { neon } from '@netlify/neon';
 
 export default async (event, context) => {
-  // Determine HTTP method (Edge uses event.request)
-  // Debug: log top-level event keys to inspect runtime shape
+
+
   try {
     console.log('Event keys:', Object.keys(event));
   } catch (e) {
     console.log('Event keys: <unavailable>');
   }
-  // Support three shapes:
-  // - Node-style: event.httpMethod
-  // - Wrapped Edge: event.request.method
-  // - Direct Request (Edge): event.method
+
+
+
+
   const method = event.httpMethod || (event.request && event.request.method) || event.method;
   console.log('Detected method source:', {
     httpMethod: event.httpMethod,
@@ -26,8 +26,8 @@ export default async (event, context) => {
   }
 
   try {
-    // Log headers and raw body length for debugging (event.headers exists in Node-style)
-    // Normalize headers for logging
+
+
     try {
       if (event.headers && typeof event.headers === 'object' && !(event.headers.get)) {
         console.log('Request headers:', event.headers);
@@ -49,13 +49,13 @@ export default async (event, context) => {
     let body = null;
     try {
       if (event && typeof event.json === 'function') {
-        // Direct Request (Edge)
+
         body = await event.json();
       } else if (event.request && typeof event.request.json === 'function') {
-        // Wrapped Edge
+
         body = await event.request.json();
       } else if (event.body) {
-        // Node runtime
+
         body = JSON.parse(event.body || '{}');
       } else {
         body = null;

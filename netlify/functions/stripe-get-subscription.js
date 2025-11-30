@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event, context) => {
-    // Handle CORS preflight
+
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
@@ -40,7 +40,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Get subscription details
+
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
         console.log('Retrieved subscription:', {
@@ -52,22 +52,22 @@ exports.handler = async (event, context) => {
             fullSubscription: subscription
         });
 
-        // Calculate current period end based on billing cycle anchor and interval
+
         let currentPeriodEnd = subscription.current_period_end;
         let currentPeriodStart = subscription.current_period_start;
 
-        // If not present, calculate from billing_cycle_anchor
+
         if (!currentPeriodEnd && subscription.billing_cycle_anchor) {
             const billingAnchor = subscription.billing_cycle_anchor;
             currentPeriodStart = billingAnchor;
-            
-            // Calculate next billing date based on interval
+
+
             const interval = subscription.plan?.interval || 'month';
             const intervalCount = subscription.plan?.interval_count || 1;
-            
+
             const anchorDate = new Date(billingAnchor * 1000);
             const nextDate = new Date(anchorDate);
-            
+
             if (interval === 'month') {
                 nextDate.setMonth(nextDate.getMonth() + intervalCount);
             } else if (interval === 'year') {
@@ -77,7 +77,7 @@ exports.handler = async (event, context) => {
             } else if (interval === 'day') {
                 nextDate.setDate(nextDate.getDate() + intervalCount);
             }
-            
+
             currentPeriodEnd = Math.floor(nextDate.getTime() / 1000);
         }
 
@@ -103,8 +103,8 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
-                error: error.message || 'Failed to get subscription details' 
+            body: JSON.stringify({
+                error: error.message || 'Failed to get subscription details'
             })
         };
     }

@@ -1,4 +1,4 @@
-// Netlify Function: Create Subscription
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event, context) => {
@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
     try {
         const { customerId, priceId, metadata } = JSON.parse(event.body);
 
-        // Get the customer to find their payment methods
+
         const paymentMethods = await stripe.paymentMethods.list({
             customer: customerId,
             type: 'card',
@@ -33,17 +33,17 @@ exports.handler = async (event, context) => {
             throw new Error('No payment method found for customer');
         }
 
-        // Use the most recent payment method as default
+
         const paymentMethodId = paymentMethods.data[0].id;
 
-        // Set as default payment method
+
         await stripe.customers.update(customerId, {
             invoice_settings: {
                 default_payment_method: paymentMethodId,
             },
         });
 
-        // Create subscription (payment method is now attached and set as default)
+
         const subscription = await stripe.subscriptions.create({
             customer: customerId,
             items: [{ price: priceId }],

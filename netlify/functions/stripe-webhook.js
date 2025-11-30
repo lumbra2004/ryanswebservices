@@ -1,10 +1,10 @@
-// Netlify Function: Stripe Webhooks
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// Function to send payment confirmation email using Gmail
+
 async function sendPaymentEmail(paymentIntent) {
-    const GMAIL_USER = process.env.GMAIL_USER; // Your Gmail address
-    const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD; // App-specific password
+    const GMAIL_USER = process.env.GMAIL_USER;
+    const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
     const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL || GMAIL_USER;
 
     if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
@@ -16,11 +16,11 @@ async function sendPaymentEmail(paymentIntent) {
     const serviceName = paymentIntent.metadata?.serviceName || 'Service';
     const customerEmail = paymentIntent.metadata?.email || 'Unknown';
 
-    // Use a simple HTTP request to a mail service or just log for now
+
     console.log(`📧 Payment notification: $${amount} for ${serviceName} from ${customerEmail}`);
-    
-    // TODO: Set up email sending with Gmail SMTP
-    // For now, just log the notification
+
+
+
 }
 
 exports.handler = async (event, context) {
@@ -57,8 +57,8 @@ exports.handler = async (event, context) {
                     customer: paymentIntent.customer,
                     metadata: paymentIntent.metadata
                 });
-                
-                // Send email notification
+
+
                 await sendPaymentEmail(paymentIntent);
                 break;
 

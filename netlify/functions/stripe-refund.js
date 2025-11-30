@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async function(event) {
-    // Only allow POST
+
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -20,41 +20,41 @@ exports.handler = async function(event) {
         }
 
         let refund;
-        
-        // If we have a charge ID, refund that directly
+
+
         if (chargeId) {
             const refundParams = {
                 charge: chargeId,
                 reason: reason || 'requested_by_customer'
             };
-            
-            // If amount specified, do partial refund
+
+
             if (amount) {
-                refundParams.amount = Math.round(amount * 100); // Convert to cents
+                refundParams.amount = Math.round(amount * 100);
             }
-            
+
             refund = await stripe.refunds.create(refundParams);
-        } 
-        // Otherwise, get the charge from the payment intent
+        }
+
         else {
             const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-            
+
             if (!paymentIntent.latest_charge) {
                 return {
                     statusCode: 400,
                     body: JSON.stringify({ error: 'No charge found for this payment' })
                 };
             }
-            
+
             const refundParams = {
                 charge: paymentIntent.latest_charge,
                 reason: reason || 'requested_by_customer'
             };
-            
+
             if (amount) {
                 refundParams.amount = Math.round(amount * 100);
             }
-            
+
             refund = await stripe.refunds.create(refundParams);
         }
 
@@ -80,7 +80,7 @@ exports.handler = async function(event) {
         console.error('Refund error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 error: error.message,
                 type: error.type
             })

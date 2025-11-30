@@ -1,9 +1,6 @@
-/* ==========================================================================
-   PRICING PAGE STYLES
-   Additional styles specific to the pricing page
-   ========================================================================== */
 
-/* Pricing Hero */
+
+
 .pricing-hero {
     text-align: center;
     padding: calc(var(--header-height, 4.5rem) + var(--space-16)) var(--space-6) var(--space-12);
@@ -18,7 +15,7 @@
     width: 200%;
     height: 100%;
     transform: translateX(-50%);
-    background: 
+    background:
         radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212, 168, 83, 0.1), transparent),
         radial-gradient(ellipse 60% 40% at 80% 60%, rgba(245, 158, 11, 0.05), transparent);
     pointer-events: none;
@@ -41,7 +38,7 @@
     line-height: var(--leading-relaxed);
 }
 
-/* Pricing Grid */
+
 .pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -51,7 +48,7 @@
     padding: 0 var(--space-6);
 }
 
-/* Pricing Card */
+
 .pricing-card {
     background: var(--bg-surface);
     border: 1px solid var(--border-default);
@@ -124,7 +121,7 @@
     margin-bottom: var(--space-6);
 }
 
-/* Features List */
+
 .features-list {
     list-style: none;
     margin: var(--space-6) 0;
@@ -156,7 +153,7 @@
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M19 13H5v-2h14v2z'/%3E%3C/svg%3E") center/contain no-repeat;
 }
 
-/* CTA Button */
+
 .cta-button {
     width: 100%;
     padding: var(--space-4) var(--space-6);
@@ -191,7 +188,7 @@
     box-shadow: var(--shadow-lg), var(--shadow-glow-accent);
 }
 
-/* Maintenance Section */
+
 .maintenance-section {
     padding: var(--space-20) var(--space-6);
     text-align: center;
@@ -269,7 +266,7 @@
     font-weight: var(--font-bold);
 }
 
-/* FAQ Section */
+
 .faq-section {
     padding: var(--space-20) var(--space-6);
 }
@@ -313,7 +310,7 @@
     line-height: var(--leading-relaxed);
 }
 
-/* Toggle Details Button */
+
 .toggle-details {
     display: none;
     width: 100%;
@@ -344,7 +341,7 @@
     transform: rotate(180deg);
 }
 
-/* Tooltips */
+
 .tooltip {
     position: relative;
     border-bottom: 1px dotted var(--text-tertiary);
@@ -378,31 +375,31 @@
     transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile Responsive */
+
 @media (max-width: 768px) {
     .pricing-hero {
         padding: calc(var(--header-height, 4rem) + var(--space-12)) var(--space-4) var(--space-8);
     }
-    
+
     .pricing-grid {
         grid-template-columns: 1fr;
         padding: 0 var(--space-4);
     }
-    
+
     .pricing-card.featured {
         transform: none;
     }
-    
+
     .toggle-details {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    
+
     .features-list.collapsed {
         display: none;
     }
-    
+
     .maintenance-grid {
         grid-template-columns: 1fr;
     }

@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event, context) => {
-    // Handle CORS preflight
+
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
@@ -38,7 +38,7 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Cancel the subscription at period end (user keeps access until billing period ends)
+
         const subscription = await stripe.subscriptions.update(subscriptionId, {
             cancel_at_period_end: true
         });
@@ -58,8 +58,8 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ 
-                error: error.message || 'Failed to cancel subscription' 
+            body: JSON.stringify({
+                error: error.message || 'Failed to cancel subscription'
             })
         };
     }

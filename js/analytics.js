@@ -1,27 +1,23 @@
-// Visitor Analytics Tracking Script
-// Include this on all pages to track visitors
+
+
 
 (function() {
     'use strict';
-    
-    // Wrap everything in try-catch to prevent any errors from breaking the page
+
+
     try {
         const SUPABASE_URL = 'https://auth.ryanswebservices.com';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMTU0NDIsImV4cCI6MjA3OTU5MTQ0Mn0.VNvo4tjz_HafmQsvVkCBRiq8WmLrlhkPavNaB_3Exig';
-        
-        console.log('[Analytics] Script loaded');
-        
-        // Don't track admin pages or if DNT is enabled
+
         if (window.location.pathname.includes('admin') || navigator.doNotTrack === '1') {
-            console.log('[Analytics] Skipping - admin page or DNT enabled');
             return;
         }
-        
+
         let visitId = null;
         let startTime = Date.now();
         let maxScrollDepth = 0;
-    
-    // Generate or retrieve session ID
+
+
     function getSessionId() {
         let sessionId = sessionStorage.getItem('rws_session_id');
         if (!sessionId) {
@@ -30,15 +26,15 @@
         }
         return sessionId;
     }
-    
-    // Generate a simple browser fingerprint
+
+
     function getFingerprint() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         ctx.textBaseline = 'top';
         ctx.font = '14px Arial';
         ctx.fillText('fingerprint', 2, 2);
-        
+
         const data = [
             navigator.userAgent,
             navigator.language,
@@ -49,8 +45,8 @@
             !!window.localStorage,
             canvas.toDataURL()
         ].join('|');
-        
-        // Simple hash
+
+
         let hash = 0;
         for (let i = 0; i < data.length; i++) {
             const char = data.charCodeAt(i);
@@ -59,8 +55,8 @@
         }
         return 'fp_' + Math.abs(hash).toString(36);
     }
-    
-    // Parse user agent for device/browser info
+
+
     function parseUserAgent() {
         const ua = navigator.userAgent;
         let device = 'desktop';
@@ -68,13 +64,13 @@
         let browserVersion = '';
         let os = 'Unknown';
         let osVersion = '';
-        
-        // Device type
+
+
         if (/Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
             device = /iPad|Tablet/i.test(ua) ? 'tablet' : 'mobile';
         }
-        
-        // Browser detection
+
+
         if (ua.includes('Firefox/')) {
             browser = 'Firefox';
             browserVersion = ua.match(/Firefox\/(\d+)/)?.[1] || '';
@@ -91,8 +87,8 @@
             browser = 'Internet Explorer';
             browserVersion = ua.match(/(?:MSIE |rv:)(\d+)/)?.[1] || '';
         }
-        
-        // OS detection
+
+
         if (ua.includes('Windows NT')) {
             os = 'Windows';
             const ntVersion = ua.match(/Windows NT (\d+\.\d+)/)?.[1];
@@ -110,11 +106,11 @@
             os = 'iOS';
             osVersion = ua.match(/OS (\d+)/)?.[1] || '';
         }
-        
+
         return { device, browser, browserVersion, os, osVersion };
     }
-    
-    // Get UTM parameters
+
+
     function getUTMParams() {
         const params = new URLSearchParams(window.location.search);
         return {
@@ -125,23 +121,22 @@
             utm_content: params.get('utm_content')
         };
     }
-    
-    // Track scroll depth
+
+
     function trackScrollDepth() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrollPercent = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
         maxScrollDepth = Math.max(maxScrollDepth, scrollPercent);
     }
-    
-    // Send visit data to Supabase
+
+
     async function recordVisit() {
-        console.log('[Analytics] Recording visit...');
         const sessionId = getSessionId();
         const fingerprint = getFingerprint();
         const deviceInfo = parseUserAgent();
         const utmParams = getUTMParams();
-        
+
         const visitData = {
             p_session_id: sessionId,
             p_page_url: window.location.pathname + window.location.search,
@@ -165,9 +160,7 @@
             p_fingerprint: fingerprint,
             p_metadata: JSON.stringify({ fingerprint: fingerprint })
         };
-        
-        console.log('[Analytics] Visit data:', visitData);
-        
+
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/record_page_visit`, {
                 method: 'POST',
@@ -178,31 +171,24 @@
                 },
                 body: JSON.stringify(visitData)
             });
-            
-            console.log('[Analytics] Response status:', response.status);
-            
+
             if (response.ok) {
                 visitId = await response.json();
-                console.log('[Analytics] Visit recorded, ID:', visitId);
-                // Fetch geolocation data
                 fetchGeolocation();
-            } else {
-                const errorText = await response.text();
-                console.error('[Analytics] Error response:', errorText);
             }
         } catch (error) {
-            console.error('[Analytics] Tracking error:', error);
+            // Silent fail
         }
     }
-    
-    // Fetch geolocation from IP
+
+
     async function fetchGeolocation() {
         if (!visitId) return;
-        
+
         try {
-            // Using ipapi.co (HTTPS, 30k requests/month free)
+
             const response = await fetch('https://ipapi.co/json/');
-            
+
             if (response.ok) {
                 const data = await response.json();
                 if (!data.error) {
@@ -221,15 +207,15 @@
                 }
             }
         } catch (error) {
-            // Silently fail - geolocation is optional
+
             console.debug('Geolocation fetch failed:', error);
         }
     }
-    
-    // Update visit with location data
+
+
     async function updateVisitLocation(geoData) {
         if (!visitId) return;
-        
+
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/rpc/update_visit_location`, {
                 method: 'POST',
@@ -256,13 +242,13 @@
             console.debug('Location update error:', error);
         }
     }
-    
-    // Update time on page and scroll depth when leaving
+
+
     async function updateEngagement() {
         if (!visitId) return;
-        
+
         const timeOnPage = Math.round((Date.now() - startTime) / 1000);
-        
+
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/page_visits?id=eq.${visitId}`, {
                 method: 'PATCH',
@@ -282,13 +268,13 @@
             console.debug('Engagement update error:', error);
         }
     }
-    
-    // Track specific events
+
+
     window.rwsTrackEvent = function(eventType, eventCategory, eventLabel, eventValue, metadata = {}) {
         if (!visitId) return;
-        
+
         const sessionId = getSessionId();
-        
+
         fetch(`${SUPABASE_URL}/rest/v1/page_events`, {
             method: 'POST',
             headers: {
@@ -308,64 +294,65 @@
             })
         }).catch(() => {});
     };
-    
-    // Initialize tracking
+
+
     function init() {
-        // Record the visit
+
         recordVisit();
-        
-        // Track scroll depth
+
+
         window.addEventListener('scroll', trackScrollDepth, { passive: true });
-        
-        // Update engagement on page unload
+
+
         window.addEventListener('beforeunload', updateEngagement);
         window.addEventListener('pagehide', updateEngagement);
-        
-        // Track visibility changes
+
+
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
                 updateEngagement();
             }
         });
-        
-        // Track form interactions
+
+
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('focus', function(e) {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     window.rwsTrackEvent('form_interaction', 'form', form.id || 'unknown', e.target.name);
                 }
             }, true);
-            
+
             form.addEventListener('submit', function() {
                 window.rwsTrackEvent('form_submit', 'form', form.id || 'unknown', 'submitted');
             });
         });
-        
-        // Track outbound links
+
+
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a');
             if (link && link.hostname !== window.location.hostname) {
                 window.rwsTrackEvent('outbound_click', 'link', link.href, link.textContent.trim().substring(0, 50));
             }
         });
-        
-        // Track CTA button clicks
+
+
         document.querySelectorAll('.hero-cta, .cta-button, [data-track]').forEach(el => {
             el.addEventListener('click', function() {
                 window.rwsTrackEvent('cta_click', 'button', el.dataset.track || el.textContent.trim().substring(0, 50), window.location.pathname);
             });
         });
     }
-    
-    // Start tracking when DOM is ready
+
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
     }
-    
+
+    console.log('%c✓ analytics.js loaded successfully', 'color: #10b981; font-weight: 500');
+
     } catch (e) {
-        // Silently fail - analytics should never break the page
-        console.debug('Analytics init error:', e);
+        // Silent fail
     }
 })();

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4S74TXQDB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S4S74TXQDB');
+        gtag('config', 'AW-17751846529');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <title>Updates | Ryans Web Services</title>
+    <meta name="description" content="Latest updates, news, and announcements from Ryans Web Services.">
+
+    <link rel="icon" href="/favicon_io/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="/" class="logo"><img src="/images/logo.png" alt="Ryans Web Services" class="logo-img">Ryans Web Services, LLC</a>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/updates/" class="nav-link active">Updates</a></li>
+                <li><a href="/contact/" class="nav-link">Contact</a></li>
+                <li id="authNavItem"><a href="/login" class="nav-link nav-cta">Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <div class="section-header">
+            <span class="section-label">Latest Updates</span>
+            <h1 class="section-title">Ryans Web Services Updates</h1>
+            <p class="section-description">Postings from Ryans Web Services</p>
+        </div>
+    </section>
+
+    <section id="updates-list">
+        <div class="updates-container" id="updatesContainer">
+            <div class="loading-updates">Loading updates...</div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Ryans Web Services</div>
+            <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/updates/">Updates</a></li>
+                <li><a href="/contact/">Contact</a></li>
+            </ul>
+            <p class="footer-copyright">© 2025-2026 Ryans Web Services, LLC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/analytics.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        async function updateAuthNav() {
+            const authNavItem = document.getElementById('authNavItem');
+            if (!authNavItem) return;
+
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user) {
+                    const userEmail = session.user.email;
+                    const userInitial = userEmail.charAt(0).toUpperCase();
+
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('role, full_name')
+                        .eq('id', session.user.id)
+                        .single();
+
+                    const isAdmin = profile?.role === 'admin' || profile?.role === 'owner';
+                    const displayName = profile?.full_name || userEmail.split('@')[0];
+
+                    authNavItem.innerHTML = `
+                        <div class="user-menu">
+                            <button class="user-button">
+                                <span class="user-avatar">${userInitial}</span>
+                                <span class="user-name">${displayName}</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </button>
+                            <div class="user-dropdown">
+                                <a href="/profile/" class="user-dropdown-item">
+                                    <span>👤</span> Profile
+                                </a>
+                                <a href="/dashboard.html" class="user-dropdown-item">
+                                    <span>📊</span> Dashboard
+                                </a>
+                                ${isAdmin ? '<a href="/admin.html" class="user-dropdown-item"><span>⚙️</span> Admin Panel</a>' : ''}
+                                <a href="/messages.html" class="user-dropdown-item">
+                                    <span>💬</span> Messages
+                                </a>
+                                <div style="height: 1px; background: var(--color-border-light); margin: 0.5rem 0;"></div>
+                                <button onclick="logout()" class="user-dropdown-item" style="width: 100%; border: none; background: none; cursor: pointer; text-align: left; font-size: inherit; font-family: inherit; color: inherit;">
+                                    <span>🚪</span> Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    authNavItem.innerHTML = '<a href="/login" class="nav-link nav-cta">Get Started</a>';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.reload();
+        }
+
+        updateAuthNav();
+
+        async function loadUpdates() {
+            const container = document.getElementById('updatesContainer');
+            if (!container) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('updates')
+                    .select('*')
+                    .eq('published', true)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    if (error.message?.includes('does not exist') || error.code === '42P01') {
+                        container.innerHTML = '<p class="no-updates">No updates yet.</p>';
+                        return;
+                    }
+                    throw error;
+                }
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="no-updates">No updates yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = data.map(update => `
+                    <article class="update-card">
+                        <div class="update-header">
+                            <img src="/images/logo.png" alt="Ryans Web Services" class="update-avatar-img">
+                            <div class="update-meta">
+                                <div class="update-author">Ryans Web Services</div>
+                                <div class="update-date">${new Date(update.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} at ${new Date(update.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+                            </div>
+                        </div>
+                        <h3 class="update-title">${update.title}</h3>
+                        <div class="update-content">${update.content}</div>
+                        ${update.image_url ? `<img src="${update.image_url}" alt="" class="update-image">` : ''}
+                    </article>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading updates:', error);
+                container.innerHTML = '<p class="no-updates">No updates yet.</p>';
+            }
+        }
+
+        loadUpdates();
+
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

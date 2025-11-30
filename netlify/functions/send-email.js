@@ -1,6 +1,6 @@
-// Serverless function to send emails via SendGrid Web API.
-// Requires these environment variables set in Netlify:
-// SENDGRID_API_KEY, SENDER_EMAIL, RECIPIENT_EMAIL
+
+
+
 
 exports.handler = async function(event, context) {
   if (event.httpMethod !== 'POST') {

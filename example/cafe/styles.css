@@ -67,7 +67,7 @@ button{min-height:48px;font-size:16px;padding:0.85rem 1.25rem;border-radius:12px
 	.search{max-width:100%}
 }
 
-/* Mobile nav behavior */
+
 @media (max-width:900px){
 	.hamburger{display:inline-flex;margin-left:auto;align-items:center;justify-content:center}
 	.nav{position:relative}

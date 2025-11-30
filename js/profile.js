@@ -1,4 +1,4 @@
-// Profile Page JavaScript
+
 class ProfileManager {
     constructor() {
         this.currentUser = null;
@@ -11,29 +11,29 @@ class ProfileManager {
 
     async init() {
         try {
-            // Check authentication
+
             const { data: { session } } = await supabase.auth.getSession();
-            
+
             if (!session) {
-                // Redirect to home if not logged in
+
                 window.location.href = 'index.html';
                 return;
             }
 
             this.currentUser = session.user;
             console.log('Profile init - Current user:', this.currentUser.id);
-            
-            // Check if returning from Stripe payment
+
+
             await this.handleStripeReturn();
-            
+
             await this.loadProfile();
             await this.loadRequests();
             await this.loadInvoices();
-            
+
             console.log('About to load documents...');
             await this.loadDocuments();
             console.log('Documents loaded successfully');
-            
+
             await this.updateStats();
             this.setupEventListeners();
         } catch (error) {
@@ -49,7 +49,7 @@ class ProfileManager {
         console.log('Checking Stripe return:', { paymentIntentId, redirectStatus });
 
         if (paymentIntentId && redirectStatus === 'succeeded') {
-            // Get the request ID from localStorage
+
             const requestId = localStorage.getItem('pending_payment_request_id');
             const customerId = localStorage.getItem('pending_customer_id');
             const priceId = localStorage.getItem('pending_price_id');
@@ -59,7 +59,7 @@ class ProfileManager {
             if (requestId && customerId && priceId) {
                 try {
                     console.log('Creating subscription...');
-                    // Create subscription
+
                     const response = await fetch('/api/stripe/create-subscription', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -78,10 +78,10 @@ class ProfileManager {
 
                     if (response.ok) {
                         console.log('Updating database...');
-                        // Update request status to 'paid'
+
                         const { data, error } = await supabase
                             .from('service_requests')
-                            .update({ 
+                            .update({
                                 status: 'paid',
                                 paid_at: new Date().toISOString(),
                                 stripe_customer_id: customerId,
@@ -95,14 +95,14 @@ class ProfileManager {
                             console.log('Database updated successfully');
                         }
 
-                        // Clear localStorage
+
                         localStorage.removeItem('pending_payment_request_id');
                         localStorage.removeItem('pending_customer_id');
                         localStorage.removeItem('pending_price_id');
 
                         this.showNotification('Payment successful! 🎉', 'success');
-                        
-                        // Reload requests to show updated status
+
+
                         setTimeout(() => {
                             window.location.reload();
                         }, 1000);
@@ -116,32 +116,32 @@ class ProfileManager {
                 console.log('Missing payment data in localStorage');
             }
 
-            // Clean up URL
+
             window.history.replaceState({}, document.title, '/profile.html');
         }
     }
 
     async updateStats() {
         try {
-            // Get order stats
+
             const { data: orders } = await supabase
                 .from('orders')
                 .select('amount')
                 .eq('user_id', this.currentUser.id);
 
-            // Update stat cards (with null checks)
+
             const totalOrdersEl = document.getElementById('totalOrders');
             if (totalOrdersEl) totalOrdersEl.textContent = orders?.length || 0;
-            
+
             const totalSpent = orders?.reduce((sum, order) => sum + parseFloat(order.amount), 0) || 0;
             const totalSpentEl = document.getElementById('totalSpent');
             if (totalSpentEl) totalSpentEl.textContent = '$' + totalSpent.toFixed(2);
-            
+
             const memberSince = new Date(this.currentUser.created_at).getFullYear();
             const memberSinceEl = document.getElementById('memberSince');
             if (memberSinceEl) memberSinceEl.textContent = memberSince;
 
-            // Update badges (with null checks)
+
             const orderCountEl = document.getElementById('orderCount');
             if (orderCountEl) orderCountEl.textContent = `${orders?.length || 0} Orders`;
 
@@ -155,7 +155,7 @@ class ProfileManager {
             const container = document.getElementById('requestsContainer');
             if (!container) return;
 
-            // Get service requests for current user
+
             const { data: requests, error } = await supabase
                 .from('service_requests')
                 .select('*')
@@ -164,7 +164,7 @@ class ProfileManager {
 
             if (error) throw error;
 
-            // Update request count
+
             const requestCountEl = document.getElementById('requestCount');
             if (requestCountEl) {
                 requestCountEl.textContent = `${requests.length} Service${requests.length !== 1 ? 's' : ''}`;
@@ -175,7 +175,7 @@ class ProfileManager {
                     <div class="no-documents">
                         <div class="no-documents-icon">🛠️</div>
                         <p>No services yet</p>
-                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Request a service from the <a href="pricing.html" style="color: var(--primary);">pricing page</a></p>
+                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Request a service from the <a href="/pricing/" style="color: var(--primary);">pricing page</a></p>
                     </div>
                 `;
                 return;
@@ -196,7 +196,7 @@ class ProfileManager {
         const container = document.getElementById('requestsContainer');
         if (!container) return;
 
-        // Debug: Log all requests and their package_details
+
         console.log('=== DEBUG: All service requests ===');
         requests.forEach((req, i) => {
             console.log(`Request ${i}:`, req.service_name);
@@ -230,18 +230,18 @@ class ProfileManager {
             const statusColor = statusColors[request.status] || '#6b7280';
             const statusLabel = statusLabels[request.status] || request.status;
             const date = new Date(request.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            
-            // Calculate monthly cost (handle both old and new data formats)
-            // Old format: maintenancePrice is stored directly
-            // New format: maintenance_plan.monthly_cost
-            const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost 
-                || request.package_details?.maintenancePrice 
+
+
+
+
+            const maintenanceCost = request.package_details?.maintenance_plan?.monthly_cost
+                || request.package_details?.maintenancePrice
                 || 0;
             const workspaceCost = request.package_details?.google_workspace?.monthly_cost || 0;
-            
-            // Calculate addon costs (these are monthly recurring costs)
+
+
             const addonsCost = request.package_details?.addons?.reduce((sum, addon) => sum + (addon.price || 0), 0) || 0;
-            
+
             const monthlyTotal = maintenanceCost + workspaceCost + addonsCost;
 
             const statusIcon = {
@@ -275,7 +275,7 @@ class ProfileManager {
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Card Body -->
                     <div style="padding: 1.5rem;">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
@@ -290,7 +290,7 @@ class ProfileManager {
                                 </div>
                             ` : ''}
                         </div>
-                        
+
                         <!-- Expandable Details -->
                         <div id="details-${index}" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212, 168, 83, 0.2);">
                             ${request.package_details ? `
@@ -307,7 +307,7 @@ class ProfileManager {
                                             </div>
                                         </div>
                                     ` : ''}
-                                    
+
                                     ${maintenanceCost > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
@@ -321,7 +321,7 @@ class ProfileManager {
                                             </div>
                                         </div>
                                     ` : ''}
-                                    
+
                                     ${workspaceCost > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
@@ -336,7 +336,7 @@ class ProfileManager {
                                             </div>
                                         </div>
                                     ` : ''}
-                                    
+
                                     ${request.package_details.addons && request.package_details.addons.length > 0 ? `
                                         <div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
@@ -371,7 +371,7 @@ class ProfileManager {
                                 </div>
                             ` : '<div style="opacity: 0.6; text-align: center; padding: 2rem;">No additional details available</div>'}
                         </div>
-                        
+
                         <!-- Action Buttons -->
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
                             <button class="expand-btn" data-index="${index}" style="flex: 1; min-width: 120px; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;"onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%)'; this.style.transform='translateY(0)'">
@@ -393,7 +393,7 @@ class ProfileManager {
 
         container.innerHTML = html;
 
-        // Add event listeners for expand buttons
+
         container.querySelectorAll('.expand-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const button = e.currentTarget;
@@ -401,7 +401,7 @@ class ProfileManager {
                 const detailsDiv = document.getElementById(`details-${index}`);
                 const textSpan = button.querySelector('.expand-text');
                 const isExpanded = detailsDiv.style.display !== 'none';
-                
+
                 if (isExpanded) {
                     detailsDiv.style.display = 'none';
                     if (textSpan) textSpan.textContent = '📋 Show Details';
@@ -412,16 +412,16 @@ class ProfileManager {
             });
         });
 
-        // Add event listeners for view contract buttons
+
         container.querySelectorAll('.btn-view-contract').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const fileId = e.target.dataset.fileId;
-                // Scroll to documents section
+
                 const docsSection = document.getElementById('documentsContainer');
                 if (docsSection) {
                     docsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Highlight the contract row after scrolling
+
+
                     setTimeout(() => {
                         const contractRow = docsSection.querySelector(`[data-file-id="${fileId}"]`);
                         if (contractRow) {
@@ -439,7 +439,7 @@ class ProfileManager {
             });
         });
 
-        // Add event listeners for pay now buttons
+
         container.querySelectorAll('.btn-pay-now').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const requestId = e.target.dataset.requestId;
@@ -454,7 +454,7 @@ class ProfileManager {
     async loadProfile() {
         try {
             console.log('Loading profile...');
-            // Try to get user profile from database, but don't fail if table doesn't exist
+
             let profile = null;
             try {
                 const { data, error } = await supabase
@@ -463,7 +463,7 @@ class ProfileManager {
                     .eq('id', this.currentUser.id)
                     .single();
 
-                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+                if (error && error.code !== 'PGRST116') {
                     console.warn('user_profiles table issue (non-critical):', error.message);
                 }
                 profile = data;
@@ -471,34 +471,34 @@ class ProfileManager {
                 console.warn('Could not load from user_profiles, using auth metadata instead');
             }
 
-            // Update UI with profile data
+
             const name = profile?.full_name || this.currentUser.user_metadata?.full_name || this.currentUser.email?.split('@')[0] || 'User';
             const email = this.currentUser.email;
 
             const profileNameEl = document.getElementById('profileName');
             const profileEmailEl = document.getElementById('profileEmail');
             const profileAvatarEl = document.getElementById('profileAvatar');
-            
+
             if (profileNameEl) profileNameEl.textContent = name;
             if (profileEmailEl) profileEmailEl.textContent = email;
             if (profileAvatarEl) profileAvatarEl.textContent = this.getInitials(name);
-            
-            // Fill form
+
+
             const fullNameInput = document.getElementById('fullName');
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('phone');
             const companyInput = document.getElementById('company');
-            
+
             if (fullNameInput) fullNameInput.value = profile?.full_name || '';
             if (emailInput) emailInput.value = email;
             if (phoneInput) phoneInput.value = profile?.phone || '';
             if (companyInput) companyInput.value = profile?.company || '';
-            
+
             console.log('Profile loaded successfully');
 
         } catch (error) {
             console.error('Error in loadProfile:', error);
-            // Don't throw - allow init to continue
+
         }
     }
 
@@ -508,7 +508,7 @@ class ProfileManager {
             console.log('ordersContainer not found, skipping loadOrders');
             return;
         }
-        
+
         try {
             const { data: orders, error } = await supabase
                 .from('orders')
@@ -524,13 +524,13 @@ class ProfileManager {
                         <div class="empty-state-icon">📦</div>
                         <h3>No orders yet</h3>
                         <p>Your order history will appear here</p>
-                        <a href="pricing.html" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Browse Services</a>
+                        <a href="/pricing/" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Browse Services</a>
                     </div>
                 `;
                 return;
             }
 
-            // Create orders table
+
             let html = `
                 <table class="orders-table">
                     <thead>
@@ -550,7 +550,7 @@ class ProfileManager {
                     month: 'short',
                     day: 'numeric'
                 });
-                
+
                 html += `
                     <tr>
                         <td><strong>${order.service_name}</strong></td>
@@ -582,9 +582,9 @@ class ProfileManager {
     async loadInvoices() {
         const container = document.getElementById('invoicesContainer');
         const invoiceCountEl = document.getElementById('invoiceCount');
-        
+
         try {
-            // Get all paid service requests with Stripe data
+
             const { data: paidRequests, error } = await supabase
                 .from('service_requests')
                 .select('*')
@@ -613,13 +613,13 @@ class ProfileManager {
             container.innerHTML = paidRequests.map(request => {
                 const packageDetails = request.package_details || {};
                 const oneTimeCost = packageDetails.oneTimeCost || request.total_amount || 0;
-                
-                // Calculate total monthly cost from all subscription components
+
+
                 const maintenanceCost = packageDetails.maintenance_plan?.monthly_cost || 0;
                 const workspaceCost = packageDetails.google_workspace?.monthly_cost || 0;
                 const monthlyCost = maintenanceCost + workspaceCost;
-                
-                // Debug logging
+
+
                 console.log('Invoice item:', {
                     serviceName: request.service_name,
                     packageDetails: request.package_details,
@@ -629,7 +629,7 @@ class ProfileManager {
                     monthlyCost,
                     hasSubscription: !!request.stripe_subscription_id
                 });
-                
+
                 return `
                 <div class="invoice-item" style="padding: 0; border: 1px solid rgba(212, 168, 83, 0.2); border-radius: 16px; margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.05) 0%, rgba(201, 151, 63, 0.05) 100%); overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header with gradient -->
@@ -661,7 +661,7 @@ class ProfileManager {
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Body -->
                     <div style="padding: 1.5rem;">
                         <!-- Renewal Info Section -->
@@ -673,7 +673,7 @@ class ProfileManager {
                                 </div>
                             </div>
                         ` : ''}
-                        
+
                         <!-- IDs Section -->
                         <div style="display: grid; grid-template-columns: ${request.stripe_subscription_id ? '1fr 1fr' : '1fr'}; gap: 1rem; margin-bottom: 1.25rem;">
                             <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
@@ -687,11 +687,11 @@ class ProfileManager {
                                 </div>
                             ` : ''}
                         </div>
-                        
+
                         <!-- Action Buttons -->
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <a href="https://dashboard.stripe.com/test/customers/${request.stripe_customer_id}" 
-                               target="_blank" 
+                            <a href="https://dashboard.stripe.com/subscriptions/${request.stripe_subscription_id}"
+                               target="_blank"
                                style="flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 4px rgba(212, 168, 83, 0.1);"
                                onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.25) 0%, rgba(201, 151, 63, 0.25) 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(212, 168, 83, 0.2)'"
                                onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.15) 0%, rgba(201, 151, 63, 0.15) 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(212, 168, 83, 0.1)'">
@@ -716,7 +716,7 @@ class ProfileManager {
                 </div>
             `}).join('');
 
-            // Load renewal information for each subscription
+
             for (const request of paidRequests) {
                 if (request.stripe_subscription_id) {
                     this.loadRenewalInfo(request.id, request.stripe_subscription_id);
@@ -789,7 +789,7 @@ class ProfileManager {
 
     async showCancelModal(requestId, subscriptionId) {
         try {
-            // Get subscription details
+
             const response = await fetch('/api/stripe/get-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -802,11 +802,11 @@ class ProfileManager {
             const renewalDate = new Date(subscription.current_period_end * 1000);
             const formattedDate = renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-            // Create modal
+
             const modal = document.createElement('div');
             modal.id = 'cancelModal';
             modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-            
+
             modal.innerHTML = `
                 <div style="background: #1a1a2e; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%;">
                     <h2 style="margin: 0 0 1rem 0; color: #ef4444;">⚠️ Cancel Subscription</h2>
@@ -822,7 +822,7 @@ class ProfileManager {
                         </label>
                     </div>
                     <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                        <button onclick="document.getElementById('cancelModal').remove()" 
+                        <button onclick="document.getElementById('cancelModal').remove()"
                                 style="padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem;">
                             Keep Subscription
                         </button>
@@ -837,10 +837,10 @@ class ProfileManager {
 
             document.body.appendChild(modal);
 
-            // Enable cancel button when checkbox is checked
+
             const checkbox = document.getElementById('confirmCancelCheckbox');
             const confirmBtn = document.getElementById('confirmCancelBtn');
-            
+
             checkbox.addEventListener('change', () => {
                 if (checkbox.checked) {
                     confirmBtn.disabled = false;
@@ -864,7 +864,7 @@ class ProfileManager {
 
         try {
             this.showNotification('Cancelling subscription...', 'info');
-            
+
             const response = await fetch('/api/stripe/cancel-subscription', {
                 method: 'POST',
                 headers: {
@@ -879,11 +879,11 @@ class ProfileManager {
             }
 
             const data = await response.json();
-            
-            // Update the service request status
+
+
             const { error: updateError } = await supabase
                 .from('service_requests')
-                .update({ 
+                .update({
                     status: 'cancelled',
                     stripe_subscription_id: null
                 })
@@ -892,7 +892,7 @@ class ProfileManager {
             if (updateError) throw updateError;
 
             this.showNotification('Subscription cancelled successfully', 'success');
-            await this.loadInvoices(); // Reload to remove the cancel button
+            await this.loadInvoices();
         } catch (error) {
             console.error('Error cancelling subscription:', error);
             this.showNotification('Failed to cancel subscription: ' + error.message, 'error');
@@ -901,7 +901,7 @@ class ProfileManager {
 
     async loadFiles() {
         const container = document.getElementById('filesContainer');
-        
+
         try {
             const { data: files, error } = await supabase
                 .from('customer_files')
@@ -922,9 +922,9 @@ class ProfileManager {
                 return;
             }
 
-            // Create file list
+
             let html = '';
-            
+
             files.forEach(file => {
                 const date = new Date(file.uploaded_at).toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -966,8 +966,8 @@ class ProfileManager {
 
     setupEventListeners() {
         console.log('Setting up event listeners...');
-        
-        // Tab switching
+
+
         const tabBtns = document.querySelectorAll('.tab-btn');
         console.log('Found tab buttons:', tabBtns.length);
         tabBtns.forEach(btn => {
@@ -979,7 +979,7 @@ class ProfileManager {
             });
         });
 
-        // Profile form submission
+
         const profileForm = document.getElementById('profileForm');
         if (profileForm) {
             console.log('Profile form found');
@@ -988,7 +988,7 @@ class ProfileManager {
             console.warn('Profile form not found');
         }
 
-        // Edit profile button
+
         const editBtn = document.getElementById('editProfileBtn');
         if (editBtn) {
             console.log('Edit button found');
@@ -1000,7 +1000,7 @@ class ProfileManager {
             console.warn('Edit button not found');
         }
 
-        // Cancel edit button
+
         const cancelBtn = document.getElementById('cancelEditBtn');
         if (cancelBtn) {
             console.log('Cancel button found');
@@ -1012,15 +1012,15 @@ class ProfileManager {
             console.warn('Cancel button not found');
         }
 
-        // Setup payment modal listeners
+
         this.setupPaymentListeners();
-        
-        // Quote code redemption
+
+
         const redeemQuoteBtn = document.getElementById('redeemQuoteBtn');
         if (redeemQuoteBtn) {
             redeemQuoteBtn.addEventListener('click', () => this.redeemQuoteCode());
         }
-        
+
         const quoteCodeInput = document.getElementById('quoteCodeInput');
         if (quoteCodeInput) {
             quoteCodeInput.addEventListener('keypress', (e) => {
@@ -1029,17 +1029,17 @@ class ProfileManager {
                     this.redeemQuoteCode();
                 }
             });
-            // Auto-uppercase
+
             quoteCodeInput.addEventListener('input', (e) => {
                 e.target.value = e.target.value.toUpperCase();
             });
         }
-        
+
         console.log('Event listeners setup complete');
     }
 
     switchTab(tabName) {
-        // Update button styles
+
         const tabBtns = document.querySelectorAll('.tab-btn');
         tabBtns.forEach(btn => {
             const isActive = btn.dataset.tab === tabName;
@@ -1056,12 +1056,12 @@ class ProfileManager {
             }
         });
 
-        // Show/hide tab content
+
         const tabContents = document.querySelectorAll('.tab-content');
         tabContents.forEach(content => {
             content.style.display = 'none';
         });
-        
+
         const activeTab = document.getElementById(`tab-${tabName}`);
         if (activeTab) {
             activeTab.style.display = 'block';
@@ -1070,7 +1070,7 @@ class ProfileManager {
 
     async updateStats() {
         try {
-            // Count active services
+
             const { data: services } = await supabase
                 .from('service_requests')
                 .select('id', { count: 'exact' })
@@ -1082,7 +1082,7 @@ class ProfileManager {
                 statServices.textContent = services?.length || 0;
             }
 
-            // Count invoices
+
             const { data: invoices } = await supabase
                 .from('service_requests')
                 .select('id', { count: 'exact' })
@@ -1095,7 +1095,7 @@ class ProfileManager {
                 statInvoices.textContent = invoices?.length || 0;
             }
 
-            // Count pending documents
+
             const { data: docs } = await supabase
                 .from('customer_files')
                 .select('id', { count: 'exact' })
@@ -1113,58 +1113,58 @@ class ProfileManager {
 
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
-        
+
         const fullNameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phone');
         const companyInput = document.getElementById('company');
         const editBtn = document.getElementById('editProfileBtn');
         const profileActions = document.getElementById('profileActions');
-        
+
         if (this.isEditMode) {
-            // Store original values
+
             this.originalValues = {
                 fullName: fullNameInput.value,
                 phone: phoneInput.value,
                 company: companyInput.value
             };
-            
-            // Enable inputs
+
+
             fullNameInput.disabled = false;
             phoneInput.disabled = false;
             companyInput.disabled = false;
-            
-            // Show save/cancel buttons, hide edit button
+
+
             editBtn.style.display = 'none';
             profileActions.style.display = 'flex';
-            
-            // Focus first input
+
+
             fullNameInput.focus();
         } else {
-            // Disable inputs
+
             fullNameInput.disabled = true;
             phoneInput.disabled = true;
             companyInput.disabled = true;
-            
-            // Hide save/cancel buttons, show edit button
+
+
             editBtn.style.display = 'inline-block';
             profileActions.style.display = 'none';
         }
     }
 
     cancelEdit() {
-        // Restore original values
+
         const fullNameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phone');
         const companyInput = document.getElementById('company');
-        
+
         if (this.originalValues) {
             fullNameInput.value = this.originalValues.fullName;
             phoneInput.value = this.originalValues.phone;
             companyInput.value = this.originalValues.company;
         }
-        
-        // Exit edit mode
-        this.isEditMode = true; // Set to true so toggleEditMode will turn it off
+
+
+        this.isEditMode = true;
         this.toggleEditMode();
     }
 
@@ -1176,7 +1176,7 @@ class ProfileManager {
         const company = document.getElementById('company').value;
 
         try {
-            // Update or insert profile in user_profiles table
+
             const { error } = await supabase
                 .from('user_profiles')
                 .upsert({
@@ -1189,7 +1189,7 @@ class ProfileManager {
 
             if (error) throw error;
 
-            // Also update the profiles table for admin page
+
             const { error: profilesError } = await supabase
                 .from('profiles')
                 .update({
@@ -1201,9 +1201,9 @@ class ProfileManager {
 
             if (profilesError) console.warn('Could not update profiles table:', profilesError);
 
-            // Update auth metadata
+
             const { error: authError } = await supabase.auth.updateUser({
-                data: { 
+                data: {
                     full_name: fullName,
                     business_name: company
                 }
@@ -1212,12 +1212,12 @@ class ProfileManager {
             if (authError) throw authError;
 
             this.showNotification('Profile updated successfully!', 'success');
-            
-            // Reload profile to update display
+
+
             await this.loadProfile();
-            
-            // Exit edit mode
-            this.isEditMode = true; // Set to true so toggleEditMode will turn it off
+
+
+            this.isEditMode = true;
             this.toggleEditMode();
 
         } catch (error) {
@@ -1234,7 +1234,7 @@ class ProfileManager {
 
             if (error) throw error;
 
-            // Create download link
+
             const url = URL.createObjectURL(data);
             const a = document.createElement('a');
             a.href = url;
@@ -1282,7 +1282,7 @@ class ProfileManager {
     showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         const bgColor = type === 'error' ? '#ef4444' : 'linear-gradient(135deg, var(--primary), var(--primary-dark))';
-        
+
         notification.style.cssText = `
             position: fixed;
             top: 2rem;
@@ -1296,7 +1296,7 @@ class ProfileManager {
             font-weight: 600;
             animation: slideIn 0.3s ease;
         `;
-        
+
         notification.textContent = message;
         document.body.appendChild(notification);
 
@@ -1312,7 +1312,7 @@ class ProfileManager {
             console.error('documentsContainer not found in DOM');
             return;
         }
-        
+
         try {
             console.log('Loading documents for user:', this.currentUser.id);
             const { data: documents, error } = await supabase
@@ -1327,14 +1327,14 @@ class ProfileManager {
             }
 
             console.log('Documents loaded:', documents);
-            
-            // Check for duplicate file IDs
+
+
             const fileIds = documents.map(d => d.id);
             const uniqueIds = [...new Set(fileIds)];
             if (fileIds.length !== uniqueIds.length) {
                 console.warn('DUPLICATE FILES DETECTED!', documents);
             }
-            
+
             this.renderDocuments(documents || []);
         } catch (error) {
             console.error('Error loading documents:', error);
@@ -1350,7 +1350,7 @@ class ProfileManager {
     renderDocuments(documents) {
         const container = document.getElementById('documentsContainer');
         const documentCountEl = document.getElementById('documentCount');
-        
+
         if (!documents || documents.length === 0) {
             container.innerHTML = `
                 <div class="no-documents">
@@ -1366,13 +1366,13 @@ class ProfileManager {
             documentCountEl.textContent = `${documents.length} Document${documents.length !== 1 ? 's' : ''}`;
         }
 
-        // Separate unsigned and signed documents
+
         const unsigned = documents.filter(doc => doc.status === 'pending');
         const signed = documents.filter(doc => doc.status === 'signed');
 
         let html = '<div style="display: grid; gap: 2rem;">';
 
-        // Unsigned documents section
+
         if (unsigned.length > 0) {
             html += `
                 <div>
@@ -1400,7 +1400,7 @@ class ProfileManager {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Body -->
                                 <div style="padding: 1.5rem;">
                                     ${doc.description ? `
@@ -1409,7 +1409,7 @@ class ProfileManager {
                                             <div style="opacity: 0.9;">${this.escapeHtml(doc.description)}</div>
                                         </div>
                                     ` : ''}
-                                    
+
                                     <!-- Actions -->
                                     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
                                         <button onclick="profileManager.viewDocument('${doc.file_url}')" style="flex: 1; min-width: 140px; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%); color: #e5bc6a; border: 1px solid rgba(212, 168, 83, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.2) 0%, rgba(201, 151, 63, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 168, 83, 0.1) 0%, rgba(201, 151, 63, 0.1) 100%)'; this.style.transform='translateY(0)'">
@@ -1427,7 +1427,7 @@ class ProfileManager {
             `;
         }
 
-        // Signed documents section
+
         if (signed.length > 0) {
             html += `
                 <div>
@@ -1457,7 +1457,7 @@ class ProfileManager {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Body -->
                                 <div style="padding: 1.5rem;">
                                     ${doc.description ? `
@@ -1466,7 +1466,7 @@ class ProfileManager {
                                             <div style="opacity: 0.9;">${this.escapeHtml(doc.description)}</div>
                                         </div>
                                     ` : ''}
-                                    
+
                                     <!-- Action -->
                                     <button onclick="profileManager.viewDocument('${doc.file_url}')" style="width: 100%; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)'; this.style.transform='translateY(0)'">
                                         👁️ View Document
@@ -1485,13 +1485,13 @@ class ProfileManager {
     }
 
     viewDocument(fileUrl) {
-        // Check if this is a proxy URL format (/files/encodedUrl)
+
         if (fileUrl && fileUrl.startsWith('/files/')) {
-            // Convert to full URL using production domain
-            const fullUrl = `https://ryanswebservices.com${fileUrl}`;
+
+            const fullUrl = `https://ryanswebservices.com/.netlify/functions/file-proxy?path=${encodeURIComponent(fileUrl)}`;
             window.open(fullUrl, '_blank');
         } else {
-            // Direct URL - open as is
+
             window.open(fileUrl, '_blank');
         }
     }
@@ -1499,13 +1499,13 @@ class ProfileManager {
     async signDocument(documentId) {
         console.log('🔍 signDocument called with ID:', documentId);
         console.log('🔍 profileManager instance:', this);
-        
-        // Store the document ID and get document details
+
+
         this.currentDocumentToSign = documentId;
         const fileDocument = await this.getDocumentById(documentId);
-        
+
         console.log('🔍 Document fetched:', fileDocument);
-        
+
         if (!fileDocument) {
             this.showNotification('Document not found', 'error');
             return;
@@ -1514,10 +1514,10 @@ class ProfileManager {
         this.currentDocumentUrl = fileDocument.file_url;
         this.hasViewedDocument = false;
 
-        // Show the signing modal
+
         const modal = document.getElementById('signContractModal');
         console.log('🔍 Modal element:', modal);
-        
+
         if (modal) {
             modal.style.display = 'flex';
             this.setupSigningModal();
@@ -1551,7 +1551,7 @@ class ProfileManager {
         const closeBtn = document.getElementById('closeSignModalBtn');
         const viewStatus = document.getElementById('viewStatus');
 
-        // Reset state
+
         this.hasViewedDocument = false;
         agreeCheckbox.checked = false;
         agreeCheckbox.disabled = true;
@@ -1560,12 +1560,12 @@ class ProfileManager {
         confirmBtn.style.cursor = 'not-allowed';
         viewStatus.innerHTML = '<span style="display: inline-block;">📋 You must view the document before signing</span>';
 
-        // View document button
+
         viewBtn.onclick = () => {
             window.open(this.currentDocumentUrl, '_blank');
             this.hasViewedDocument = true;
-            
-            // Enable checkbox after viewing with animation
+
+
             agreeCheckbox.disabled = false;
             viewStatus.innerHTML = '<span style="display: inline-block; color: #10b981;">✅ Document viewed - you may now proceed</span>';
             viewStatus.style.background = 'rgba(16, 185, 129, 0.1)';
@@ -1573,7 +1573,7 @@ class ProfileManager {
             viewBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
         };
 
-        // Agreement checkbox
+
         agreeCheckbox.onchange = (e) => {
             if (e.target.checked && this.hasViewedDocument) {
                 confirmBtn.disabled = false;
@@ -1586,7 +1586,7 @@ class ProfileManager {
             }
         };
 
-        // Confirm sign button
+
         confirmBtn.onclick = async () => {
             if (!this.hasViewedDocument || !agreeCheckbox.checked) {
                 this.showNotification('Please view the document and agree to the terms before signing.', 'error');
@@ -1595,7 +1595,7 @@ class ProfileManager {
             await this.confirmSignDocument();
         };
 
-        // Cancel and close buttons
+
         const closeModal = () => this.closeSigningModal();
         cancelBtn.onclick = closeModal;
         closeBtn.onclick = closeModal;
@@ -1643,36 +1643,36 @@ class ProfileManager {
             onetimeCost,
             monthlyCost
         };
-        
-        // Populate payment details
+
+
         document.getElementById('paymentServiceName').textContent = serviceName;
         document.getElementById('paymentOneTime').textContent = '$' + onetimeCost.toFixed(2);
         document.getElementById('paymentMonthly').textContent = '$' + monthlyCost.toFixed(2) + '/month';
         document.getElementById('recurringAmount').textContent = '$' + monthlyCost.toFixed(2) + '/month';
-        
-        // Show modal
+
+
         const modal = document.getElementById('paymentModal');
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        
-        // Initialize Stripe payment
+
+
         this.initializeStripePayment(onetimeCost, monthlyCost, serviceName);
     }
 
     async initializeStripePayment(onetimeCost, monthlyCost, serviceName) {
         try {
-            // Initialize Stripe handler if not already done
+
             if (!this.stripeHandler) {
                 this.stripeHandler = new StripePaymentHandler();
                 await this.stripeHandler.init();
             }
 
-            // Get user profile data
+
             const { data: profile } = await supabase.auth.getUser();
             const email = profile.user.email;
             const name = profile.user.user_metadata?.full_name || email;
 
-            // Create payment intent and subscription
+
             const paymentData = await this.stripeHandler.processPayment(
                 email,
                 name,
@@ -1685,10 +1685,10 @@ class ProfileManager {
                 }
             );
 
-            // Create Stripe payment UI
+
             await this.stripeHandler.createPaymentUI(paymentData.clientSecret);
 
-            // Store price ID for subscription
+
             this.currentPriceId = paymentData.priceId;
             this.currentCustomerId = paymentData.customerId;
 
@@ -1703,13 +1703,13 @@ class ProfileManager {
         const modal = document.getElementById('paymentModal');
         modal.style.display = 'none';
         document.body.style.overflow = '';
-        
-        // Destroy Stripe elements
+
+
         if (this.stripeHandler) {
             this.stripeHandler.destroy();
         }
-        
-        // Reset consent checkbox
+
+
         const consentCheckbox = document.getElementById('recurringConsent');
         if (consentCheckbox) {
             consentCheckbox.checked = false;
@@ -1717,19 +1717,19 @@ class ProfileManager {
     }
 
     setupPaymentListeners() {
-        // Close button
+
         const closeBtn = document.getElementById('closePaymentModalBtn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => this.closePaymentModal());
         }
 
-        // Cancel button
+
         const cancelBtn = document.getElementById('cancelPaymentBtn');
         if (cancelBtn) {
             cancelBtn.addEventListener('click', () => this.closePaymentModal());
         }
 
-        // Confirm payment button
+
         const confirmBtn = document.getElementById('confirmPaymentBtn');
         if (confirmBtn) {
             confirmBtn.addEventListener('click', (e) => this.handleStripePayment(e));
@@ -1739,7 +1739,7 @@ class ProfileManager {
     async handleStripePayment(e) {
         e.preventDefault();
 
-        // Check consent checkbox
+
         const consentCheckbox = document.getElementById('recurringConsent');
         if (!consentCheckbox.checked) {
             this.showNotification('Please agree to recurring payments', 'error');
@@ -1748,29 +1748,29 @@ class ProfileManager {
 
         const confirmBtn = document.getElementById('confirmPaymentBtn');
         const originalText = confirmBtn.innerHTML;
-        
+
         try {
-            // Disable button and show loading
+
             confirmBtn.disabled = true;
             confirmBtn.innerHTML = '⏳ Processing Payment...';
 
-            // Save data to localStorage before redirect
+
             localStorage.setItem('pending_payment_request_id', this.currentRequestToPay);
             localStorage.setItem('pending_customer_id', this.currentCustomerId);
             localStorage.setItem('pending_price_id', this.currentPriceId);
 
-            // Confirm payment with Stripe (this will redirect to Stripe's payment page)
-            // The rest of the flow is handled by handleStripeReturn() after redirect
+
+
             await this.stripeHandler.confirmPayment();
 
         } catch (error) {
             console.error('Error processing payment:', error);
-            
-            // Re-enable button on error
+
+
             confirmBtn.disabled = false;
             confirmBtn.innerHTML = originalText;
-            
-            // Check if error is from Stripe validation
+
+
             if (error.type === 'validation_error') {
                 this.showNotification('Please complete all payment fields', 'error');
             } else {
@@ -1790,69 +1790,69 @@ class ProfileManager {
         return text.replace(/[&<>"']/g, m => map[m]);
     }
 
-    // ==================== Quote Code Redemption ====================
-    
+
+
     async redeemQuoteCode() {
         const input = document.getElementById('quoteCodeInput');
         const resultDiv = document.getElementById('quoteRedemptionResult');
         const btn = document.getElementById('redeemQuoteBtn');
-        
+
         if (!input || !resultDiv) return;
-        
+
         const code = input.value.trim().toUpperCase();
-        
+
         if (!code) {
             this.showQuoteResult('error', 'Please enter a quote code');
             return;
         }
-        
-        // Validate format
+
+
         if (!/^RWS-[A-Z0-9]{8}$/.test(code)) {
             this.showQuoteResult('error', 'Invalid code format. Codes look like: RWS-XXXXXXXX');
             return;
         }
-        
+
         const originalBtnText = btn.innerHTML;
         btn.innerHTML = '⏳ Checking...';
         btn.disabled = true;
-        
+
         try {
-            // Look up the quote
+
             const { data: quote, error } = await supabase
                 .from('custom_quotes')
                 .select('*')
                 .eq('code', code)
                 .single();
-            
+
             if (error || !quote) {
                 this.showQuoteResult('error', 'Quote code not found. Please check and try again.');
                 return;
             }
-            
-            // Check if quote is valid
+
+
             if (quote.status === 'cancelled') {
                 this.showQuoteResult('error', 'This quote has been cancelled.');
                 return;
             }
-            
+
             if (quote.status === 'redeemed') {
                 this.showQuoteResult('error', 'This quote has already been redeemed.');
                 return;
             }
-            
+
             if (quote.valid_until && new Date(quote.valid_until) < new Date()) {
                 this.showQuoteResult('error', 'This quote has expired.');
                 return;
             }
-            
+
             if (quote.status !== 'pending' && quote.status !== 'viewed') {
                 this.showQuoteResult('error', 'This quote is not available.');
                 return;
             }
-            
-            // Show quote details for confirmation
+
+
             this.showQuoteDetails(quote);
-            
+
         } catch (error) {
             console.error('Error looking up quote:', error);
             this.showQuoteResult('error', 'Error looking up quote. Please try again.');
@@ -1861,11 +1861,11 @@ class ProfileManager {
             btn.disabled = false;
         }
     }
-    
+
     showQuoteResult(type, message) {
         const resultDiv = document.getElementById('quoteRedemptionResult');
         if (!resultDiv) return;
-        
+
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = `
             <div style="padding: 1rem; border-radius: 10px; background: ${type === 'error' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(34, 197, 94, 0.15)'}; border: 1px solid ${type === 'error' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}; color: ${type === 'error' ? '#ef4444' : '#22c55e'};">
@@ -1873,22 +1873,22 @@ class ProfileManager {
             </div>
         `;
     }
-    
+
     showQuoteDetails(quote) {
         const resultDiv = document.getElementById('quoteRedemptionResult');
         if (!resultDiv) return;
-        
+
         const pricing = [];
         if (quote.upfront_cost) pricing.push(`<div style="display: flex; justify-content: space-between;"><span>Upfront Cost:</span><strong>$${parseFloat(quote.upfront_cost).toLocaleString()}</strong></div>`);
         if (quote.monthly_fee) pricing.push(`<div style="display: flex; justify-content: space-between;"><span>Monthly Maintenance:</span><strong>$${parseFloat(quote.monthly_fee).toLocaleString()}/mo</strong></div>`);
-        
+
         const serviceTypeLabels = {
             'website': 'Website Design',
             'maintenance': 'Maintenance Plan',
             'google_workspace': 'Google Workspace',
             'custom': 'Custom Project'
         };
-        
+
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = `
             <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.5rem;">
@@ -1896,38 +1896,38 @@ class ProfileManager {
                     <span style="font-size: 1.5rem;">✅</span>
                     <h3 style="margin: 0; color: #22c55e;">Quote Found!</h3>
                 </div>
-                
+
                 ${quote.service_type ? `<div style="margin-bottom: 0.75rem;"><span style="background: rgba(212, 168, 83, 0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">${serviceTypeLabels[quote.service_type] || quote.service_type}</span></div>` : ''}
-                
+
                 ${quote.service_description ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;">${this.escapeHtml(quote.service_description)}</p>` : ''}
-                
+
                 ${quote.deliverables ? `
                     <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                         <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">📦 What's Included</h4>
                         <p style="margin: 0; color: var(--text-secondary); white-space: pre-line;">${this.escapeHtml(quote.deliverables)}</p>
                     </div>
                 ` : ''}
-                
+
                 ${quote.estimated_timeline ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong>Timeline:</strong> ${this.escapeHtml(quote.estimated_timeline)}</p>` : ''}
-                
+
                 <div style="background: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                     <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Pricing</h4>
                     ${pricing.length > 0 ? pricing.join('') : '<span style="color: var(--text-secondary);">Contact for pricing details</span>'}
                 </div>
-                
+
                 ${quote.client_notes ? `
                     <div style="background: rgba(212, 168, 83, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                         <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem;">📝 Notes from Ryan</h4>
                         <p style="margin: 0; color: var(--text-secondary);">${this.escapeHtml(quote.client_notes)}</p>
                     </div>
                 ` : ''}
-                
+
                 ${quote.requires_contract ? `
                     <div style="background: rgba(251, 191, 36, 0.1); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #fbbf24;">
                         <span>📋</span> A contract will need to be signed before work begins
                     </div>
                 ` : ''}
-                
+
                 <div style="display: flex; gap: 1rem; margin-top: 1.25rem;">
                     <button onclick="profileManager.confirmQuoteRedemption('${quote.id}')" class="btn btn-primary" style="flex: 1; padding: 0.875rem;">
                         ✨ Accept & Start Project
@@ -1939,31 +1939,31 @@ class ProfileManager {
             </div>
         `;
     }
-    
+
     async confirmQuoteRedemption(quoteId) {
         const resultDiv = document.getElementById('quoteRedemptionResult');
-        
+
         try {
-            // Get the quote details again
+
             const { data: quote, error: fetchError } = await supabase
                 .from('custom_quotes')
                 .select('*')
                 .eq('id', quoteId)
                 .single();
-            
+
             if (fetchError || !quote) {
                 this.showQuoteResult('error', 'Quote not found');
                 return;
             }
-            
-            // Create a service request from the quote
+
+
             const serviceTypeLabels = {
                 'website': 'Website Design',
                 'maintenance': 'Maintenance Plan',
                 'google_workspace': 'Google Workspace',
                 'custom': 'Custom Project'
             };
-            
+
             const { data: serviceRequest, error: requestError } = await supabase
                 .from('service_requests')
                 .insert({
@@ -1985,21 +1985,21 @@ class ProfileManager {
                 })
                 .select()
                 .single();
-            
+
             if (requestError) throw requestError;
-            
-            // Update quote status and link to service request
+
+
             await supabase
                 .from('custom_quotes')
-                .update({ 
+                .update({
                     status: 'redeemed',
                     redeemed_by: this.currentUser.id,
                     redeemed_at: new Date().toISOString(),
                     service_request_id: serviceRequest?.id
                 })
                 .eq('id', quoteId);
-            
-            // Show success and refresh
+
+
             resultDiv.innerHTML = `
                 <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center;">
                     <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🎉</span>
@@ -2011,11 +2011,11 @@ class ProfileManager {
                     </button>
                 </div>
             `;
-            
-            // Refresh the services list
+
+
             await this.loadRequests();
             await this.updateStats();
-            
+
         } catch (error) {
             console.error('Error redeeming quote:', error);
             this.showQuoteResult('error', 'Error redeeming quote: ' + error.message);
@@ -2023,12 +2023,12 @@ class ProfileManager {
     }
 }
 
-// Initialize profile manager when page loads
+
 let profileManager;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Initializing ProfileManager...');
     profileManager = new ProfileManager();
-    window.profileManager = profileManager; // Make explicitly global
+    window.profileManager = profileManager;
     console.log('✅ ProfileManager initialized:', profileManager);
     console.log('✅ window.profileManager:', window.profileManager);
 });

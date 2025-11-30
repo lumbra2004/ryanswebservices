@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4S74TXQDB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S4S74TXQDB');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>My Account | Ryans Web Services</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        nav {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a { color: #666; text-decoration: none; font-size: 0.875rem; }
+        nav a:hover { color: #333; }
+        nav .logo { font-weight: 600; color: #333; }
+        nav .links { display: flex; gap: 1.5rem; align-items: center; }
+        nav .signout { color: #dc3545; }
+
+        main {
+            max-width: 480px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info { text-align: center; }
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #d4a853;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 0.75rem;
+        }
+        .profile-info h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .profile-info p { color: #666; font-size: 0.875rem; }
+
+        .section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #999;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.875rem;
+        }
+        .field:last-child { border-bottom: none; }
+        .field .label { color: #666; }
+        .field .value { color: #333; }
+        .field .value.edit { color: #d4a853; cursor: pointer; }
+        .field .value.edit:hover { text-decoration: underline; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+        .btn:last-child { margin-bottom: 0; }
+        .btn-primary { background: #d4a853; color: #fff; }
+        .btn-primary:hover { background: #c9973f; }
+        .btn-outline { background: #fff; color: #333; border: 1px solid #ddd; }
+        .btn-outline:hover { background: #f8f9fa; }
+        .btn-danger { background: #fff; color: #dc3545; border: 1px solid #f5c6cb; }
+        .btn-danger:hover { background: #fff5f5; }
+
+        .empty { text-align: center; padding: 1rem; color: #999; font-size: 0.875rem; }
+
+        .project {
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .project:last-child { margin-bottom: 0; }
+        .project-top { display: flex; justify-content: space-between; align-items: center; }
+        .project-name { font-weight: 500; }
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-done { background: #d4edda; color: #155724; }
+        .project-date { color: #999; font-size: 0.75rem; margin-top: 0.25rem; }
+
+        @media (max-width: 480px) {
+            main { margin: 1rem auto; }
+            nav .links { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">Ryans Web Services</a>
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="/pricing/">Pricing</a>
+            <a href="#" class="signout" id="logoutBtn">Sign Out</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="card profile-info">
+            <div class="avatar" id="avatar">?</div>
+            <h1 id="userName">Loading...</h1>
+            <p id="userEmail">Loading...</p>
+        </div>
+
+        <div class="card">
+            <div class="section-label">Account Details</div>
+            <div class="field">
+                <span class="label">Name</span>
+                <span class="value edit" id="displayName" onclick="editProfile()">—</span>
+            </div>
+            <div class="field">
+                <span class="label">Email</span>
+                <span class="value" id="displayEmail">—</span>
+            </div>
+            <div class="field">
+                <span class="label">Phone</span>
+                <span class="value edit" id="displayPhone" onclick="editProfile()">Add</span>
+            </div>
+            <div class="field">
+                <span class="label">Company</span>
+                <span class="value edit" id="displayCompany" onclick="editProfile()">Add</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-label">My Projects</div>
+            <div id="projectsContainer">
+                <div class="empty">No projects yet</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <a href="/pricing/" class="btn btn-primary">Start a Project</a>
+            <a href="/messages/" class="btn btn-outline">Send Message</a>
+            <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/config.js"></script>
+    <script>
+        let currentUser = null;
+        let userProfile = null;
+
+        async function init() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (!session) {
+                window.location.href = '/login/';
+                return;
+            }
+
+            currentUser = session.user;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('displayEmail').textContent = currentUser.email;
+            document.getElementById('avatar').textContent = currentUser.email.charAt(0).toUpperCase();
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (profile) {
+                userProfile = profile;
+                document.getElementById('userName').textContent = profile.full_name || currentUser.email.split('@')[0];
+                document.getElementById('displayName').textContent = profile.full_name || '—';
+                document.getElementById('displayPhone').textContent = profile.phone || 'Add';
+                document.getElementById('displayCompany').textContent = profile.business_name || 'Add';
+            } else {
+                document.getElementById('userName').textContent = currentUser.email.split('@')[0];
+            }
+
+            loadProjects();
+        }
+
+        async function loadProjects() {
+            const { data: requests } = await supabase
+                .from('service_requests')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false })
+                .limit(3);
+
+            const container = document.getElementById('projectsContainer');
+
+            if (requests && requests.length > 0) {
+                container.innerHTML = requests.map(req => {
+                    const isDone = req.status === 'completed';
+                    return '<div class="project"><div class="project-top"><span class="project-name">' + 
+                        (req.service_name || 'Website Project') + '</span><span class="badge ' + 
+                        (isDone ? 'badge-done' : 'badge-pending') + '">' + 
+                        req.status.charAt(0).toUpperCase() + req.status.slice(1) + 
+                        '</span></div><div class="project-date">' + 
+                        new Date(req.created_at).toLocaleDateString() + '</div></div>';
+                }).join('');
+            }
+        }
+
+        function editProfile() {
+            const name = prompt('Enter your name:', userProfile?.full_name || '');
+            if (name === null) return;
+            
+            const phone = prompt('Enter your phone:', userProfile?.phone || '');
+            if (phone === null) return;
+            
+            const company = prompt('Enter your company:', userProfile?.business_name || '');
+            if (company === null) return;
+
+            saveProfile(name, phone, company);
+        }
+
+        async function saveProfile(name, phone, company) {
+            const { error } = await supabase
+                .from('profiles')
+                .upsert({
+                    id: currentUser.id,
+                    full_name: name || null,
+                    phone: phone || null,
+                    business_name: company || null,
+                    updated_at: new Date().toISOString()
+                });
+
+            if (!error) {
+                document.getElementById('userName').textContent = name || currentUser.email.split('@')[0];
+                document.getElementById('displayName').textContent = name || '—';
+                document.getElementById('displayPhone').textContent = phone || 'Add';
+                document.getElementById('displayCompany').textContent = company || 'Add';
+                userProfile = { ...userProfile, full_name: name, phone, business_name: company };
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await supabase.auth.signOut();
+            window.location.href = '/';
+        });
+
+        document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return;
+            if (!confirm('This will permanently delete all your data. Continue?')) return;
+            alert('Please contact support to delete your account.');
+        });
+
+        init();
+    </script>
+</body>
+</html>

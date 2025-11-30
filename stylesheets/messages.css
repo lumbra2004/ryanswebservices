@@ -1,10 +1,8 @@
-/* Messages System Styles */
 
-/* ============================================
-   FLOATING MESSAGE BUTTON & CHAT WIDGET
-   ============================================ */
 
-/* Message Button (replaces settings) */
+
+
+
 .message-button {
     position: fixed;
     bottom: 1.5rem;
@@ -58,7 +56,7 @@
     50% { transform: scale(1.1); }
 }
 
-/* Chat Widget */
+
 .chat-widget {
     position: fixed;
     bottom: 5rem;
@@ -87,7 +85,7 @@
     transform: translateY(0) scale(1);
 }
 
-/* Chat content container */
+
 #chatContent {
     display: none;
     flex-direction: column;
@@ -101,7 +99,7 @@
     overflow: hidden !important;
 }
 
-/* Chat Header */
+
 .chat-widget-header {
     display: flex;
     align-items: center;
@@ -170,7 +168,7 @@
     color: var(--primary);
 }
 
-/* Chat Messages Area */
+
 .chat-widget-messages {
     flex: 1 1 auto;
     overflow: hidden auto;
@@ -197,7 +195,7 @@
     border-radius: 3px;
 }
 
-/* Chat Message Bubbles */
+
 .chat-message {
     display: flex;
     flex-direction: column;
@@ -243,7 +241,7 @@
     text-align: right;
 }
 
-/* Message Status Indicators */
+
 .chat-message-meta {
     display: flex;
     align-items: center;
@@ -290,7 +288,7 @@
     object-fit: contain;
 }
 
-/* Sending state animation */
+
 .chat-message.sending .chat-message-content {
     opacity: 0.7;
 }
@@ -299,7 +297,7 @@
     border: 1px solid #ef4444;
 }
 
-/* Chat Empty State */
+
 .chat-empty-state {
     flex: 1;
     display: flex;
@@ -328,7 +326,7 @@
     font-size: 0.9rem;
 }
 
-/* Login Prompt in Chat */
+
 .chat-login-prompt {
     flex: 1;
     display: flex;
@@ -371,7 +369,7 @@
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
-/* Chat Input Area */
+
 .chat-widget-input {
     display: flex;
     align-items: center;
@@ -432,7 +430,7 @@
     fill: #1a1f2e;
 }
 
-/* Typing Indicator */
+
 .typing-indicator {
     display: flex;
     align-items: center;
@@ -461,9 +459,7 @@
     40% { transform: scale(1); opacity: 1; }
 }
 
-/* ============================================
-   MESSAGES PAGE STYLES
-   ============================================ */
+
 
 .messages-page {
     min-height: 100vh;
@@ -505,7 +501,7 @@
     margin: 0;
 }
 
-/* Messages Layout */
+
 .messages-layout {
     display: grid;
     grid-template-columns: 350px 1fr;
@@ -514,7 +510,7 @@
     min-height: 500px;
 }
 
-/* Conversations List */
+
 .conversations-panel {
     background: rgba(26, 31, 46, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
@@ -580,7 +576,7 @@
     border-radius: 3px;
 }
 
-/* Conversation Item */
+
 .conversation-item {
     display: flex;
     align-items: center;
@@ -692,7 +688,7 @@
     flex-shrink: 0;
 }
 
-/* Chat Panel */
+
 .chat-panel {
     background: rgba(26, 31, 46, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
@@ -767,7 +763,7 @@
     color: var(--text-primary);
 }
 
-/* Chat Messages */
+
 .chat-panel-messages {
     flex: 1;
     overflow-y: auto;
@@ -790,7 +786,7 @@
     border-radius: 3px;
 }
 
-/* Message Bubble (Page version) */
+
 .message-bubble {
     display: flex;
     flex-direction: column;
@@ -846,7 +842,7 @@
     color: #10b981;
 }
 
-/* Date Divider */
+
 .message-date-divider {
     display: flex;
     align-items: center;
@@ -868,7 +864,7 @@
     white-space: nowrap;
 }
 
-/* Chat Input (Page version) */
+
 .chat-panel-input {
     display: flex;
     align-items: center;
@@ -924,7 +920,7 @@
     transform: none;
 }
 
-/* Empty/No Conversation State */
+
 .no-conversation-selected {
     flex: 1;
     display: flex;
@@ -953,7 +949,7 @@
     max-width: 300px;
 }
 
-/* Empty Messages State */
+
 .no-messages {
     flex: 1;
     display: flex;
@@ -981,20 +977,18 @@
     font-size: 0.9rem;
 }
 
-/* ============================================
-   RESPONSIVE STYLES
-   ============================================ */
+
 
 @media (max-width: 992px) {
     .messages-layout {
         grid-template-columns: 1fr;
         height: auto;
     }
-    
+
     .conversations-panel {
         height: 300px;
     }
-    
+
     .chat-panel {
         height: calc(100vh - 26rem);
         min-height: 400px;
@@ -1005,8 +999,8 @@
     .messages-container {
         padding: 7rem 1rem 2rem;
     }
-    
-    /* Mobile Chat Widget - Full Screen Style */
+
+
     .chat-widget {
         position: fixed;
         right: 0.75rem;
@@ -1018,7 +1012,7 @@
         min-height: 300px;
         border-radius: 16px;
     }
-    
+
     .chat-widget-messages {
         flex: 1;
         overflow-y: auto;
@@ -1027,54 +1021,54 @@
         padding: 0.75rem;
         min-height: 0;
     }
-    
+
     .chat-widget-header {
         padding: 0.875rem 1rem;
         flex-shrink: 0;
     }
-    
+
     .chat-widget-input {
         flex-shrink: 0;
         padding: 0.75rem;
         gap: 0.5rem;
     }
-    
+
     .chat-widget-input input {
         padding: 0.625rem 0.875rem;
-        font-size: 16px; /* Prevents iOS zoom on focus */
+        font-size: 16px;
     }
-    
+
     .chat-send-btn {
         width: 40px;
         height: 40px;
         flex-shrink: 0;
     }
-    
+
     .message-button {
         right: 1rem;
         bottom: 1rem;
         width: 50px;
         height: 50px;
     }
-    
+
     .message-bubble {
         max-width: 85%;
     }
-    
+
     .chat-panel-input {
         padding: 1rem;
     }
-    
+
     .chat-panel-send-btn {
         padding: 0.875rem 1rem;
     }
-    
+
     .chat-panel-send-btn span {
         display: none;
     }
 }
 
-/* Extra small screens */
+
 @media (max-width: 400px) {
     .chat-widget {
         right: 0.5rem;
@@ -1083,26 +1077,26 @@
         max-height: 65vh;
         border-radius: 12px;
     }
-    
+
     .chat-widget-header {
         padding: 0.75rem;
     }
-    
+
     .chat-widget-avatar {
         width: 32px;
         height: 32px;
         font-size: 0.85rem;
     }
-    
+
     .chat-widget-header-text h4 {
         font-size: 0.9rem;
     }
-    
+
     .chat-message-content {
         padding: 0.625rem 0.875rem;
         font-size: 0.9rem;
     }
-    
+
     .message-button {
         width: 46px;
         height: 46px;
@@ -1111,9 +1105,7 @@
     }
 }
 
-/* ============================================
-   ADMIN MESSAGING STYLES
-   ============================================ */
+
 
 .admin-messages-grid {
     display: grid;
@@ -1356,11 +1348,11 @@
         grid-template-columns: 1fr;
         height: auto;
     }
-    
+
     .admin-conversations-list {
         height: 250px;
     }
-    
+
     .admin-chat-panel {
         height: 400px;
     }

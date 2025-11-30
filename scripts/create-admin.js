@@ -32,7 +32,7 @@ async function main() {
   try {
     await client.connect();
 
-    // Ensure pgcrypto available and table exists
+
     await client.query("CREATE EXTENSION IF NOT EXISTS pgcrypto;");
     await client.query(`CREATE TABLE IF NOT EXISTS admins (
       username TEXT PRIMARY KEY,

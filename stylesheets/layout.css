@@ -1,10 +1,6 @@
-/* ==========================================================================
-   LAYOUT - Header, Navigation, Footer, Grids
-   ========================================================================== */
 
-/* ========================================================================
-   HEADER & NAVIGATION
-   ======================================================================== */
+
+
 
 .header {
     position: fixed;
@@ -35,7 +31,7 @@
     padding: 0 var(--space-6);
 }
 
-/* Logo */
+
 .logo {
     display: flex;
     align-items: center;
@@ -64,7 +60,7 @@
     font-size: var(--text-sm);
 }
 
-/* Navigation */
+
 .nav {
     display: flex;
     align-items: center;
@@ -94,14 +90,14 @@
     background: rgba(212, 168, 83, 0.1);
 }
 
-/* Header Actions */
+
 .header-actions {
     display: flex;
     align-items: center;
     gap: var(--space-3);
 }
 
-/* Mobile Menu Toggle */
+
 .mobile-menu-toggle {
     display: none;
     flex-direction: column;
@@ -138,9 +134,7 @@
     transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ========================================================================
-   MOBILE NAVIGATION
-   ======================================================================== */
+
 
 @media (max-width: 768px) {
     .nav {
@@ -177,7 +171,7 @@
         display: flex;
     }
 
-    /* Mobile menu overlay */
+
     body.menu-open::before {
         content: '';
         position: fixed;
@@ -205,9 +199,7 @@
     }
 }
 
-/* ========================================================================
-   HERO SECTION
-   ======================================================================== */
+
 
 .hero {
     position: relative;
@@ -220,7 +212,7 @@
     overflow: hidden;
 }
 
-/* Hero Background Effects */
+
 .hero::before {
     content: '';
     position: absolute;
@@ -229,19 +221,19 @@
     width: 200%;
     height: 100%;
     transform: translateX(-50%);
-    background: 
+    background:
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 168, 83, 0.15), transparent),
         radial-gradient(ellipse 60% 40% at 80% 60%, rgba(245, 158, 11, 0.08), transparent);
     pointer-events: none;
     z-index: -1;
 }
 
-/* Subtle grid pattern */
+
 .hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: 
+    background-image:
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 60px 60px;
@@ -304,7 +296,7 @@
     justify-content: center;
 }
 
-/* Texas Badge - positioned separately */
+
 .texas-badge {
     position: absolute;
     top: calc(var(--header-height) + var(--space-6));
@@ -354,9 +346,7 @@
     }
 }
 
-/* ========================================================================
-   CONTENT SECTIONS
-   ======================================================================== */
+
 
 .section {
     padding: var(--space-20) var(--space-6);
@@ -367,9 +357,7 @@
     background: var(--bg-surface);
 }
 
-/* ========================================================================
-   GRID LAYOUTS
-   ======================================================================== */
+
 
 .grid {
     display: grid;
@@ -406,9 +394,7 @@
     }
 }
 
-/* ========================================================================
-   FOOTER
-   ======================================================================== */
+
 
 .footer {
     background: var(--bg-surface);

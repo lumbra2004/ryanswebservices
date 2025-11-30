@@ -1,10 +1,10 @@
 exports.handler = async function(event) {
   try {
-    // Get the encoded URL from the path (after /files/)
+
     const path = event.path || event.rawUrl || '';
     const match = path.match(/\/files\/(.+)/);
     let encodedUrl = match ? match[1] : (event.queryStringParameters?.url || '');
-    
+
     if (!encodedUrl) {
       return {
         statusCode: 400,
@@ -20,7 +20,7 @@ exports.handler = async function(event) {
       };
     }
     const headers = {};
-    // Copy content headers
+
     for (const [key, value] of response.headers.entries()) {
       if (['content-type', 'content-disposition', 'content-length', 'cache-control'].includes(key.toLowerCase())) {
         headers[key] = value;

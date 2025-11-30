@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4S74TXQDB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S4S74TXQDB');
+        gtag('config', 'AW-17751846529');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="canonical" href="https://ryanswebservices.com/">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Pricing | Ryans Web Services, LLC</title>
+    <meta name="description" content="Transparent pricing for professional web design services. Choose from Starter, Professional, or Premium packages.">
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+
+    <link rel="stylesheet" href="/stylesheets/main.css">
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pricing.css">
+</head>
+<body>
+
+    <div class="validation-popup" id="validationPopup">
+        <div class="validation-popup-content">
+            <div class="validation-icon">⚠️</div>
+            <h3 id="validationTitle">Selection Required</h3>
+            <p id="validationMessage">Please make a selection before continuing.</p>
+            <button class="validation-btn" onclick="closeValidationPopup()">Got it</button>
+        </div>
+    </div>
+
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="Ryans Web Services" class="logo-img">
+                Ryans Web Services, LLC
+            </a>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/pricing/" class="nav-link active">Pricing</a></li>
+                <li><a href="/resources/" class="nav-link">Resources</a></li>
+                <li><a href="/#contact" class="nav-link">Contact</a></li>
+                <li id="authNavItem"><a href="/login/" class="nav-link nav-cta">Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div class="progress-nav">
+        <div class="progress-dot active" data-section="hero" data-label="Start"></div>
+        <div class="progress-dot" data-section="packages" data-label="Packages"></div>
+        <div class="progress-dot" data-section="maintenance" data-label="Maintenance"></div>
+        <div class="progress-dot" data-section="addons" data-label="Add-ons"></div>
+        <div class="progress-dot" data-section="faq" data-label="FAQ"></div>
+        <div class="progress-dot" data-section="summary" data-label="Summary"></div>
+    </div>
+
+
+    <section class="pricing-section visible" id="hero">
+        <h1>Build Your Perfect Package</h1>
+        <p>Select your website package, maintenance plan, and add-ons to create a custom solution tailored to your business needs.</p>
+        <button class="start-btn" onclick="scrollToSection('packages')">Start Building →</button>
+    </section>
+
+
+    <section class="pricing-section" id="packages">
+        <div class="section-header">
+            <h2>Choose Your Package</h2>
+            <p>Select the website package that best fits your business needs</p>
+        </div>
+        <div class="cards-container">
+            <div class="pricing-card" data-package="starter" data-price="199" onclick="selectPackage(this)">
+                <h3 class="card-title">Starter</h3>
+                <div class="card-price">$199 <span>one-time</span></div>
+                <ul class="card-features">
+                    <li>Single page website</li>
+                    <li>Mobile responsive design</li>
+                    <li>Basic SEO setup</li>
+                    <li>Contact form</li>
+                    <li>3 revision rounds</li>
+                </ul>
+                <button class="card-select-btn">Select Package</button>
+            </div>
+            <div class="pricing-card recommended" data-package="professional" data-price="349" onclick="selectPackage(this)">
+                <span class="recommended-badge">Most Popular</span>
+                <h3 class="card-title">Professional</h3>
+                <div class="card-price">$349 <span>one-time</span></div>
+                <ul class="card-features">
+                    <li>Up to 5 pages</li>
+                    <li>Custom design</li>
+                    <li>Advanced SEO</li>
+                    <li>Contact form + CRM</li>
+                    <li>5 revision rounds</li>
+                </ul>
+                <button class="card-select-btn">Select Package</button>
+            </div>
+            <div class="pricing-card" data-package="premium" data-price="499" onclick="selectPackage(this)">
+                <h3 class="card-title">Premium</h3>
+                <div class="card-price">$499 <span>one-time</span></div>
+                <ul class="card-features">
+                    <li>Unlimited pages</li>
+                    <li>E-commerce ready</li>
+                    <li>Full SEO suite</li>
+                    <li>Custom integrations</li>
+                    <li>Unlimited revisions</li>
+                </ul>
+                <button class="card-select-btn">Select Package</button>
+            </div>
+        </div>
+        <button class="continue-btn" id="packages-continue" onclick="scrollToSection('maintenance')">Continue →</button>
+    </section>
+
+    <section class="pricing-section" id="maintenance">
+        <div class="section-header">
+            <h2>Maintenance Plan</h2>
+            <p>Keep your website running smoothly with our maintenance plans</p>
+        </div>
+        <div class="cards-container">
+            <div class="maintenance-card" data-maintenance="basic" data-price="49" onclick="selectMaintenance(this)">
+                <h3 class="card-title">Basic Maintenance</h3>
+                <div class="card-price">$49 <span>/month</span></div>
+                <ul class="card-features">
+                    <li>Monthly backups</li>
+                    <li>Security updates</li>
+                    <li>Uptime monitoring</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="card-select-btn">Select Plan</button>
+            </div>
+            <div class="maintenance-card recommended" data-maintenance="full" data-price="89" onclick="selectMaintenance(this)">
+                <span class="recommended-badge">Recommended</span>
+                <h3 class="card-title">Full Service</h3>
+                <div class="card-price">$89 <span>/month</span></div>
+                <ul class="card-features">
+                    <li>Weekly backups</li>
+                    <li>Priority security</li>
+                    <li>24/7 monitoring</li>
+                    <li>Priority phone support</li>
+                    <li>Monthly content updates</li>
+                </ul>
+                <button class="card-select-btn">Select Plan</button>
+            </div>
+        </div>
+        <button class="continue-btn" id="maintenance-continue" onclick="scrollToSection('addons')">Continue →</button>
+        <button class="skip-btn" onclick="scrollToSection('addons')">Skip for now</button>
+    </section>
+
+
+    <section class="pricing-section" id="addons">
+        <div class="section-header">
+            <h2>Add-ons</h2>
+            <p>Enhance your website with these optional features</p>
+        </div>
+        <div class="cards-container">
+            <div class="addon-card" data-addon="google-workspace" data-price="7" data-has-quantity="true" onclick="toggleAddon(this)">
+                <h4 class="addon-title">Google Workspace</h4>
+                <div class="addon-price">$7 <span>/user/month</span></div>
+                <p class="addon-desc">Professional email & productivity suite</p>
+                <div class="addon-quantity" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(212, 168, 83, 0.2);" onclick="event.stopPropagation()">
+                    <label style="font-size: 0.85rem; opacity: 0.8; display: block; margin-bottom: 0.5rem;">How many users?</label>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
+                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(-1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(212, 168, 83, 0.1); color: #e5bc6a; font-size: 1.2rem; cursor: pointer;">−</button>
+                        <input type="number" id="workspace-qty" value="1" min="1" max="100" style="width: 60px; text-align: center; padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(15, 15, 35, 0.8); color: white; font-size: 1rem;" onchange="updateWorkspaceFromInput()">
+                        <button type="button" class="qty-btn" onclick="updateWorkspaceQty(1)" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(212, 168, 83, 0.3); background: rgba(212, 168, 83, 0.1); color: #e5bc6a; font-size: 1.2rem; cursor: pointer;">+</button>
+                    </div>
+                    <div id="workspace-total" style="margin-top: 0.5rem; font-weight: 600; color: #10b981;">$7/month</div>
+                </div>
+            </div>
+            <div class="addon-card" data-addon="database" data-price="15" onclick="toggleAddon(this)">
+                <h4 class="addon-title">Database Integration</h4>
+                <div class="addon-price">$35 <span>/month</span></div>
+                <p class="addon-desc">Store and manage your business data</p>
+            </div>
+            <div class="addon-card" data-addon="analytics" data-price="10" onclick="toggleAddon(this)">
+                <h4 class="addon-title">Advanced Analytics</h4>
+                <div class="addon-price">$10 <span>/month</span></div>
+                <p class="addon-desc">Detailed insights and reporting</p>
+            </div>
+        </div>
+        <button class="continue-btn enabled" onclick="scrollToSection('faq')">Continue →</button>
+        <button class="skip-btn" onclick="scrollToSection('faq')">Skip add-ons</button>
+    </section>
+
+
+    <section class="pricing-section" id="faq">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Quick answers while you're building your package</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">How long does it take to build my website?</div>
+                <div class="faq-answer"><p>Most websites are completed within 2-4 weeks depending on the package and complexity. We'll provide a detailed timeline after our initial consultation.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Can I change my plan later?</div>
+                <div class="faq-answer"><p>Absolutely! You can upgrade or adjust your maintenance plan at any time. For package changes, I offer discounted upgrade paths.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">What payment methods do you accept?</div>
+                <div class="faq-answer"><p>I accept all major credit cards, PayPal, and bank transfers. Payment plans are available for larger projects.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Do I own my website?</div>
+                <div class="faq-answer"><p>Yes! You have full ownership of your website and all its content. I provide all necessary files and credentials upon project completion.</p></div>
+            </div>
+        </div>
+        <button class="continue-btn enabled" onclick="scrollToSection('summary')">View Summary →</button>
+    </section>
+
+
+    <section class="pricing-section" id="summary">
+        <div class="section-header">
+            <h2>Your Custom Package</h2>
+            <p>Review your selections and submit your service request</p>
+        </div>
+        <div class="summary-container">
+            <div class="summary-item">
+                <span class="summary-label">Website Package</span>
+                <span class="summary-value" id="summary-package">Not selected</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Maintenance Plan</span>
+                <span class="summary-value" id="summary-maintenance">Not selected</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Add-ons</span>
+                <span class="summary-value" id="summary-addons">None</span>
+            </div>
+            <div class="summary-total">
+                <span class="label">Starting Total</span>
+                <span class="price" id="summary-total">$0</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 1rem; text-align: center;">
+                *Monthly costs shown separately. Final pricing confirmed after consultation.
+            </p>
+            <button class="submit-request-btn" onclick="openModal()">Submit Service Request</button>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Submit Service Request</h3>
+                <p>We'll review your request and get back to you within 24 hours</p>
+            </div>
+            <form class="modal-form" id="serviceRequestForm" onsubmit="submitRequest(event)">
+                <div class="form-group">
+                    <label for="clientName">Your Name *</label>
+                    <input type="text" id="clientName" name="clientName" required placeholder="John Smith">
+                </div>
+                <div class="form-group">
+                    <label for="clientEmail">Email Address *</label>
+                    <input type="email" id="clientEmail" name="clientEmail" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="businessName">Business Name</label>
+                    <input type="text" id="businessName" name="businessName" placeholder="Your Business LLC">
+                </div>
+                <div class="form-group">
+                    <label for="additionalNotes">Additional Notes</label>
+                    <textarea id="additionalNotes" name="additionalNotes" placeholder="Tell us about your project..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="modal-submit" id="submitBtn">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer style="padding: 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border-primary);">
+        <p>© 2025-2026 Ryans Web Services, LLC. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/analytics.js" defer></script>
+    <script src="../js/main.js" defer></script>
+    <script src="../themes/christmas/christmas.js" defer></script>
+    <script src="pricingauth.js" defer></script>
+    <script src="pricing.js"></script>
+</body>
+</html>
