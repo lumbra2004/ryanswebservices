@@ -10,7 +10,7 @@
         ENABLED: true, // enable or disable the Christmas theme
         snowflakes: true,
         lights: true,
-        greeting: true,
+        greeting: false,
         countdown: true,
         candyCaneAccents: true,
         festiveColors: true,
@@ -284,9 +284,6 @@
         
         /* Coupon Button in navbar */
         .xmas-coupon-btn {
-            position: fixed;
-            top: 18px;
-            right: 20px;
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 50%, #c0392b 100%);
             color: #fff;
             border: 2px solid #fff;
@@ -296,7 +293,6 @@
             font-weight: 700;
             font-family: system-ui, -apple-system, sans-serif;
             cursor: pointer;
-            z-index: 100000;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -305,6 +301,8 @@
             transition: transform 0.2s, box-shadow 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-left: 12px;
+            white-space: nowrap;
         }
         
         .xmas-coupon-btn:hover {
@@ -901,7 +899,16 @@
         const couponBtn = document.createElement('button');
         couponBtn.className = 'xmas-coupon-btn';
         couponBtn.innerHTML = '<span class="gift-icon">🎁</span> Holiday Deal!';
-        document.body.appendChild(couponBtn);
+        
+        // Insert into navbar
+        const navMenu = document.querySelector('.nav-menu');
+        if (navMenu) {
+            const li = document.createElement('li');
+            li.appendChild(couponBtn);
+            navMenu.appendChild(li);
+        } else {
+            document.body.appendChild(couponBtn);
+        }
         
         // Coupon popup
         const couponPopup = document.createElement('div');
