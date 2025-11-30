@@ -6,7 +6,7 @@
     
     // Wrap everything in try-catch to prevent any errors from breaking the page
     try {
-        const SUPABASE_URL = 'https://ujludleswiuqlvosbpyg.supabase.co';
+        const SUPABASE_URL = 'https://auth.ryanswebservices.com';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqbHVkbGVzd2l1cWx2b3NicHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMTU0NDIsImV4cCI6MjA3OTU5MTQ0Mn0.VNvo4tjz_HafmQsvVkCBRiq8WmLrlhkPavNaB_3Exig';
         
         console.log('[Analytics] Script loaded');

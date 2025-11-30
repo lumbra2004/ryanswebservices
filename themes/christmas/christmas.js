@@ -6,13 +6,16 @@
 (function() {
     'use strict';
 
+    // Check if on login/signup pages
+    const isAuthPage = /\/(login|signup)\.html/.test(window.location.pathname);
+
     const CONFIG = {
         ENABLED: true, // enable or disable the Christmas theme
         snowflakes: true,
-        lights: true,
+        lights: !isAuthPage, // disable lights on login/signup
         greeting: false,
         countdown: true,
-        candyCaneAccents: true,
+        candyCaneAccents: !isAuthPage, // disable deal button on login/signup
         festiveColors: true,
         snowflakeCount: 25,
     };
