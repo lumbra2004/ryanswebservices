@@ -95,7 +95,7 @@
                 if (redirect === 'pricing') {
                     window.location.href = '/pricing/';
                 } else {
-                    window.location.href = 'index.html';
+                    window.location.href = '/';
                 }
 
             } catch (error) {

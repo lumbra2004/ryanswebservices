@@ -23,26 +23,30 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            color: #333;
+            background: linear-gradient(160deg, #fff 0%, #9dc4ff 40%, #9dc4ff 70%, #fff 100%);
+            background-attachment: fixed;
+            color: #222;
             min-height: 100vh;
             line-height: 1.5;
         }
 
         nav {
-            background: #fff;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 1rem 1.5rem;
+            background: #1e2846;
+            border-bottom: none;
+            padding: 0 1.5rem;
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        nav a { color: #666; text-decoration: none; font-size: 0.875rem; }
-        nav a:hover { color: #333; }
-        nav .logo { font-weight: 600; color: #333; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.875rem; }
+        nav a:hover { color: #fff; }
+        nav .logo { font-weight: 600; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+        nav .logo img { height: 44px; }
         nav .links { display: flex; gap: 1.5rem; align-items: center; }
-        nav .signout { color: #dc3545; }
+        nav .signout { color: #ff6b6b; }
+        nav .signout:hover { color: #ff5252; }
 
         main {
             max-width: 480px;
@@ -51,11 +55,12 @@
         }
 
         .card {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .profile-info { text-align: center; }
@@ -63,7 +68,7 @@
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background: #d4a853;
+            background: linear-gradient(135deg, #8053d4 0%, #200e85 100%);
             color: #fff;
             display: flex;
             align-items: center;
@@ -71,8 +76,9 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin: 0 auto 0.75rem;
+            box-shadow: 0 2px 8px rgba(32,14,133,0.3);
         }
-        .profile-info h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .profile-info h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; color: #222; }
         .profile-info p { color: #666; font-size: 0.875rem; }
 
         .section-label {
@@ -87,21 +93,64 @@
         .field {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             font-size: 0.875rem;
         }
         .field:last-child { border-bottom: none; }
         .field .label { color: #666; }
-        .field .value { color: #333; }
-        .field .value.edit { color: #d4a853; cursor: pointer; }
-        .field .value.edit:hover { text-decoration: underline; }
+        .field .value { color: #222; display: flex; align-items: center; gap: 0.5rem; }
+        .field .value-text { }
+        .field .edit-input {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            width: 140px;
+            outline: none;
+            font-family: inherit;
+        }
+        .field .edit-input:focus { border-color: #200e85; }
+        .edit-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #999;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+        .edit-btn:hover { color: #200e85; }
+        .edit-btn svg { width: 14px; height: 14px; }
+        .save-btn {
+            background: #200e85;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .save-btn:hover { background: #150a5c; }
+        .cancel-btn {
+            background: none;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            color: #666;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        .cancel-btn:hover { background: #f5f5f5; }
 
         .btn {
             display: block;
             width: 100%;
             padding: 0.75rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.875rem;
             font-weight: 500;
             text-decoration: none;
@@ -109,27 +158,29 @@
             border: none;
             cursor: pointer;
             margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
         }
         .btn:last-child { margin-bottom: 0; }
-        .btn-primary { background: #d4a853; color: #fff; }
-        .btn-primary:hover { background: #c9973f; }
-        .btn-outline { background: #fff; color: #333; border: 1px solid #ddd; }
-        .btn-outline:hover { background: #f8f9fa; }
-        .btn-danger { background: #fff; color: #dc3545; border: 1px solid #f5c6cb; }
+        .btn-primary { background: linear-gradient(135deg, #8053d4 0%, #200e85 100%); color: #fff; }
+        .btn-primary:hover { background: linear-gradient(135deg, #200e85 0%, #150a5c 100%); transform: translateY(-1px); }
+        .btn-outline { background: rgba(255,255,255,0.8); color: #222; border: 1px solid #e0e0e0; }
+        .btn-outline:hover { background: #fff; border-color: #200e85; }
+        .btn-danger { background: rgba(255,255,255,0.8); color: #dc3545; border: 1px solid #f5c6cb; }
         .btn-danger:hover { background: #fff5f5; }
 
         .empty { text-align: center; padding: 1rem; color: #999; font-size: 0.875rem; }
 
         .project {
             padding: 0.75rem;
-            background: #f8f9fa;
-            border-radius: 6px;
+            background: rgba(157,196,255,0.2);
+            border-radius: 8px;
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         .project:last-child { margin-bottom: 0; }
         .project-top { display: flex; justify-content: space-between; align-items: center; }
-        .project-name { font-weight: 500; }
+        .project-name { font-weight: 500; color: #222; }
         .badge {
             font-size: 0.7rem;
             padding: 0.2rem 0.5rem;
@@ -148,10 +199,10 @@
 </head>
 <body>
     <nav>
-        <a href="/" class="logo">Ryans Web Services</a>
+        <a href="/" class="logo"><img src="/images/logo2.png" alt="Ryans Web Services"></a>
         <div class="links">
             <a href="/">Home</a>
-            <a href="/pricing/">Pricing</a>
+            <a href="/contact/">Contact</a>
             <a href="#" class="signout" id="logoutBtn">Sign Out</a>
         </div>
     </nav>
@@ -165,21 +216,47 @@
 
         <div class="card">
             <div class="section-label">Account Details</div>
-            <div class="field">
+            <div class="field" id="nameField">
                 <span class="label">Name</span>
-                <span class="value edit" id="displayName" onclick="editProfile()">—</span>
+                <span class="value">
+                    <span class="value-text" id="displayName">—</span>
+                    <button class="edit-btn" onclick="startEdit('name')" aria-label="Edit name">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                </span>
             </div>
             <div class="field">
                 <span class="label">Email</span>
-                <span class="value" id="displayEmail">—</span>
+                <span class="value">
+                    <span class="value-text" id="displayEmail">—</span>
+                </span>
             </div>
-            <div class="field">
+            <div class="field" id="phoneField">
                 <span class="label">Phone</span>
-                <span class="value edit" id="displayPhone" onclick="editProfile()">Add</span>
+                <span class="value">
+                    <span class="value-text" id="displayPhone">Add</span>
+                    <button class="edit-btn" onclick="startEdit('phone')" aria-label="Edit phone">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                </span>
             </div>
-            <div class="field">
+            <div class="field" id="companyField">
                 <span class="label">Company</span>
-                <span class="value edit" id="displayCompany" onclick="editProfile()">Add</span>
+                <span class="value">
+                    <span class="value-text" id="displayCompany">Add</span>
+                    <button class="edit-btn" onclick="startEdit('company')" aria-label="Edit company">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                </span>
             </div>
         </div>
 
@@ -258,37 +335,114 @@
             }
         }
 
-        function editProfile() {
-            const name = prompt('Enter your name:', userProfile?.full_name || '');
-            if (name === null) return;
+        function startEdit(fieldType) {
+            const fieldMap = {
+                name: { field: 'nameField', display: 'displayName', key: 'full_name' },
+                phone: { field: 'phoneField', display: 'displayPhone', key: 'phone' },
+                company: { field: 'companyField', display: 'displayCompany', key: 'business_name' }
+            };
             
-            const phone = prompt('Enter your phone:', userProfile?.phone || '');
-            if (phone === null) return;
+            const config = fieldMap[fieldType];
+            const fieldEl = document.getElementById(config.field);
+            const valueEl = fieldEl.querySelector('.value');
+            const currentValue = userProfile?.[config.key] || '';
             
-            const company = prompt('Enter your company:', userProfile?.business_name || '');
-            if (company === null) return;
-
-            saveProfile(name, phone, company);
+            valueEl.innerHTML = `
+                <input type="text" class="edit-input" value="${currentValue}" id="editInput_${fieldType}">
+                <button class="save-btn" onclick="saveField('${fieldType}')">Save</button>
+                <button class="cancel-btn" onclick="cancelEdit('${fieldType}')">Cancel</button>
+            `;
+            
+            const input = document.getElementById(`editInput_${fieldType}`);
+            input.focus();
+            input.select();
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveField(fieldType);
+                if (e.key === 'Escape') cancelEdit(fieldType);
+            });
         }
-
-        async function saveProfile(name, phone, company) {
-            const { error } = await supabase
+        
+        function cancelEdit(fieldType) {
+            const fieldMap = {
+                name: { field: 'nameField', display: 'displayName', key: 'full_name', empty: '—' },
+                phone: { field: 'phoneField', display: 'displayPhone', key: 'phone', empty: 'Add' },
+                company: { field: 'companyField', display: 'displayCompany', key: 'business_name', empty: 'Add' }
+            };
+            
+            const config = fieldMap[fieldType];
+            const fieldEl = document.getElementById(config.field);
+            const valueEl = fieldEl.querySelector('.value');
+            const currentValue = userProfile?.[config.key] || config.empty;
+            
+            valueEl.innerHTML = `
+                <span class="value-text" id="${config.display}">${currentValue}</span>
+                <button class="edit-btn" onclick="startEdit('${fieldType}')" aria-label="Edit ${fieldType}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                </button>
+            `;
+        }
+        
+        async function saveField(fieldType) {
+            const fieldMap = {
+                name: { field: 'nameField', display: 'displayName', key: 'full_name', empty: '—' },
+                phone: { field: 'phoneField', display: 'displayPhone', key: 'phone', empty: 'Add' },
+                company: { field: 'companyField', display: 'displayCompany', key: 'business_name', empty: 'Add' }
+            };
+            
+            const config = fieldMap[fieldType];
+            const input = document.getElementById(`editInput_${fieldType}`);
+            const newValue = input.value.trim();
+            
+            // Try update first (for existing profiles)
+            const { data: existingProfile, error: selectError } = await supabase
                 .from('profiles')
-                .upsert({
-                    id: currentUser.id,
-                    full_name: name || null,
-                    phone: phone || null,
-                    business_name: company || null,
-                    updated_at: new Date().toISOString()
-                });
-
-            if (!error) {
-                document.getElementById('userName').textContent = name || currentUser.email.split('@')[0];
-                document.getElementById('displayName').textContent = name || '—';
-                document.getElementById('displayPhone').textContent = phone || 'Add';
-                document.getElementById('displayCompany').textContent = company || 'Add';
-                userProfile = { ...userProfile, full_name: name, phone, business_name: company };
+                .select('id')
+                .eq('id', currentUser.id)
+                .single();
+            
+            let error;
+            
+            if (existingProfile) {
+                // Update existing profile
+                const result = await supabase
+                    .from('profiles')
+                    .update({ 
+                        [config.key]: newValue || null,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentUser.id);
+                error = result.error;
+            } else {
+                // Insert new profile
+                const result = await supabase
+                    .from('profiles')
+                    .insert({ 
+                        id: currentUser.id,
+                        [config.key]: newValue || null,
+                        updated_at: new Date().toISOString()
+                    });
+                error = result.error;
             }
+            
+            if (error) {
+                console.error('Error saving profile:', error.message, error);
+                alert('Failed to save: ' + error.message);
+                return;
+            }
+            
+            // Update local state
+            if (!userProfile) userProfile = {};
+            userProfile[config.key] = newValue || null;
+            
+            if (fieldType === 'name') {
+                document.getElementById('userName').textContent = newValue || currentUser.email.split('@')[0];
+            }
+            
+            cancelEdit(fieldType);
         }
 
         document.getElementById('logoutBtn').addEventListener('click', async (e) => {

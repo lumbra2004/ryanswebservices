@@ -121,7 +121,7 @@
 
                     successDiv.textContent = 'Account created! Please check your email (' + email + ') to verify your account.';
                     successDiv.style.display = 'block';
-                    setTimeout(() => window.location.href = 'login.html' + (redirect ? '?redirect=' + redirect : ''), 3000);
+                    setTimeout(() => window.location.href = '/login/' + (redirect ? '?redirect=' + redirect : ''), 3000);
                 }
 
             } catch (error) {
